@@ -397,12 +397,12 @@ export default function App() {
 
             {/* Author Tribute */}
             <div className="text-xs text-slate-400 font-semibold mb-4">
-              ✦ ĐẠI NĂNG TRƯƠNG ANH TOÀN – 0824049191 ✦
+              ✦ ĐẠI NĂNG TRƯƠNG ANH TOÀN – 0329056500 ✦
             </div>
 
             {/* Lore */}
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6 max-w-md">
-              Một vị đại năng tên là Nguyễn Tuấn Anh cho rằng nếu vượt qua 10 ải
+              Một vị đại năng tên là Trương Anh Toàn cho rằng nếu vượt qua 10 ải
               tu luyện sẽ đạt được kết quả bất ngờ. Tri thức chính là sức mạnh,
               tư duy là chìa khóa!
             </p>
@@ -1285,7 +1285,7 @@ export default function App() {
             </p>
 
             <div className="text-xs text-slate-400 font-semibold mb-6">
-              ✦ ĐẠI NĂNG TRƯƠNG ANH TOÀN – 0824049191 ✦
+              ✦ ĐẠI NĂNG TRƯƠNG ANH TOÀN – 0329056500 ✦
             </div>
 
             <div className="flex flex-col gap-2.5">
