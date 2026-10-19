@@ -1,0 +1,6 @@
+{
+  "name": "Tu Tiên Toán Học",
+  "description": "Hành trình tu tiên khai mở trí tuệ toán học, tối ưu hiển thị cân đối cho điện thoại di động và mọi kích thước màn hình.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
