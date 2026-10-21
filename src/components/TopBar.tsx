@@ -38,8 +38,8 @@ export const TopBar: React.FC<TopBarProps> = ({
           <div className="min-w-0">
             <h1 className="text-xs sm:text-sm font-black tracking-tight text-amber-300 truncate">
               {chapter === 1
-                ? 'CHAP 1: THÁM HIỂM DI TÍCH CỔ'
-                : 'CHAP 2: TIẾN VÀO TU TIÊN GIỚI'}
+                ? 'CHƯƠNG 1: THÁM HIỂM DI TÍCH CỔ'
+                : 'CHƯƠNG 2: TIẾN VÀO TU TIÊN GIỚI'}
             </h1>
             <p className="text-[10px] text-slate-400 truncate hidden xs:block">
               Đại Giáo Chủ Trương Anh Toàn – 0329056500
@@ -76,9 +76,9 @@ export const TopBar: React.FC<TopBarProps> = ({
                     ? 'bg-amber-400 text-slate-950'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
-                title="Chuyển sang Chap 1"
+                title="Chuyển sang Chương 1"
               >
-                Chap 1
+                Chương 1
               </button>
               <button
                 type="button"
@@ -88,9 +88,9 @@ export const TopBar: React.FC<TopBarProps> = ({
                     ? 'bg-amber-400 text-slate-950'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
-                title="Chuyển sang Chap 2"
+                title="Chuyển sang Chương 2"
               >
-                Chap 2
+                Chương 2
               </button>
             </div>
           )}
@@ -99,7 +99,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center gap-1 bg-amber-400/10 border border-amber-400/30 px-2.5 py-1 rounded-full text-amber-300 text-xs font-bold tabular-nums">
             <Sparkles className="w-3 h-3 text-amber-400" />
             <span>{score}</span>
-            <span className="text-[10px] font-normal text-amber-400/80">pt</span>
+            <span className="text-[10px] font-normal text-amber-400/80">aura</span>
           </div>
 
           {/* Sound & Music Toggle */}

@@ -83,16 +83,20 @@ export default function App() {
     }
   }, []);
 
-  // Unlock Web Audio on first user interaction (tap/click anywhere)
+  // Unlock Web Audio on first user interaction (tap/click/press anywhere)
   useEffect(() => {
     const handleFirstGesture = () => {
       unlockAudio();
     };
     window.addEventListener('click', handleFirstGesture, { once: true });
     window.addEventListener('touchstart', handleFirstGesture, { once: true });
+    window.addEventListener('pointerdown', handleFirstGesture, { once: true });
+    window.addEventListener('keydown', handleFirstGesture, { once: true });
     return () => {
       window.removeEventListener('click', handleFirstGesture);
       window.removeEventListener('touchstart', handleFirstGesture);
+      window.removeEventListener('pointerdown', handleFirstGesture);
+      window.removeEventListener('keydown', handleFirstGesture);
     };
   }, []);
 
@@ -223,6 +227,7 @@ export default function App() {
     setTimeLeft(20);
     setCurrentChapter(1);
     setScreen('c1_quiz');
+    unlockAudio();
     playSound('magic', soundEnabled);
   };
 
@@ -272,7 +277,7 @@ export default function App() {
       setC1Feedback(null);
       setTimeLeft(20);
     } else {
-      // Completed Chap 1 10 questions -> go to Khung 14: Bí mật sau di tích
+      // Completed Chap 1 10 questions -> go to Bí mật sau di tích
       saveScoreToLeaderboard(1, c1Score + (c1SelectedOption === c1Questions[c1Index]?.correctIndex ? 10 : 0), c1CorrectCount);
       setScreen('c1_ruins_secret');
       playSound('magic', soundEnabled);
@@ -305,6 +310,7 @@ export default function App() {
 
     setCurrentChapter(2);
     setScreen('c2_quiz');
+    unlockAudio();
     playSound('magic', soundEnabled);
   };
 
@@ -338,7 +344,7 @@ export default function App() {
       }
 
       setC2Feedback({
-        text: `Chính xác! +10 tu vi. Thăng cấp cảnh giới lên [${REALMS[newRealm]}].`,
+        text: `Chính xác! +10 aura tu vi. Thăng cấp cảnh giới lên [${REALMS[newRealm]}].`,
         isGood: true,
       });
     } else {
@@ -438,7 +444,7 @@ export default function App() {
       treasureName: chap === 2 ? treasureNames[c2Treasure] || 'Không' : undefined,
       chapter: chap,
       chapterTitle:
-        chap === 1 ? 'Chap 1: Thám Hiểm Di Tích' : 'Chap 2: Tiến Vào Tu Tiên Giới',
+        chap === 1 ? 'Chương 1: Thám Hiểm Di Tích' : 'Chương 2: Tiến Vào Tu Tiên Giới',
       timestamp: Date.now(),
     };
 
@@ -525,7 +531,7 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-3.5 sm:p-6 flex flex-col justify-center">
         {/* ======================================================== */}
-        {/* CHAP 1 - KHUNG 01: LỜI MỞ ĐẦU                            */}
+        {/* CHAP 1 - LỜI MỞ ĐẦU                                      */}
         {/* ======================================================== */}
         {screen === 'c1_intro' && (
           <div className="flex flex-col items-center text-center py-4 sm:py-8 max-w-xl mx-auto w-full">
@@ -536,12 +542,12 @@ export default function App() {
                 </div>
               </div>
               <div className="absolute -bottom-2 -right-2 bg-cyan-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow">
-                CHAP 1
+                CHƯƠNG 1
               </div>
             </div>
 
             <div className="text-[11px] font-bold uppercase tracking-widest text-cyan-400 mb-1">
-              Khung 01 · Tiếng gọi từ vùng đất lạ
+              Tiếng gọi từ vùng đất lạ
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-slate-50 tracking-tight mb-2">
               Thám Hiểm <span className="text-cyan-300">Di Tích Cổ</span>
@@ -576,7 +582,7 @@ export default function App() {
               <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5">
                 <div className="text-base sm:text-lg mb-0.5">🌌</div>
                 <div className="text-[11px] font-bold text-slate-200">Dị Giới</div>
-                <div className="text-[9px] text-slate-400">Cổng sang Chap 2</div>
+                <div className="text-[9px] text-slate-400">Cổng sang Chương 2</div>
               </div>
             </div>
 
@@ -596,14 +602,14 @@ export default function App() {
                 }}
                 className="w-full min-h-[44px] bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-colors"
               >
-                <span>Chuyển thẳng sang Chap 2 ➜</span>
+                <span>Chuyển thẳng sang Chương 2 ➜</span>
               </button>
             </div>
           </div>
         )}
 
         {/* ======================================================== */}
-        {/* CHAP 1 - KHUNG 02: BẢN ĐỒ BÍ ẨN                         */}
+        {/* CHAP 1 - BẢN ĐỒ BÍ ẨN                                    */}
         {/* ======================================================== */}
         {screen === 'c1_map' && (
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 sm:p-7 max-w-md mx-auto w-full text-center shadow-xl">
@@ -611,7 +617,7 @@ export default function App() {
               📜
             </div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1">
-              Khung 02 · Mảnh bản đồ cổ
+              Mảnh bản đồ cổ
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-100 mb-3">
               Manh Mối Đầu Tiên
@@ -643,7 +649,7 @@ export default function App() {
         )}
 
         {/* ======================================================== */}
-        {/* CHAP 1 - KHUNG 03: GHI DANH NHÀ THÁM HIỂM               */}
+        {/* CHAP 1 - GHI DANH NHÀ THÁM HIỂM                          */}
         {/* ======================================================== */}
         {screen === 'c1_register' && (
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-7 max-w-md mx-auto w-full shadow-xl">
@@ -653,7 +659,7 @@ export default function App() {
               </div>
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">
-                  Khung 03 · Cánh cửa thử thách
+                  Cánh cửa thử thách
                 </div>
                 <h2 className="text-lg sm:text-xl font-black text-slate-100">
                   Ghi Danh Nhà Thám Hiểm
@@ -723,7 +729,7 @@ export default function App() {
         )}
 
         {/* ======================================================== */}
-        {/* CHAP 1 - KHUNG 04-13: 10 THỬ THÁCH ĐẠI SỐ               */}
+        {/* CHAP 1 - 10 THỬ THÁCH ĐẠI SỐ                             */}
         {/* ======================================================== */}
         {screen === 'c1_quiz' && currentC1Question && (
           <div className="w-full max-w-2xl mx-auto flex flex-col gap-3">
@@ -773,7 +779,7 @@ export default function App() {
             <div className="flex items-center justify-between text-[11px] bg-slate-900/60 border border-slate-800/60 px-3 py-1.5 rounded-lg text-slate-300">
               <div className="flex items-center gap-1.5">
                 <span>⚡ Điểm:</span>
-                <span className="font-bold text-amber-300">{c1Score} pt</span>
+                <span className="font-bold text-amber-300">{c1Score} aura</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span>🏛️ Phong ấn đã giải:</span>
@@ -892,7 +898,7 @@ export default function App() {
         )}
 
         {/* ======================================================== */}
-        {/* CHAP 1 - KHUNG 14: BÍ MẬT SAU DI TÍCH                   */}
+        {/* CHAP 1 - BÍ MẬT SAU DI TÍCH                              */}
         {/* ======================================================== */}
         {screen === 'c1_ruins_secret' && (
           <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md mx-auto w-full text-center shadow-2xl">
@@ -900,7 +906,7 @@ export default function App() {
               🏛️
             </div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-1">
-              Khung 14 · Hồi III: Cánh Cổng Dị Giới
+              Hồi III · Cánh Cổng Dị Giới
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-100 mb-3">
               Bí Mật Sau Di Tích
@@ -918,7 +924,7 @@ export default function App() {
         )}
 
         {/* ======================================================== */}
-        {/* CHAP 1 - KHUNG 15: BƯỚC QUA RANH GIỚI                   */}
+        {/* CHAP 1 - BƯỚC QUA RANH GIỚI                              */}
         {/* ======================================================== */}
         {screen === 'c1_boundary' && (
           <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md mx-auto w-full text-center shadow-2xl">
@@ -926,7 +932,7 @@ export default function App() {
               🌌
             </div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-1">
-              Khung 15 · Ranh giới hai thế giới
+              Ranh giới hai thế giới
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-100 mb-3">
               Bước Qua Ranh Giới
@@ -954,7 +960,7 @@ export default function App() {
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-xl mx-auto w-full shadow-xl">
             <div className="text-center mb-4">
               <div className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-1">
-                Thám hiểm hoàn tất · Chap 1
+                Thám hiểm hoàn tất · Chương 1
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-slate-100">
                 Bảng Thành Tích Khám Phá
@@ -970,7 +976,7 @@ export default function App() {
                   {c1Score}
                 </div>
                 <div className="text-[10px] text-slate-400 font-bold uppercase">
-                  Tổng điểm
+                  Tổng aura
                 </div>
               </div>
               <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-center">
@@ -1022,7 +1028,7 @@ export default function App() {
                 onClick={() => setScreen('transition_to_c2')}
                 className="flex-[1.5] min-h-[44px] bg-gradient-to-r from-amber-400 to-amber-300 text-slate-950 font-black text-xs sm:text-sm rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-amber-400/20 active:scale-[0.98] transition-transform"
               >
-                <span>Chuyển cảnh Chap 2 ➜</span>
+                <span>Chuyển cảnh Chương 2 ➜</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -1037,7 +1043,7 @@ export default function App() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">
-                  Thám hiểm kiến thức · Chap 1
+                  Thám hiểm kiến thức · Chương 1
                 </div>
                 <h2 className="text-lg sm:text-xl font-black text-slate-100">
                   Ôn Tập 10 Câu Đại Số
@@ -1072,7 +1078,7 @@ export default function App() {
                             : 'bg-rose-500/20 text-rose-400'
                         }`}
                       >
-                        {isCorrect ? 'Đúng (+10 pt)' : 'Chưa đúng'}
+                        {isCorrect ? 'Đúng (+10 aura)' : 'Chưa đúng'}
                       </span>
                     </div>
 
@@ -1104,7 +1110,7 @@ export default function App() {
                 onClick={() => setScreen('transition_to_c2')}
                 className="flex-1 min-h-[44px] bg-gradient-to-r from-amber-400 to-amber-300 text-slate-950 font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-amber-400/20 active:scale-[0.98] transition-transform"
               >
-                <span>Chuyển cảnh Chap 2</span>
+                <span>Chuyển cảnh Chương 2</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -1112,8 +1118,8 @@ export default function App() {
         )}
 
         {/* ======================================================== */}
-        {/* TRANSITION SCREEN: KHUNG 16-20 TIẾN VÀO TU TIÊN GIỚI   */}
-        {/* (Smooth bridge to Chap 2 - no name/class re-prompt!)     */}
+        {/* TRANSITION SCREEN: TIẾN VÀO TU TIÊN GIỚI                */}
+        {/* (Smooth bridge to Chương 2 - no name/class re-prompt!)     */}
         {/* ======================================================== */}
         {screen === 'transition_to_c2' && (
           <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-lg mx-auto w-full text-center shadow-2xl">
@@ -1123,9 +1129,6 @@ export default function App() {
               </div>
             </div>
 
-            <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1">
-              Khung 16–20 · Liên kết Chap 2
-            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-100 mb-2">
               Tiến Vào Tu Tiên Giới
             </h2>
@@ -1167,14 +1170,14 @@ export default function App() {
                 }}
                 className="w-full min-h-[50px] bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/25 active:scale-[0.98] transition-transform"
               >
-                <span>BẮT ĐẦU HÀNH TRÌNH TU TIÊN (CHAP 2) ➜</span>
+                <span>BẮT ĐẦU HÀNH TRÌNH TU TIÊN (CHƯƠNG 2) ➜</span>
               </button>
 
               <button
                 onClick={() => setScreen('c1_result')}
                 className="w-full min-h-[42px] bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs rounded-xl transition-colors active:scale-[0.98]"
               >
-                Về Bảng Thành Tích Chap 1
+                Về Bảng Thành Tích Chương 1
               </button>
             </div>
           </div>
@@ -1191,7 +1194,7 @@ export default function App() {
               </div>
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
-                  Chap 2 · Nhập môn quy tắc
+                  Chương 2 · Nhập môn quy tắc
                 </div>
                 <h2 className="text-lg sm:text-xl font-black text-slate-100">
                   Nắm Vững Thần Thông Luật Quy
@@ -1223,7 +1226,7 @@ export default function App() {
                     Tích Lũy Tu Vi
                   </h3>
                   <p className="text-[11px] text-slate-300 leading-relaxed">
-                    Trả lời đúng cộng 10 điểm tu vi. Thời gian suy nghĩ mặc định là 20 giây mỗi câu.
+                    Trả lời đúng cộng 10 aura tu vi. Thời gian suy nghĩ mặc định là 20 giây mỗi câu.
                   </p>
                 </div>
               </div>
@@ -1282,7 +1285,7 @@ export default function App() {
               </div>
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
-                  Chap 2 · Chọn đạo cụ
+                  Chương 2 · Chọn đạo cụ
                 </div>
                 <h2 className="text-lg sm:text-xl font-black text-slate-100">
                   Chọn Một Pháp Bảo Đồng Hành
@@ -1599,7 +1602,7 @@ export default function App() {
         {screen === 'c2_climax' && (
           <div className="bg-slate-900/95 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md mx-auto w-full text-center shadow-2xl">
             <div className="text-[11px] font-black uppercase tracking-widest text-amber-400 mb-2">
-              Chap 2 · Thiên kiếp đã qua
+              Chương 2 · Thiên kiếp đã qua
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-50 mb-3">
               Thiên Kiếp Đã Qua!
@@ -1618,7 +1621,7 @@ export default function App() {
                 Số câu đúng: <b className="text-emerald-400">{c2CorrectCount}/10</b>
               </div>
               <div>
-                Tổng điểm tu vi: <b className="text-amber-400">{c2Score} pt</b>
+                Tổng tu vi: <b className="text-amber-400">{c2Score} aura</b>
               </div>
               <div>
                 Cảnh giới đạt được:{' '}
@@ -1642,7 +1645,7 @@ export default function App() {
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-6 max-w-xl mx-auto w-full shadow-xl">
             <div className="text-center mb-4">
               <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1">
-                Bảng Phong Thần · Chap 2
+                Bảng Phong Thần · Chương 2
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-slate-100">
                 Thành Tích Tu Luyện
@@ -1658,7 +1661,7 @@ export default function App() {
                   {c2Score}
                 </div>
                 <div className="text-[10px] text-slate-400 font-bold uppercase">
-                  Tổng tu vi
+                  Tổng aura
                 </div>
               </div>
               <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-center">
@@ -1712,7 +1715,7 @@ export default function App() {
                         <th className="py-2 px-3">Tu sĩ</th>
                         <th className="py-2 px-3">Lớp</th>
                         <th className="py-2 px-3">Chặng</th>
-                        <th className="py-2 px-3 text-right">Điểm</th>
+                        <th className="py-2 px-3 text-right">Aura</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800/60 text-slate-300">
@@ -1730,11 +1733,13 @@ export default function App() {
                             <td className="py-2 px-3 text-slate-400">
                               {item.className}
                             </td>
-                            <td className="py-2 px-3 text-slate-400 truncate max-w-[120px]">
-                              {item.chapter === 1 ? 'Chap 1: Di tích' : item.realm || 'Tu Tiên Giới'}
+                            <td className="py-2 px-3 text-slate-400 truncate max-w-[130px]">
+                              {item.chapter === 1
+                                ? 'Chương 1: Di tích'
+                                : `Chương 2: ${item.realm || 'Tu Tiên Giới'}`}
                             </td>
                             <td className="py-2 px-3 text-right font-bold text-amber-400 tabular-nums">
-                              {item.score} pt
+                              {item.score} aura
                             </td>
                           </tr>
                         ))
@@ -1784,7 +1789,7 @@ export default function App() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
-                  Đối chiếu kết quả · Chap 2
+                  Đối chiếu kết quả · Chương 2
                 </div>
                 <h2 className="text-lg sm:text-xl font-black text-slate-100">
                   Ôn Tập 10 Cửa Ải Hình Học
@@ -1824,7 +1829,7 @@ export default function App() {
                         }`}
                       >
                         {isCorrect
-                          ? 'Đúng (+10 pt)'
+                          ? 'Đúng (+10 aura)'
                           : isSkipped
                           ? 'Đại Diễn Quyết'
                           : isTimeout
@@ -1878,7 +1883,7 @@ export default function App() {
             </div>
 
             <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1">
-              Chap 2 · Lời kết
+              Chương 2 · Lời kết
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-100 mb-3">
               Hành Trình Khép Lại, Tri Thức Ở Lại
@@ -1904,7 +1909,7 @@ export default function App() {
                 className="w-full min-h-[48px] bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform"
               >
                 <RotateCcw className="w-4 h-4" />
-                <span>Bắt đầu hành trình mới (Chap 1)</span>
+                <span>Bắt đầu hành trình mới (Chương 1)</span>
               </button>
 
               <button
@@ -1920,7 +1925,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="h-10 shrink-0 border-t border-slate-900 bg-slate-950/80 flex items-center justify-center text-[10px] text-slate-500 tracking-wider">
-        TU TIÊN TOÁN HỌC · {currentChapter === 1 ? 'CHAP 1: THÁM HIỂM DI TÍCH CỔ' : 'CHAP 2: TIẾN VÀO TU TIÊN GIỚI'}
+        TU TIÊN TOÁN HỌC · {currentChapter === 1 ? 'CHƯƠNG 1: THÁM HIỂM DI TÍCH CỔ' : 'CHƯƠNG 2: TIẾN VÀO TU TIÊN GIỚI'}
       </footer>
     </div>
   );

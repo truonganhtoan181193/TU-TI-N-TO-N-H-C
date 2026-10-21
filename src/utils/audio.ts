@@ -1,9 +1,29 @@
+// =====================================================================
+// AUDIO & BGM SYNTHESIZER ENGINE (Web Audio API)
+// High fidelity, crystal clear loudness, zero external dependencies
+// - Master Compressor & Limiter for robust, audible volume on all devices
+// - Chapter 1: Ancient Ruins Exploration (Thám hiểm di tích cổ)
+// - Chapter 2: Immortal Cultivation Realm (Tiến vào Tu Tiên Giới - Guzheng & Flute)
+// - Transition: Dimensional Portal Warp (Cổng Dị Giới)
+// - Outro / Climax: Celestial Ascension & Fanfare (Độ Kiếp Phi Thăng)
+// =====================================================================
+
 let audioCtx: AudioContext | null = null;
 let bgmMasterGain: GainNode | null = null;
+let masterCompressor: DynamicsCompressorNode | null = null;
+let bgmFilter: BiquadFilterNode | null = null;
+let spaceSendGain: GainNode | null = null;
+
 let currentBgmTheme: 'chap1' | 'chap2' | 'transition' | 'outro' | 'none' = 'none';
 let bgmLoopTimer: number | null = null;
 let isAudioUnlocked = false;
 
+// Target Master BGM Volume (Clear, audible, comfortably loud without clipping)
+const MASTER_BGM_VOLUME = 0.45;
+
+// ---------------------------------------------------------------------
+// AUDIO CONTEXT & MASTER CHAIN INITIALIZATION
+// ---------------------------------------------------------------------
 export function getAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null;
   if (!audioCtx) {
@@ -12,31 +32,86 @@ export function getAudioContext(): AudioContext | null {
       (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     if (AudioContextClass) {
       audioCtx = new AudioContextClass();
+
+      // Master Dynamics Compressor: brings up soft passages & prevents distortion
+      masterCompressor = audioCtx.createDynamicsCompressor();
+      masterCompressor.threshold.setValueAtTime(-20, audioCtx.currentTime);
+      masterCompressor.knee.setValueAtTime(24, audioCtx.currentTime);
+      masterCompressor.ratio.setValueAtTime(4, audioCtx.currentTime);
+      masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+      masterCompressor.release.setValueAtTime(0.25, audioCtx.currentTime);
+      masterCompressor.connect(audioCtx.destination);
+
+      // Master BGM Gain
       bgmMasterGain = audioCtx.createGain();
-      bgmMasterGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      bgmMasterGain.connect(audioCtx.destination);
+      bgmMasterGain.gain.setValueAtTime(MASTER_BGM_VOLUME, audioCtx.currentTime);
+
+      // Warm master filter with open cutoff for sparkling clarity
+      bgmFilter = audioCtx.createBiquadFilter();
+      bgmFilter.type = 'lowpass';
+      bgmFilter.frequency.setValueAtTime(6000, audioCtx.currentTime);
+      bgmFilter.Q.setValueAtTime(0.7, audioCtx.currentTime);
+
+      // Ambient Space (Gentle feedback delay for natural acoustic room / temple depth)
+      try {
+        const delay = audioCtx.createDelay(1.0);
+        delay.delayTime.setValueAtTime(0.28, audioCtx.currentTime);
+
+        const delayFeedback = audioCtx.createGain();
+        delayFeedback.gain.setValueAtTime(0.28, audioCtx.currentTime);
+
+        const delayFilter = audioCtx.createBiquadFilter();
+        delayFilter.type = 'lowpass';
+        delayFilter.frequency.setValueAtTime(2400, audioCtx.currentTime);
+
+        spaceSendGain = audioCtx.createGain();
+        spaceSendGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+
+        spaceSendGain.connect(delay);
+        delay.connect(delayFilter);
+        delayFilter.connect(delayFeedback);
+        delayFeedback.connect(delay);
+        delayFilter.connect(bgmFilter);
+      } catch {
+        spaceSendGain = null;
+      }
+
+      bgmMasterGain.connect(bgmFilter);
+      bgmFilter.connect(masterCompressor);
     }
   }
+
   if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume();
+    audioCtx.resume().catch(() => {});
   }
   return audioCtx;
 }
 
 export function unlockAudio() {
-  if (isAudioUnlocked) return;
   const ctx = getAudioContext();
-  if (ctx && ctx.state === 'suspended') {
+  if (!ctx) return;
+
+  if (ctx.state === 'suspended') {
     ctx.resume().then(() => {
       isAudioUnlocked = true;
-    });
-  } else if (ctx) {
+      if (currentBgmTheme !== 'none') {
+        const targetTheme = currentBgmTheme;
+        currentBgmTheme = 'none';
+        setBgmTheme(targetTheme, true);
+      }
+    }).catch(() => {});
+  } else {
     isAudioUnlocked = true;
+    if (currentBgmTheme !== 'none' && bgmLoopTimer === null) {
+      const targetTheme = currentBgmTheme;
+      currentBgmTheme = 'none';
+      setBgmTheme(targetTheme, true);
+    }
   }
 }
 
 // ---------------------------------------------------------------------
-// SOUND EFFECTS (SFX)
+// SOUND EFFECTS (SFX) — Clearly audible & crisp
 // ---------------------------------------------------------------------
 export function playSound(
   type: 'correct' | 'wrong' | 'levelup' | 'tick' | 'magic',
@@ -47,6 +122,7 @@ export function playSound(
     const ctx = getAudioContext();
     if (!ctx) return;
     const now = ctx.currentTime;
+    const dest = masterCompressor || ctx.destination;
 
     if (type === 'correct') {
       const osc1 = ctx.createOscillator();
@@ -54,20 +130,20 @@ export function playSound(
       const gain = ctx.createGain();
 
       osc1.type = 'sine';
-      osc2.type = 'sine';
+      osc2.type = 'triangle';
       osc1.frequency.setValueAtTime(587.33, now); // D5
       osc1.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
-      osc2.frequency.setValueAtTime(1174.66, now + 0.1); // D6
+      osc2.frequency.setValueAtTime(1174.66, now + 0.08); // D6
 
-      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.setValueAtTime(0.35, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
 
       osc1.connect(gain);
       osc2.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(dest);
 
       osc1.start(now);
-      osc2.start(now + 0.08);
+      osc2.start(now + 0.06);
       osc1.stop(now + 0.45);
       osc2.stop(now + 0.45);
     } else if (type === 'wrong') {
@@ -75,40 +151,40 @@ export function playSound(
       const gain = ctx.createGain();
 
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(220, now);
-      osc.frequency.exponentialRampToValueAtTime(130, now + 0.25);
+      osc.frequency.setValueAtTime(240, now);
+      osc.frequency.exponentialRampToValueAtTime(130, now + 0.28);
 
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      gain.gain.setValueAtTime(0.32, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
 
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(dest);
 
       osc.start(now);
-      osc.stop(now + 0.3);
+      osc.stop(now + 0.32);
     } else if (type === 'levelup') {
       const notes = [440, 554.37, 659.25, 880, 1108.73];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'sine';
+        osc.type = 'triangle';
         osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.15, now + idx * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.35);
+        gain.gain.setValueAtTime(0.32, now + idx * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.45);
         osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now + idx * 0.08);
-        osc.stop(now + idx * 0.08 + 0.35);
+        gain.connect(dest);
+        osc.start(now + idx * 0.07);
+        osc.stop(now + idx * 0.07 + 0.45);
       });
     } else if (type === 'tick') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(800, now);
-      gain.gain.setValueAtTime(0.04, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(dest);
       osc.start(now);
       osc.stop(now + 0.04);
     } else if (type === 'magic') {
@@ -117,92 +193,180 @@ export function playSound(
       osc.type = 'sine';
       osc.frequency.setValueAtTime(440, now);
       osc.frequency.exponentialRampToValueAtTime(1200, now + 0.35);
-      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.setValueAtTime(0.28, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(dest);
       osc.start(now);
       osc.stop(now + 0.4);
     }
   } catch {
-    // Gracefully ignore audio errors
+    // Ignore audio errors
   }
 }
 
 // ---------------------------------------------------------------------
-// BGM SYNTHESIZER ENGINE
+// SYNTHESIS NOTE HELPERS (High output gain & rich presence)
 // ---------------------------------------------------------------------
 
-// Helper: play a soft plucked note with envelope
 function playPluck(
   ctx: AudioContext,
   dest: AudioNode,
   freq: number,
   time: number,
-  duration = 0.5,
-  volume = 0.08,
-  type: OscillatorType = 'sine'
+  duration = 0.55,
+  volume = 0.25,
+  type: OscillatorType = 'sine',
+  sendToSpace = true
 ) {
   if (freq <= 0) return;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, time);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, time);
 
-  // Soft attack and natural decay
-  gain.gain.setValueAtTime(0.001, time);
-  gain.gain.linearRampToValueAtTime(volume, time + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+    gain.gain.setValueAtTime(0.0001, time);
+    gain.gain.linearRampToValueAtTime(volume, time + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
 
-  osc.connect(gain);
-  gain.connect(dest);
+    osc.connect(gain);
+    gain.connect(dest);
+    if (sendToSpace && spaceSendGain) {
+      gain.connect(spaceSendGain);
+    }
 
-  osc.start(time);
-  osc.stop(time + duration);
+    osc.start(time);
+    osc.stop(time + duration);
+  } catch {
+    // Ignore
+  }
 }
 
-// Helper: play a flute / breath note with gentle vibrato
+function playGuzhengPluck(
+  ctx: AudioContext,
+  dest: AudioNode,
+  freq: number,
+  time: number,
+  duration = 0.9,
+  volume = 0.26
+) {
+  if (freq <= 0) return;
+  try {
+    // Fundamental plucked string
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'triangle';
+    osc1.frequency.setValueAtTime(freq, time);
+
+    gain1.gain.setValueAtTime(0.0001, time);
+    gain1.gain.linearRampToValueAtTime(volume, time + 0.008);
+    gain1.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+    // Overtone sparkle (crisp silk string overtone)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(freq * 2, time);
+
+    gain2.gain.setValueAtTime(0.0001, time);
+    gain2.gain.linearRampToValueAtTime(volume * 0.45, time + 0.006);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, time + duration * 0.45);
+
+    osc1.connect(gain1);
+    osc2.connect(gain2);
+    gain1.connect(dest);
+    gain2.connect(dest);
+
+    if (spaceSendGain) {
+      gain1.connect(spaceSendGain);
+    }
+
+    osc1.start(time);
+    osc2.start(time);
+    osc1.stop(time + duration);
+    osc2.stop(time + duration * 0.45);
+  } catch {
+    // Ignore
+  }
+}
+
 function playFluteNote(
   ctx: AudioContext,
   dest: AudioNode,
   freq: number,
   time: number,
-  duration = 0.8,
-  volume = 0.05
+  duration = 1.0,
+  volume = 0.20
 ) {
   if (freq <= 0) return;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-  // Vibrato LFO
-  const lfo = ctx.createOscillator();
-  const lfoGain = ctx.createGain();
-  lfo.frequency.value = 5.2; // 5Hz vibrato
-  lfoGain.gain.value = freq * 0.015; // subtle pitch modulation
-  lfo.connect(osc.frequency);
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 5.0;
+    lfoGain.gain.value = freq * 0.018;
+    lfo.connect(osc.frequency);
 
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(freq, time);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, time);
 
-  gain.gain.setValueAtTime(0.001, time);
-  gain.gain.linearRampToValueAtTime(volume, time + 0.12);
-  gain.gain.setValueAtTime(volume * 0.85, time + duration - 0.15);
-  gain.gain.linearRampToValueAtTime(0.0001, time + duration);
+    gain.gain.setValueAtTime(0.0001, time);
+    gain.gain.linearRampToValueAtTime(volume, time + 0.12);
+    gain.gain.setValueAtTime(volume * 0.85, time + duration - 0.2);
+    gain.gain.linearRampToValueAtTime(0.0001, time + duration);
 
-  osc.connect(gain);
-  gain.connect(dest);
+    osc.connect(gain);
+    gain.connect(dest);
+    if (spaceSendGain) {
+      gain.connect(spaceSendGain);
+    }
 
-  lfo.start(time);
-  osc.start(time);
-  lfo.stop(time + duration);
-  osc.stop(time + duration);
+    lfo.start(time);
+    osc.start(time);
+    lfo.stop(time + duration);
+    osc.stop(time + duration);
+  } catch {
+    // Ignore
+  }
 }
 
-// Helper: soft ambient noise burst for subtle ancient temple rhythm
-function playSoftShaker(ctx: AudioContext, dest: AudioNode, time: number, volume = 0.015) {
+function playWarmDrone(
+  ctx: AudioContext,
+  dest: AudioNode,
+  freq: number,
+  time: number,
+  duration: number,
+  volume = 0.16
+) {
+  if (freq <= 0) return;
   try {
-    const bufferSize = ctx.sampleRate * 0.05;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, time);
+
+    gain.gain.setValueAtTime(0.0001, time);
+    gain.gain.linearRampToValueAtTime(volume, time + 0.35);
+    gain.gain.setValueAtTime(volume * 0.9, time + duration - 0.35);
+    gain.gain.linearRampToValueAtTime(0.0001, time + duration);
+
+    osc.connect(gain);
+    gain.connect(dest);
+
+    osc.start(time);
+    osc.stop(time + duration);
+  } catch {
+    // Ignore
+  }
+}
+
+function playSoftShaker(ctx: AudioContext, dest: AudioNode, time: number, volume = 0.04) {
+  try {
+    const bufferSize = Math.floor(ctx.sampleRate * 0.04);
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
@@ -213,79 +377,106 @@ function playSoftShaker(ctx: AudioContext, dest: AudioNode, time: number, volume
 
     const filter = ctx.createBiquadFilter();
     filter.type = 'bandpass';
-    filter.frequency.value = 3500;
-    filter.Q.value = 2.0;
+    filter.frequency.value = 3200;
+    filter.Q.value = 2.2;
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(volume, time);
-    gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.04);
 
     noise.connect(filter);
     filter.connect(gain);
     gain.connect(dest);
 
     noise.start(time);
-    noise.stop(time + 0.05);
+    noise.stop(time + 0.04);
   } catch {
-    // Ignore buffer creation errors
+    // Ignore
   }
 }
 
 // ---------------------------------------------------------------------
-// THEME 1: CHAP 1 — THÁM HIỂM DI TÍCH CỔ
-// Mystical, exploratory ancient minor/dorian temple melody with drone
+// 1. NHẠC NỀN CHƯƠNG 1: THÁM HIỂM DI TÍCH CỔ
 // ---------------------------------------------------------------------
 function scheduleChap1Cycle(ctx: AudioContext, dest: AudioNode, startTime: number): number {
   const step = 0.32; // ~94 BPM
-  // D Minor ancient exploration scale: D3, F3, G3, A3, C4, D4, E4, F4, G4, A4
   const D2 = 73.42;
   const A2 = 110.0;
+  const C3 = 130.81;
+  const D3 = 146.83;
+
   const D4 = 293.66;
+  const E4 = 329.63;
   const F4 = 349.23;
   const G4 = 392.0;
   const A4 = 440.0;
   const C5 = 523.25;
-  const E4 = 329.63;
+  const D5 = 587.33;
 
-  // Deep stone temple bass drone (D2 & A2)
-  playPluck(ctx, dest, D2, startTime, step * 8, 0.04, 'triangle');
-  playPluck(ctx, dest, A2, startTime + step * 8, step * 8, 0.035, 'triangle');
+  // PHRASE A (Steps 0-15)
+  playWarmDrone(ctx, dest, D2, startTime, step * 8, 0.18);
+  playWarmDrone(ctx, dest, A2, startTime + step * 8, step * 8, 0.16);
 
-  // Kalimba / Ancient temple bell melody pattern (16 steps)
-  const melody = [
-    { f: D4, dur: step * 1.5, t: 0 },
-    { f: F4, dur: step * 0.9, t: 2 },
-    { f: G4, dur: step * 1.2, t: 3 },
-    { f: A4, dur: step * 1.8, t: 4 },
-    { f: D4, dur: step * 0.9, t: 7 },
-    { f: F4, dur: step * 1.2, t: 8 },
-    { f: G4, dur: step * 0.9, t: 9 },
-    { f: A4, dur: step * 1.2, t: 10 },
-    { f: C5, dur: step * 1.5, t: 11 },
-    { f: A4, dur: step * 1.2, t: 13 },
-    { f: F4, dur: step * 0.9, t: 14 },
-    { f: E4, dur: step * 1.2, t: 15 },
+  const phraseAMelody = [
+    { f: D4, t: 0, dur: step * 1.6 },
+    { f: F4, t: 2, dur: step * 1.0 },
+    { f: G4, t: 3, dur: step * 1.2 },
+    { f: A4, t: 4, dur: step * 2.0 },
+    { f: D4, t: 7, dur: step * 1.0 },
+    { f: F4, t: 8, dur: step * 1.2 },
+    { f: G4, t: 9, dur: step * 1.0 },
+    { f: A4, t: 10, dur: step * 1.4 },
+    { f: C5, t: 11, dur: step * 1.8 },
+    { f: A4, t: 13, dur: step * 1.2 },
+    { f: F4, t: 14, dur: step * 1.0 },
+    { f: E4, t: 15, dur: step * 1.2 },
   ];
 
-  melody.forEach((note) => {
-    playPluck(ctx, dest, note.f, startTime + note.t * step, note.dur, 0.065, 'sine');
+  phraseAMelody.forEach((note) => {
+    playPluck(ctx, dest, note.f, startTime + note.t * step, note.dur, 0.28, 'sine');
   });
 
-  // Gentle shaker pulse every 2 steps
-  for (let s = 1; s < 16; s += 2) {
-    playSoftShaker(ctx, dest, startTime + s * step, 0.012);
+  playFluteNote(ctx, dest, A4, startTime + 4 * step, step * 3.5, 0.18);
+  playFluteNote(ctx, dest, D5, startTime + 11 * step, step * 3.0, 0.16);
+
+  // PHRASE B (Steps 16-31)
+  playWarmDrone(ctx, dest, C3, startTime + step * 16, step * 8, 0.16);
+  playWarmDrone(ctx, dest, D3, startTime + step * 24, step * 8, 0.18);
+
+  const phraseBMelody = [
+    { f: C5, t: 16, dur: step * 1.6 },
+    { f: A4, t: 18, dur: step * 1.0 },
+    { f: G4, t: 19, dur: step * 1.2 },
+    { f: A4, t: 20, dur: step * 1.8 },
+    { f: D5, t: 22, dur: step * 1.5 },
+    { f: C5, t: 24, dur: step * 1.2 },
+    { f: A4, t: 25, dur: step * 1.0 },
+    { f: G4, t: 26, dur: step * 1.4 },
+    { f: F4, t: 27, dur: step * 1.2 },
+    { f: E4, t: 28, dur: step * 1.0 },
+    { f: F4, t: 29, dur: step * 1.2 },
+    { f: D4, t: 30, dur: step * 2.2 },
+  ];
+
+  phraseBMelody.forEach((note) => {
+    playPluck(ctx, dest, note.f, startTime + note.t * step, note.dur, 0.28, 'sine');
+  });
+
+  playFluteNote(ctx, dest, F4, startTime + 20 * step, step * 3.5, 0.18);
+  playFluteNote(ctx, dest, D4, startTime + 28 * step, step * 4.0, 0.18);
+
+  for (let s = 1; s < 32; s += 2) {
+    playSoftShaker(ctx, dest, startTime + s * step, 0.035);
   }
 
-  return 16 * step;
+  return 32 * step; // ~10.24 seconds total
 }
 
 // ---------------------------------------------------------------------
-// THEME 2: CHAP 2 — TIẾN VÀO TU TIÊN GIỚI
-// Ethereal Chinese pentatonic (Guzheng & celestial flute) meditation
+// 2. NHẠC NỀN CHƯƠNG 2: TIẾN VÀO TU TIÊN GIỚI
 // ---------------------------------------------------------------------
 function scheduleChap2Cycle(ctx: AudioContext, dest: AudioNode, startTime: number): number {
-  const step = 0.38; // ~78 BPM meditative
-  // Pentatonic notes: D, E, G, A, B, D, E
+  const step = 0.385; // ~78 BPM meditative
   const D3 = 146.83;
   const G3 = 196.0;
   const A3 = 220.0;
@@ -296,13 +487,14 @@ function scheduleChap2Cycle(ctx: AudioContext, dest: AudioNode, startTime: numbe
   const B4 = 493.88;
   const D5 = 587.33;
   const E5 = 659.25;
+  const G5 = 783.99;
+  const A5 = 880.0;
 
-  // Spiritual pad / warm drone
-  playPluck(ctx, dest, D3, startTime, step * 8, 0.035, 'sine');
-  playPluck(ctx, dest, G3, startTime + step * 8, step * 8, 0.035, 'sine');
+  // PHRASE A (Steps 0-15)
+  playWarmDrone(ctx, dest, D3, startTime, step * 8, 0.18);
+  playWarmDrone(ctx, dest, A3, startTime + step * 8, step * 8, 0.18);
 
-  // Guzheng arpeggios (crisp delicate plucks)
-  const guzheng = [
+  const phraseAGuzheng = [
     { f: D4, t: 0 },
     { f: A4, t: 1 },
     { f: D5, t: 2 },
@@ -321,75 +513,114 @@ function scheduleChap2Cycle(ctx: AudioContext, dest: AudioNode, startTime: numbe
     { f: A3, t: 15 },
   ];
 
-  guzheng.forEach((note) => {
-    playPluck(ctx, dest, note.f, startTime + note.t * step, step * 1.8, 0.05, 'triangle');
+  phraseAGuzheng.forEach((note) => {
+    playGuzhengPluck(ctx, dest, note.f, startTime + note.t * step, step * 1.8, 0.26);
   });
 
-  // Celestial flute melody singing gently above the Guzheng
-  playFluteNote(ctx, dest, A4, startTime + 0.5 * step, step * 3.2, 0.045);
-  playFluteNote(ctx, dest, D5, startTime + 4.5 * step, step * 3.0, 0.04);
-  playFluteNote(ctx, dest, B4, startTime + 8.5 * step, step * 3.5, 0.042);
-  playFluteNote(ctx, dest, G4, startTime + 12.5 * step, step * 3.2, 0.038);
+  playFluteNote(ctx, dest, A4, startTime + 0.5 * step, step * 3.2, 0.20);
+  playFluteNote(ctx, dest, D5, startTime + 4.5 * step, step * 3.2, 0.19);
+  playFluteNote(ctx, dest, B4, startTime + 8.5 * step, step * 3.5, 0.19);
+  playFluteNote(ctx, dest, G4, startTime + 12.5 * step, step * 3.2, 0.18);
 
-  return 16 * step;
+  // PHRASE B (Steps 16-31)
+  playWarmDrone(ctx, dest, G3, startTime + step * 16, step * 8, 0.18);
+  playWarmDrone(ctx, dest, D4, startTime + step * 24, step * 8, 0.18);
+
+  const phraseBGuzheng = [
+    { f: E4, t: 16 },
+    { f: G4, t: 17 },
+    { f: B4, t: 18 },
+    { f: D5, t: 19 },
+    { f: E5, t: 20 },
+    { f: G5, t: 21 },
+    { f: E5, t: 22 },
+    { f: D5, t: 23 },
+    { f: B4, t: 24 },
+    { f: A4, t: 25 },
+    { f: G4, t: 26 },
+    { f: E4, t: 27 },
+    { f: D4, t: 28 },
+    { f: E4, t: 29 },
+    { f: G4, t: 30 },
+    { f: A4, t: 31 },
+  ];
+
+  phraseBGuzheng.forEach((note) => {
+    playGuzhengPluck(ctx, dest, note.f, startTime + note.t * step, step * 1.8, 0.26);
+  });
+
+  playFluteNote(ctx, dest, E5, startTime + 16.5 * step, step * 3.5, 0.20);
+  playFluteNote(ctx, dest, G5, startTime + 20.5 * step, step * 3.2, 0.19);
+  playFluteNote(ctx, dest, D5, startTime + 24.5 * step, step * 3.5, 0.19);
+  playFluteNote(ctx, dest, A4, startTime + 28.5 * step, step * 3.5, 0.18);
+
+  playPluck(ctx, dest, A5, startTime + 16 * step, step * 4.0, 0.12, 'sine');
+
+  return 32 * step; // ~12.32 seconds total
 }
 
 // ---------------------------------------------------------------------
-// THEME 3: TRANSITION — CÁNH CỔNG DỊ GIỚI (Dimensional Portal)
-// Shimmering mystical glissando & cosmic portal harmonics
+// 3. ÂM THANH CHUYỂN CẢNH: CỔNG DỊ GIỚI
 // ---------------------------------------------------------------------
 function scheduleTransitionCycle(ctx: AudioContext, dest: AudioNode, startTime: number): number {
-  const step = 0.28;
-  const portalNotes = [
-    196.0, 246.94, 293.66, 369.99, 440.0, 493.88, 587.33, 739.99, 880.0, 987.77, 1174.66,
+  const portalScale = [
+    196.0, 246.94, 293.66, 369.99, 440.0, 493.88, 587.33, 739.99, 880.0, 987.77, 1174.66, 1479.98,
   ];
 
-  portalNotes.forEach((freq, idx) => {
-    playPluck(ctx, dest, freq, startTime + idx * 0.14, 0.8, 0.06, 'sine');
+  portalScale.forEach((freq, idx) => {
+    playPluck(ctx, dest, freq, startTime + idx * 0.16, 1.2, 0.26, 'sine');
   });
 
-  // Resonant singing portal drone
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(220, startTime);
-  osc.frequency.exponentialRampToValueAtTime(440, startTime + 2.5);
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(220, startTime);
+    osc.frequency.exponentialRampToValueAtTime(587.33, startTime + 3.0);
 
-  gain.gain.setValueAtTime(0.001, startTime);
-  gain.gain.linearRampToValueAtTime(0.05, startTime + 0.8);
-  gain.gain.linearRampToValueAtTime(0.0001, startTime + 3.2);
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.linearRampToValueAtTime(0.24, startTime + 0.8);
+    gain.gain.linearRampToValueAtTime(0.0001, startTime + 3.8);
 
-  osc.connect(gain);
-  gain.connect(dest);
-  osc.start(startTime);
-  osc.stop(startTime + 3.2);
+    osc.connect(gain);
+    gain.connect(dest);
+    if (spaceSendGain) {
+      gain.connect(spaceSendGain);
+    }
 
-  return 3.5;
+    osc.start(startTime);
+    osc.stop(startTime + 3.8);
+  } catch {
+    // Ignore
+  }
+
+  return 4.2;
 }
 
 // ---------------------------------------------------------------------
-// THEME 4: OUTRO — PHONG THẦN & ĐỘ KIẾP VICTORY
-// Majestic ceremonial celebration & joyous bells
+// 4. ÂM THANH KẾT THÚC: ĐỘ KIẾP PHI THĂNG & LỜI KẾT
 // ---------------------------------------------------------------------
 function scheduleOutroCycle(ctx: AudioContext, dest: AudioNode, startTime: number): number {
-  const step = 0.34;
-  // Victorious fanfare arpeggio chords
+  const step = 0.32;
   const victoryNotes = [
-    { f: 523.25, t: 0 },
-    { f: 659.25, t: 1 },
-    { f: 783.99, t: 2 },
-    { f: 1046.5, t: 3 },
-    { f: 880.0, t: 5 },
-    { f: 1046.5, t: 6 },
-    { f: 1174.66, t: 7 },
-    { f: 1318.51, t: 8 },
-    { f: 1046.5, t: 11 },
-    { f: 783.99, t: 13 },
+    { f: 523.25, t: 0, dur: step * 2.5 },  // C5
+    { f: 659.25, t: 1, dur: step * 2.0 },  // E5
+    { f: 783.99, t: 2, dur: step * 2.0 },  // G5
+    { f: 1046.5, t: 3, dur: step * 3.5 },  // C6
+    { f: 880.0, t: 5, dur: step * 2.0 },   // A5
+    { f: 1046.5, t: 6, dur: step * 2.0 },  // C6
+    { f: 1174.66, t: 7, dur: step * 2.0 }, // D6
+    { f: 1318.51, t: 8, dur: step * 3.5 }, // E6
+    { f: 1046.5, t: 11, dur: step * 2.5 }, // C6
+    { f: 783.99, t: 13, dur: step * 3.0 }, // G5
   ];
 
+  playWarmDrone(ctx, dest, 130.81, startTime, step * 8, 0.20);
+  playWarmDrone(ctx, dest, 196.0, startTime + step * 8, step * 8, 0.20);
+
   victoryNotes.forEach((note) => {
-    playPluck(ctx, dest, note.f, startTime + note.t * step, step * 2.2, 0.065, 'triangle');
-    playPluck(ctx, dest, note.f * 0.5, startTime + note.t * step, step * 2.5, 0.035, 'sine');
+    playPluck(ctx, dest, note.f, startTime + note.t * step, note.dur, 0.30, 'triangle');
+    playPluck(ctx, dest, note.f * 0.5, startTime + note.t * step, note.dur * 1.2, 0.16, 'sine');
   });
 
   return 16 * step;
@@ -414,7 +645,6 @@ export function setBgmTheme(
     return;
   }
 
-  // If already playing this theme, keep rolling
   if (currentBgmTheme === theme && bgmLoopTimer !== null) {
     return;
   }
@@ -422,14 +652,23 @@ export function setBgmTheme(
   stopBGM();
   currentBgmTheme = theme;
 
-  // Un-mute master BGM gain softly
-  bgmMasterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-  bgmMasterGain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.6);
+  try {
+    const now = ctx.currentTime;
+    bgmMasterGain.gain.cancelScheduledValues(now);
+    bgmMasterGain.gain.setValueAtTime(0.001, now);
+    bgmMasterGain.gain.linearRampToValueAtTime(MASTER_BGM_VOLUME, now + 0.4);
+  } catch {
+    // Ignore ramp errors
+  }
 
   let nextScheduleTime = ctx.currentTime + 0.05;
 
   const loop = () => {
     if (!ctx || !bgmMasterGain || currentBgmTheme !== theme) return;
+
+    if (nextScheduleTime < ctx.currentTime || nextScheduleTime > ctx.currentTime + 15) {
+      nextScheduleTime = ctx.currentTime + 0.05;
+    }
 
     let cycleDuration = 4;
     if (theme === 'chap1') {
@@ -443,8 +682,7 @@ export function setBgmTheme(
     }
 
     nextScheduleTime += cycleDuration;
-    // Schedule next chunk ~0.4s before current ends
-    const waitMs = Math.max(200, (cycleDuration - 0.4) * 1000);
+    const waitMs = Math.max(250, (cycleDuration - 0.45) * 1000);
     bgmLoopTimer = window.setTimeout(loop, waitMs);
   };
 
@@ -458,8 +696,10 @@ export function stopBGM() {
   }
   if (bgmMasterGain && audioCtx) {
     try {
-      bgmMasterGain.gain.setValueAtTime(bgmMasterGain.gain.value, audioCtx.currentTime);
-      bgmMasterGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+      const now = audioCtx.currentTime;
+      bgmMasterGain.gain.cancelScheduledValues(now);
+      bgmMasterGain.gain.setValueAtTime(bgmMasterGain.gain.value, now);
+      bgmMasterGain.gain.linearRampToValueAtTime(0.0001, now + 0.25);
     } catch {
       // Ignore ramp errors
     }
