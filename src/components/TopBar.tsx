@@ -1,23 +1,29 @@
 import React from 'react';
 import { Volume2, VolumeX, Sparkles, Award } from 'lucide-react';
-import { REALMS } from '../types';
+import { ChapterId, REALMS } from '../types';
 
 interface TopBarProps {
+  chapter: ChapterId;
   playerName: string;
-  realmIndex: number;
+  realmIndex?: number;
+  chap1Seals?: number;
   score: number;
   soundEnabled: boolean;
   onToggleSound: () => void;
   onOpenLeaderboard?: () => void;
+  onSwitchChapter?: (target: ChapterId) => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
+  chapter,
   playerName,
-  realmIndex,
+  realmIndex = 0,
+  chap1Seals = 0,
   score,
   soundEnabled,
   onToggleSound,
   onOpenLeaderboard,
+  onSwitchChapter,
 }) => {
   const currentRealm = REALMS[realmIndex] || 'Luyện Khí';
 
@@ -27,14 +33,16 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Brand */}
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-400 to-amber-200 text-slate-950 font-black text-sm flex items-center justify-center shrink-0 shadow-sm shadow-amber-400/20">
-            ☯
+            {chapter === 1 ? '🗿' : '☯'}
           </div>
           <div className="min-w-0">
             <h1 className="text-xs sm:text-sm font-black tracking-tight text-amber-300 truncate">
-              TU TIÊN TOÁN HỌC
+              {chapter === 1
+                ? 'CHAP 1: THÁM HIỂM DI TÍCH CỔ'
+                : 'CHAP 2: TIẾN VÀO TU TIÊN GIỚI'}
             </h1>
             <p className="text-[10px] text-slate-400 truncate hidden xs:block">
-              Đại Năng Trương Anh Toàn
+              Đại Giáo Chủ Trương Anh Toàn – 0329056500
             </p>
           </div>
         </div>
@@ -47,26 +55,66 @@ export const TopBar: React.FC<TopBarProps> = ({
                 {playerName}
               </span>
               <span className="text-slate-500">·</span>
-              <span className="text-amber-400 font-medium">{currentRealm}</span>
+              {chapter === 1 ? (
+                <span className="text-amber-400 font-medium">
+                  {chap1Seals}/10 Phong ấn
+                </span>
+              ) : (
+                <span className="text-amber-400 font-medium">{currentRealm}</span>
+              )}
             </div>
           )}
 
-          {/* Tu vi score */}
+          {/* Chapter Quick Switch if callback provided */}
+          {onSwitchChapter && (
+            <div className="flex items-center bg-slate-950/70 p-0.5 rounded-lg border border-slate-800 text-[10px] font-bold">
+              <button
+                type="button"
+                onClick={() => onSwitchChapter(1)}
+                className={`px-1.5 py-0.5 rounded transition-colors ${
+                  chapter === 1
+                    ? 'bg-amber-400 text-slate-950'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Chuyển sang Chap 1"
+              >
+                Chap 1
+              </button>
+              <button
+                type="button"
+                onClick={() => onSwitchChapter(2)}
+                className={`px-1.5 py-0.5 rounded transition-colors ${
+                  chapter === 2
+                    ? 'bg-amber-400 text-slate-950'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Chuyển sang Chap 2"
+              >
+                Chap 2
+              </button>
+            </div>
+          )}
+
+          {/* Score point */}
           <div className="flex items-center gap-1 bg-amber-400/10 border border-amber-400/30 px-2.5 py-1 rounded-full text-amber-300 text-xs font-bold tabular-nums">
             <Sparkles className="w-3 h-3 text-amber-400" />
             <span>{score}</span>
             <span className="text-[10px] font-normal text-amber-400/80">pt</span>
           </div>
 
-          {/* Sound Toggle */}
+          {/* Sound & Music Toggle */}
           <button
             onClick={onToggleSound}
-            aria-label={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors active:scale-95"
-            title={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
+            aria-label={soundEnabled ? 'Tắt nhạc nền & âm thanh' : 'Bật nhạc nền & âm thanh'}
+            className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-95 ${
+              soundEnabled
+                ? 'bg-amber-400/15 border-amber-400/50 text-amber-300 shadow-sm shadow-amber-400/20'
+                : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-400'
+            }`}
+            title={soundEnabled ? 'Nhạc nền & Âm thanh: Đang bật' : 'Nhạc nền & Âm thanh: Đã tắt'}
           >
             {soundEnabled ? (
-              <Volume2 className="w-4 h-4 text-amber-400" />
+              <Volume2 className="w-4 h-4 text-amber-300 animate-pulse" />
             ) : (
               <VolumeX className="w-4 h-4 text-slate-400" />
             )}
@@ -76,9 +124,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           {onOpenLeaderboard && (
             <button
               onClick={onOpenLeaderboard}
-              aria-label="Bảng phong thần"
+              aria-label="Bảng thành tích / Bảng phong thần"
               className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 hover:text-amber-300 flex items-center justify-center transition-colors active:scale-95"
-              title="Bảng phong thần"
+              title="Bảng thành tích"
             >
               <Award className="w-4 h-4" />
             </button>

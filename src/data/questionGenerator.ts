@@ -20,13 +20,6 @@ function makeUniqueOptions(correct: string, distractors: string[]): string[] {
       result.push(d);
     }
   }
-  // Fill up to 4 if needed
-  let counter = 1;
-  while (result.length < 4) {
-    const fallback = `${correct} (${counter})`;
-    if (!result.includes(fallback)) result.push(fallback);
-    counter++;
-  }
   return shuffle(result.slice(0, 4));
 }
 

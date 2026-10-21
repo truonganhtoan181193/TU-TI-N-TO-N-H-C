@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tu Tiên Toán Học | Chap 1: Thám Hiểm Di Tích Cổ</title>
+<style>
+:root { --navy:#10233f; --cyan:#57d7d0; --violet:#7654c8; --gold:#ffd36a; --ink:#20314b; --muted:#63748b; --good:#17845b; --bad:#bd3f52; }
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; padding:0; min-height:100%; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:var(--ink); background:#09172c; }
+body { min-height:100vh; display:flex; justify-content:center; align-items:center; padding:12px; background:radial-gradient(ellipse at 15% 10%,#244c78 0,transparent 36%),radial-gradient(ellipse at 85% 90%,#473277 0,transparent 35%),#09172c; }
+button,input { font:inherit; } button { cursor:pointer; border:0; }
+.game { width:min(1180px,100%); min-height:620px; max-height:96vh; position:relative; border:1px solid rgba(255,255,255,0.2); border-radius:20px; background:linear-gradient(145deg,#f8fbff 0%,#f4f1ff 100%); box-shadow:0 25px 80px rgba(0,0,0,0.5); display:flex; flex-direction:column; overflow:hidden; }
+.topbar { height:56px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 18px; background:#10233f; color:white; border-bottom:3px solid var(--gold); gap:10px; z-index:10; }
+.brand { display:flex; align-items:center; gap:8px; font-weight:900; font-size:1rem; }
+.brand-mark { width:32px; height:32px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,var(--cyan),#b8fff1); color:#10233f; font-size:18px; }
+.topmeta { display:flex; gap:6px; align-items:center; }
+.pill { padding:5px 10px; border-radius:999px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); font-size:11px; font-weight:750; color:#fff; white-space:nowrap; }
+.screen { display:none; flex:1; min-height:0; padding:clamp(12px,2.5vw,24px); overflow-y:auto; }
+.screen.active { display:flex; flex-direction:column; }
+.hero { align-items:center; justify-content:center; text-align:center; background:radial-gradient(ellipse at 50% 22%,#e0fbf7 0,transparent 38%),linear-gradient(135deg,#f9fbff,#ede9ff); }
+.orb { width:clamp(70px,10vw,110px); aspect-ratio:1; border-radius:42% 58% 54% 46%; display:grid; place-items:center; font-size:clamp(40px,6vw,65px); background:linear-gradient(145deg,#d8fff8,#b9d9ff 55%,#e7d9ff); border:3px solid white; box-shadow:0 10px 28px rgba(53,92,150,0.2); margin-bottom:10px; }
+.eyebrow { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--violet); font-weight:900; }
+.hero h1 { font-size:clamp(24px,4vw,42px); line-height:1.1; margin:4px 0; color:var(--navy); }
+.hero h1 span { color:var(--violet); }
+.motto-banner { background:linear-gradient(100deg,#fff1bf,#ffe08a); border:2px solid #e7b846; padding:6px 14px; border-radius:10px; font-weight:900; color:#624510; box-shadow:0 3px 0 #e4bd58; margin:6px 0 12px; font-size:0.92rem; }
+.author-info { font-size:0.85rem; color:var(--muted); margin-bottom:10px; font-weight:700; }
+.primary,.secondary { border-radius:12px; padding:10px 18px; font-weight:850; min-height:44px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+.primary { color:#10233f; background:linear-gradient(100deg,#7ce8db,#9ed2ff); box-shadow:0 4px 0 #5ca9be; }
+.secondary { background:white; color:#334b6a; border:1px solid #cfdae9; }
+.primary:active,.secondary:active { transform:scale(0.98); }
+.actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.panel { background:#fff; border:1px solid #dfe6f1; border-radius:16px; padding:clamp(14px,2vw,22px); box-shadow:0 6px 20px rgba(24,60,103,0.05); }
+.center { align-items:center; justify-content:center; } .wide { width:min(780px,100%); margin:auto; }
+.screen-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px; }
+.screen-heading h2 { margin:2px 0 0; font-size:clamp(18px,2.4vw,26px); color:var(--navy); }
+.formgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:760px; width:100%; margin:8px auto; }
+.field label { display:block; font-size:11px; font-weight:850; margin:0 0 5px; }
+.field input { width:100%; padding:10px 12px; border:1px solid #ccd8e8; border-radius:10px; background:#fbfdff; font-size:16px; outline:none; }
+.question-layout { display:grid; grid-template-columns:minmax(0,1fr) 210px; gap:14px; flex:1; min-height:0; }
+.question-card { display:flex; flex-direction:column; min-height:0; }
+.question-top { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+.stage { font-size:11px; font-weight:900; letter-spacing:1px; color:var(--violet); text-transform:uppercase; }
+.progress { height:5px; background:#e7edf6; border-radius:10px; overflow:hidden; margin:0 0 10px; }
+.progress span { display:block; height:100%; width:0; background:linear-gradient(90deg,#55d5ca,#6d82ec); transition:width .25s; }
+.mobile-status-strip { display:none; background:linear-gradient(100deg,#10233f,#1e3a66); color:#fff; padding:6px 10px; border-radius:10px; font-size:11px; font-weight:750; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.mobile-status-strip span { color:var(--gold); }
+.qtitle { font-size:clamp(15px,1.8vw,22px); color:var(--navy); margin:0 0 8px; font-weight:800; }
+.mathbox { background:#f5f8ff; border:1px solid #dfe7f5; border-radius:12px; padding:10px 14px; font-size:clamp(14px,1.6vw,19px); font-weight:700; text-align:center; line-height:1.5; margin-bottom:10px; color:#203d65; overflow-x:auto; }
+.answers { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.answer { padding:8px 10px; border:1.5px solid #d9e2ef; border-radius:10px; background:white; text-align:left; display:flex; gap:8px; align-items:center; min-height:44px; color:#263a56; font-weight:700; font-size:0.88rem; overflow-x:auto; }
+.answer .letter { flex-shrink:0; width:24px; height:24px; border-radius:6px; background:#edf2fa; display:grid; place-items:center; font-size:11px; color:var(--navy); }
+.answer:hover:not(:disabled) { border-color:#6f8ed0; background:#f7f9ff; }
+.answer.correct { border-color:#37a87b; background:#e9fbf2; } .answer.correct .letter { background:#b6f0d5; color:#075b3a; }
+.answer.wrong { border-color:#d96979; background:#fff0f1; } .answer:disabled { cursor:default; }
+.feedback { display:none; margin-top:8px; border-radius:10px; padding:8px 12px; font-weight:750; line-height:1.4; font-size:0.85rem; }
+.feedback.show { display:block; } .feedback.good { background:#e7f8ef; color:#176345; border:1px solid #bce8d0; } .feedback.bad { background:#fff0f1; color:#8f2637; border:1px solid #f8c2c8; }
+.sidepanel { display:flex; flex-direction:column; gap:8px; }
+.stat { background:white; border:1px solid #dfe6f1; border-radius:12px; padding:10px; }
+.stat label { display:block; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#77869a; font-weight:900; }
+.stat strong { display:block; font-size:18px; color:var(--navy); margin-top:2px; }
+.helper { font-size:11px; line-height:1.3; color:var(--muted); }
+.side-art { flex:1; min-height:70px; border-radius:12px; background:linear-gradient(145deg,#d9fff6,#dce5ff,#f1ddff); display:grid; place-items:center; font-size:40px; }
+.bottomrow { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px; flex-wrap:wrap; }
+.summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0; }
+.summary-stat { text-align:center; padding:10px 4px; border-radius:10px; background:#f6f8ff; border:1px solid #e0e7f4; }
+.summary-stat strong { display:block; font-size:clamp(16px,2vw,24px); color:var(--navy); }
+.summary-stat span { font-size:10px; color:var(--muted); font-weight:800; }
+.rank { font-size:clamp(16px,2.5vw,28px); font-weight:950; color:#8860cc; text-align:center; margin:6px; }
+.resultnote { text-align:center; line-height:1.45; color:var(--muted); max-width:650px; margin:0 auto; font-size:0.88rem; }
+.leaderboard { width:100%; border-collapse:collapse; margin-top:10px; font-size:0.82rem; }
+.leaderboard th, .leaderboard td { text-align:left; padding:8px; border-bottom:1px solid #e7ecf4; }
+.leaderboard th { font-size:10px; text-transform:uppercase; color:#71819a; }
+.toast { position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:9999; background:#10233f; color:#fff; padding:8px 16px; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.35); display:none; font-size:12px; font-weight:800; border:1px solid var(--gold); }
+.toast.show { display:block; animation:popIn 0.2s ease-out; }
+@keyframes popIn { from { opacity:0; transform:translate(-50%,-10px); } to { opacity:1; transform:translate(-50%,0); } }
+.footer { height:28px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#7d8aa0; font-size:10px; letter-spacing:.5px; }
+@media(max-width:760px) {
+    body { padding:0; display:block; background:#09172c; }
+    .game { width:100%; min-height:100dvh; max-height:none; border-radius:0; border:0; }
+    .topbar { height:50px; padding:4px 10px; }
+    .brand { font-size:0.88rem; } .brand-mark { width:28px; height:28px; font-size:15px; }
+    .screen { padding:10px; }
+    .formgrid, .question-layout { grid-template-columns:1fr; gap:8px; }
+    .answers { grid-template-columns:1fr; gap:6px; }
+    .sidepanel { display:none; } .mobile-status-strip { display:flex; }
+    .bottomrow button { flex:1; }
+}
+</style>
+</head>
+<body>
+<div class="game" id="game">
+    <header class="topbar">
+        <div class="brand"><div class="brand-mark">🗿</div><span>CHAP 1: THÁM HIỂM DI TÍCH CỔ</span></div>
+        <div class="topmeta">
+            <span class="pill" id="playerPill">Nhà thám hiểm</span>
+            <span class="pill" id="stagePill">Tiền truyện: Di tích cổ</span>
+        </div>
+    </header>
+    <div class="toast" id="toast"></div>
+
+    <!-- KHUNG 01: LỜI MỞ ĐẦU -->
+    <section class="screen hero active" id="s1">
+        <div class="orb">🏺</div>
+        <div class="eyebrow">Khung 01 · Tiếng gọi từ vùng đất lạ</div>
+        <h1>Thám Hiểm <span>Di Tích Cổ</span></h1>
+        <div class="motto-banner">"ĐIỂM SỐ CỦA TA, DO TA QUYẾT ĐỊNH!"</div>
+        <div class="author-info">✦ ĐẠI GIÁO CHỦ TRƯƠNG ANH TOÀN – 0329056500 ✦</div>
+        <p style="max-width:580px; margin:0 auto 10px; color:#53647d; line-height:1.4; font-size:0.85rem;">
+            Trong một chuyến thám hiểm đến vùng đất chưa từng được ghi chép trên bản đồ, bạn phát hiện những dấu tích kỳ lạ của một nền văn minh cổ xưa. Không ai biết nơi này chứa đựng điều gì. Nhưng một cảm giác thôi thúc khiến bạn quyết định tiến sâu hơn vào khu di tích.
+        </p>
+        <div class="actions"><button class="primary" onclick="go(2)">BẮT ĐẦU THÁM HIỂM ➜</button></div>
+    </section>
+
+    <!-- KHUNG 02: BẢN ĐỒ BÍ ẨN -->
+    <section class="screen center" id="s2">
+        <div class="panel wide" style="text-align:center">
+            <div class="orb" style="margin:0 auto 10px">📜</div>
+            <div class="eyebrow">Khung 02 · Mảnh bản đồ cổ</div>
+            <h2 style="font-size:clamp(20px,3vw,30px);color:var(--navy);margin:4px 0">Manh Mối Đầu Tiên</h2>
+            <p class="resultnote" style="margin-bottom:15px">
+                Giữa đống tàn tích, bạn tìm thấy một mảnh bản đồ được khắc những ký hiệu khó hiểu. Trên bản đồ có ghi một dòng chữ đã phai mờ: <i>"Chỉ người vượt qua thử thách mới có thể nhìn thấy bí mật cuối cùng."</i>
+            </p>
+            <div class="actions">
+                <button class="secondary" onclick="go(1)">Quay lại</button>
+                <button class="primary" onclick="go(3)">TIẾN VÀO DI TÍCH ➜</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- KHUNG 03: CÁNH CỬA THỬ THÁCH & GHI DANH -->
+    <section class="screen center" id="s3">
+        <div class="panel wide">
+            <div class="screen-heading">
+                <div>
+                    <div class="eyebrow">Khung 03 · Cánh cửa thử thách</div>
+                    <h2>Ghi danh nhà thám hiểm</h2>
+                    <p>Mười phong ấn trên cửa lần lượt phát sáng. Giọng nói bí ẩn vang lên: "Muốn khám phá bí mật di tích, hãy chứng minh khả năng tư duy qua 10 thử thách Đại số."</p>
+                </div>
+                <div style="font-size:28px">🗝️</div>
+            </div>
+            <div class="formgrid">
+                <div class="field"><label for="studentName">HỌ VÀ TÊN NHÀ THÁM HIỂM</label><input id="studentName" maxlength="60" placeholder="Ví dụ: Nguyễn Văn A" autocomplete="off"></div>
+                <div class="field"><label for="studentClass">LỚP HỌC</label><input id="studentClass" maxlength="20" placeholder="Ví dụ: 7/4" autocomplete="off"></div>
+            </div>
+            <div class="actions">
+                <button class="secondary" onclick="go(2)">Quay lại</button>
+                <button class="primary" onclick="saveStudentAndBegin()">BƯỚC VÀO THỬ THÁCH ➜</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- KHUNG 04-13: 10 THỬ THÁCH ĐẠI SỐ -->
+    <section class="screen" id="s5">
+        <div class="screen-heading">
+            <div>
+                <div class="eyebrow" id="qStage">Khung 04 · Thử thách 01</div>
+                <h2 id="qHeader">Phong Ấn Thứ Nhất</h2>
+                <p id="qSubtitle">Giải khai cơ quan để tiến sâu vào di tích.</p>
+            </div>
+            <div style="font-size:28px" id="qEmoji">🏛️</div>
+        </div>
+        <div class="question-layout">
+            <div class="panel question-card" id="qCard">
+                <div class="question-top">
+                    <span class="stage" id="qCount">CÂU 1 / 10</span>
+                    <span class="pill" style="background:#e6f7ff;color:#006699;border-color:#b3e0ff" id="qTag">Đại số 7</span>
+                </div>
+                <div class="progress"><span id="progressBar"></span></div>
+                <div class="mobile-status-strip">
+                    <div>⚡ Điểm: <span id="mScore">0</span> pt</div>
+                    <div>🏛️ Phong ấn: <span id="mRealm">0/10</span></div>
+                </div>
+                <h3 class="qtitle" id="qPrompt">Đang tải đề bài...</h3>
+                <div class="mathbox" id="qMath"></div>
+                <div class="answers" id="answers"></div>
+                <div class="feedback" id="feedback"></div>
+                <div class="bottomrow" id="bottomRow">
+                    <span class="helper" id="questionHint">Chọn một đáp án để kích hoạt cơ quan.</span>
+                    <button class="primary" id="nextBtn" style="display:none" onclick="nextQuestion()">Tiếp tục ➜</button>
+                </div>
+            </div>
+            <aside class="sidepanel">
+                <div class="stat"><label>Điểm thám hiểm</label><strong id="scoreStat">0</strong><span class="helper">tích lũy</span></div>
+                <div class="stat"><label>Tiến độ phong ấn</label><strong style="font-size:14px; color:var(--violet);" id="realmStat">0 / 10</strong><span class="helper" id="realmStep">Cửa ải 1</span></div>
+                <div class="side-art" id="sideArt">🗝️</div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- KHUNG 14: BÍ MẬT SAU DI TÍCH -->
+    <section class="screen center" id="s14">
+        <div class="panel wide" style="text-align:center">
+            <div class="orb" style="margin:0 auto 10px">🏛️</div>
+            <div class="eyebrow">Khung 14 · Hồi III: Cánh Cổng Dị Giới</div>
+            <h2 style="font-size:clamp(20px,3vw,30px);color:var(--navy);margin:4px 0">Bí Mật Sau Di Tích</h2>
+            <p class="resultnote">
+                Mười dấu ấn đồng loạt phát sáng! Khối đá cổ bắt đầu rung chuyển, những bức tường trong căn phòng trung tâm chuyển động. Sau khối đá cổ, một cánh cổng khổng lồ từ từ hiện ra — cánh cổng chưa từng xuất hiện trên bất kỳ tấm bản đồ nào!
+            </p>
+            <div class="actions"><button class="primary" onclick="go(15)">KHÁM PHÁ CÁNH CỔNG ➜</button></div>
+        </div>
+    </section>
+
+    <!-- KHUNG 15: BƯỚC QUA RANH GIỚI -->
+    <section class="screen center" id="s15">
+        <div class="panel wide" style="text-align:center">
+            <div class="orb" style="margin:0 auto 10px">🌌</div>
+            <div class="eyebrow">Khung 15 · Ranh giới hai thế giới</div>
+            <h2 style="font-size:clamp(20px,3vw,32px);color:var(--navy);margin:6px 0">Bước Qua Ranh Giới</h2>
+            <p class="resultnote">
+                Phía bên kia cánh cổng là một thế giới rộng lớn với núi non hùng vĩ, những hòn đảo lơ lửng và ánh sáng huyền ảo. Giọng nói bí ẩn vang lên: <i>"Cánh cổng đã được khai mở. Nếu đã đặt chân đến đây, hãy sẵn sàng khám phá một thế giới hoàn toàn mới."</i>
+            </p>
+            <div class="actions"><button class="primary" onclick="showResult()">MỞ BẢNG THÀNH TÍCH ➜</button></div>
+        </div>
+    </section>
+
+    <!-- BẢNG THÀNH TÍCH CHAP 1 -->
+    <section class="screen center" id="s16">
+        <div class="panel wide">
+            <div class="screen-heading">
+                <div><div class="eyebrow" style="text-align:center">Thám hiểm hoàn tất</div><h2 style="text-align:center;color:var(--navy);font-size:clamp(20px,2.8vw,30px);margin:4px 0">Bảng Thành Tích Khám Phá</h2></div>
+            </div>
+            <div class="rank" id="rankText">Giải Khai 10 Phong Ấn Cổ</div>
+            <div class="summary-grid">
+                <div class="summary-stat"><strong id="finalScore">0</strong><span>TỔNG ĐIỂM</span></div>
+                <div class="summary-stat"><strong id="finalCorrect">0/10</strong><span>CÂU ĐÚNG</span></div>
+                <div class="summary-stat"><strong id="finalAccuracy">0%</strong><span>ĐỘ CHÍNH XÁC</span></div>
+            </div>
+            <p class="resultnote" id="resultMessage"></p>
+            <table class="leaderboard">
+                <thead><tr><th>Nhà thám hiểm</th><th>Lớp</th><th>Chặng</th><th>Điểm</th></tr></thead>
+                <tbody id="leaderRow"></tbody>
+            </table>
+            <div class="actions">
+                <button class="secondary" onclick="showReview()">Xem đáp án chi tiết</button>
+                <button class="primary" onclick="go(17)">Chuyển cảnh Chap 2 ➜</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- KHUNG 16-20: CHUYỂN CẢNH SANG CHAP 2 -->
+    <section class="screen center" id="s17">
+        <div class="panel wide" style="text-align:center">
+            <div class="orb" style="margin:0 auto 10px">☯</div>
+            <div class="eyebrow">Khung 16–20 · Liên kết Chap 2</div>
+            <h2 style="font-size:clamp(20px,3vw,32px);color:var(--navy)">Tiến Vào Tu Tiên Giới</h2>
+            <div class="motto-banner" style="display:inline-block; margin:6px 0;">"ĐIỂM SỐ CỦA TA, DO TA QUYẾT ĐỊNH!"</div>
+            <p class="resultnote">
+                Chuyến thám hiểm di tích tưởng chừng đã kết thúc, nhưng thực chất lại mở đầu cho một hành trình hoàn toàn khác. Bạn đã vô tình bước vào <b>Tu Tiên Giới</b> — nơi những thử thách mới đang chờ đợi, và tri thức sẽ trở thành chìa khóa để thăng tiến cảnh giới!
+            </p>
+            <div class="author-info" style="margin-top:10px;">✦ ĐẠI GIÁO CHỦ TRƯƠNG ANH TOÀN – 0329056500 ✦</div>
+            <div class="actions">
+                <a class="primary" href="chap2-html.html" style="font-size:1.05rem; padding:12px 24px;">BẮT ĐẦU HÀNH TRÌNH TU TIÊN (CHAP 2) ➜</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MÀN HÌNH ÔN TẬP ĐÁP ÁN -->
+    <section class="screen" id="reviewScreen">
+        <div class="screen-heading">
+            <div><div class="eyebrow">Thám hiểm kiến thức</div><h2>Ôn tập & Đáp án chi tiết</h2><p>Đối chiếu đáp án đúng của từng câu hỏi Đại số Chap 1.</p></div>
+        </div>
+        <div id="reviewList" style="display:grid; gap:8px"></div>
+        <div class="actions" style="margin-top:12px">
+            <button class="secondary" onclick="go(16)">Quay lại Bảng Thành Tích</button>
+            <button class="primary" onclick="go(17)">Chuyển cảnh Chap 2 ➜</button>
+        </div>
+    </section>
+
+    <footer class="footer">TU TIÊN TOÁN HỌC · CHAP 1: THÁM HIỂM DI TÍCH CỔ</footer>
+</div>
+
+<script>
+(function loadKaTeXEngine() {
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css'; document.head.appendChild(css);
+    var js1 = document.createElement('script'); js1.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js';
+    js1.onload = function() {
+        var js2 = document.createElement('script'); js2.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js';
+        js2.onload = function() { triggerMathRender(document.body); };
+        document.head.appendChild(js2);
+    };
+    document.head.appendChild(js1);
+})();
+
+function triggerMathRender(el) { if (window.renderMathInElement) renderMathInElement(el || document.body, { delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false }); }
+
+var STORY_FRAMES = [
+    { frame: 4, title: "Thử Thách 1 — Phong Ấn Thứ Nhất", desc: "Một cánh cửa nhỏ với phong ấn đầu tiên phát sáng. Lời giải chính xác sẽ mở cửa.", successMsg: "Phong ấn đầu tiên đã được giải khai. Cánh cửa bắt đầu chuyển động!" },
+    { frame: 5, title: "Thử Thách 2 — Hành Lang Ký Hiệu", desc: "Hành lang dài chứa các ký hiệu. Tìm lời giải để kích hoạt cơ quan đá.", successMsg: "Cơ quan đã được kích hoạt. Con đường phía trước đã mở!" },
+    { frame: 6, title: "Thử Thách 3 — Căn Phòng Bí Mật", desc: "Rương cổ bị khóa bởi thử thách mới. Giải mã để tìm manh mối.", successMsg: "Chiếc rương đã mở. Bên trong là mảnh bản đồ dẫn đến khu vực sâu hơn!" },
+    { frame: 7, title: "Thử Thách 4 — Cầu Đá Đổ Nát", desc: "Vực sâu chia cắt lối đi. Kích hoạt cơ chế cổ xưa trong vách đá.", successMsg: "Những phiến đá bắt đầu dịch chuyển, tạo thành một lối đi an toàn!" },
+    { frame: 8, title: "Thử Thách 5 — Bia Đá Cổ Xưa", desc: "Tấm bia đá khắc thông điệp bị che khuất. Khôi phục ký hiệu còn thiếu.", successMsg: "Thông điệp trên bia đá đã hiện ra. Bạn phát hiện di tích này còn che giấu bí mật lớn hơn!" },
+    { frame: 9, title: "Thử Thách 6 — Mê Cung Đá", desc: "Nhiều lối rẽ giống hệt nhau. Quan sát kỹ dữ kiện để không lạc hướng.", successMsg: "Bạn đã tìm được lối đi đúng. Lối vào khu vực trung tâm đã ở ngay phía trước!" },
+    { frame: 10, title: "Thử Thách 7 — Cơ Quan Thời Gian", desc: "Bánh răng đá dừng quay. Tìm dãy ký hiệu chìa khóa để khởi động lại.", successMsg: "Những bánh răng bắt đầu quay. Một cánh cửa bí mật từ từ mở ra!" },
+    { frame: 11, title: "Thử Thách 8 — Phòng Lưu Trữ", desc: "Sách đá và cuộn giấy cổ. Giải mã thử thách bảo vệ thư khố.", successMsg: "Một cuộn bản đồ được tìm thấy. Nó chỉ đến căn phòng sâu nhất của di tích!" },
+    { frame: 12, title: "Thử Thách 9 — Cổng Phong Ấn", desc: "Cánh cổng lớn được bao quanh bởi 9 vòng ký hiệu hội tụ ánh sáng.", successMsg: "Cổng phong ấn đã được giải khai. Phía sau nó là căn phòng chưa từng có dấu chân người!" },
+    { frame: 13, title: "Thử Thách 10 — Mật Mã Cuối Cùng", desc: "Khối đá lơ lửng bùng phát năng lượng. Thời khắc quyết định bí mật di tích.", successMsg: "Mười dấu ấn đồng loạt phát sáng. Khối đá cổ bắt đầu rung chuyển, để lộ một cánh cổng bí ẩn!" }
+];
+
+var gameState = { playerName:"", playerClass:"", score:0, correctCount:0, qIndex:0, questions:[], answers:[], locked:false };
+
+function $(id) { return document.getElementById(id); }
+
+function go(n) {
+    var screens = document.querySelectorAll('.screen');
+    for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+    var target = $('s' + n) || $('reviewScreen');
+    if (target) target.classList.add('active');
+    if (n === 5) renderQuestion();
+    window.scrollTo(0, 0);
+}
+
+function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2200);
+}
+
+function saveStudentAndBegin() {
+    var n = $('studentName').value.trim(), c = $('studentClass').value.trim();
+    if (!n || !c) { toast("Vui lòng nhập đầy đủ Họ tên và Lớp nhé!"); return; }
+    gameState.playerName = n; gameState.playerClass = c;
+    $('playerPill').textContent = n;
+    
+    gameState.score = 0; 
+    gameState.correctCount = 0; 
+    gameState.qIndex = 0; 
+    gameState.answers = []; 
+    gameState.questions = [];
+    
+    for (var i = 1; i <= 10; i++) {
+        gameState.questions.push(makeQuestion(i));
+    }
+    
+    go(5);
+}
+
+function rand(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+
+function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) { var j = rand(0, i); var temp = arr[i]; arr[i] = arr[j]; arr[j] = temp; }
+    return arr;
+}
+
+function gcd(a, b) { return b === 0 ? Math.abs(a) : gcd(b, a % b); }
+
+function simplifyFrac(a, b) {
+    if (b < 0) { a = -a; b = -b; }
+    var g = gcd(a, b);
+    return { a: a / g, b: b / g };
+}
+
+function formatFrac(a, b) {
+    var f = simplifyFrac(a, b);
+    if (f.b === 1) return f.a.toString();
+    return "\\dfrac{" + f.a + "}{" + f.b + "}";
+}
+
+function makeUniqueOptions(correct, distractors) {
+    var list = [correct];
+    for (var i = 0; i < distractors.length; i++) {
+        if (distractors[i] && list.indexOf(distractors[i]) === -1) list.push(distractors[i]);
+    }
+    return shuffle(list.slice(0, 4));
+}
+
+function makeQuestion(n) {
+    var q = { n: n, tag: "Đại số 7", emoji: "🏛️", prompt: "", math: "", opts: [], correct: "" };
+    if (n === 1) {
+        q.tag = "Giá trị tuyệt đối"; q.emoji = "🔍";
+        var a = rand(-15, 15); while (a === 0) a = rand(-15, 15);
+        var b = rand(2, 9);
+        q.prompt = "Tính giá trị tuyệt đối của số hữu tỉ $x = \\dfrac{" + a + "}{" + b + "}$:";
+        q.correct = "$|x| = \\dfrac{" + Math.abs(a) + "}{" + b + "}$";
+        q.opts = makeUniqueOptions(q.correct, [
+            "$|x| = \\dfrac{" + (-Math.abs(a)) + "}{" + b + "}$",
+            "$|x| = \\dfrac{" + a + "}{" + b + "}$",
+            "$|x| = \\dfrac{" + b + "}{" + Math.abs(a) + "}$"
+        ]);
+    } else if (n === 2) {
+        q.tag = "Số đối của số thực"; q.emoji = "☯";
+        var type = rand(1, 3);
+        if (type === 1) {
+            var val = rand(-25, 25); while (val === 0) val = rand(-25, 25);
+            q.prompt = "Tìm số đối của số thực $x = " + val + "$:";
+            q.correct = "$" + (-val) + "$";
+            q.opts = makeUniqueOptions(q.correct, ["$" + val + "$", "$|" + val + "|$", "$\\dfrac{1}{" + val + "}$"]);
+        } else if (type === 2) {
+            var a = rand(-11, 11); while (a === 0) a = rand(-11, 11);
+            var b = rand(2, 7);
+            q.prompt = "Tìm số đối của số thực $x = \\dfrac{" + a + "}{" + b + "}$:";
+            q.correct = "$" + formatFrac(-a, b) + "$";
+            q.opts = makeUniqueOptions(q.correct, ["$" + formatFrac(a, b) + "$", "$" + formatFrac(b, a) + "$", "$" + formatFrac(-b, a) + "$"]);
+        } else {
+            var k = rand(2, 19);
+            q.prompt = "Tìm số đối của số thực $x = \\sqrt{" + k + "}$:";
+            q.correct = "$-\\sqrt{" + k + "}$";
+            q.opts = makeUniqueOptions(q.correct, ["$\\sqrt{" + k + "}$", "$\\dfrac{1}{\\sqrt{" + k + "}}$", "$-" + k + "$"]);
+        }
+    } else if (n === 3) {
+        q.tag = "Căn bậc hai số học"; q.emoji = "⚡";
+        var r = rand(2, 25);
+        var x = r * r;
+        q.prompt = "Tìm căn bậc hai số học của $x = " + x + "$:";
+        q.correct = "$\\sqrt{" + x + "} = " + r + "$";
+        q.opts = makeUniqueOptions(q.correct, [
+            "$\\sqrt{" + x + "} = -" + r + "$",
+            "$\\sqrt{" + x + "} = \\pm " + r + "$",
+            "$\\sqrt{" + x + "} = " + (r + 2) + "$"
+        ]);
+    } else if (n === 4) {
+        q.tag = "So sánh số thực"; q.emoji = "⚖️";
+        var b = rand(3, 9);
+        var diff = [-5, -3, -2, 2, 3, 5][rand(0, 5)];
+        var aRad = b * b + diff; if (aRad < 2) aRad = b * b + 2;
+        var realValA = Math.sqrt(aRad);
+        var relation = realValA > b ? ">" : "<";
+        q.prompt = "So sánh hai số thực $a = \\sqrt{" + aRad + "}$ và $b = " + b + "$:";
+        q.correct = "$\\sqrt{" + aRad + "} " + relation + " " + b + "$";
+        var altRel = relation === ">" ? "<" : ">";
+        q.opts = makeUniqueOptions(q.correct, [
+            "$\\sqrt{" + aRad + "} " + altRel + " " + b + "$",
+            "$\\sqrt{" + aRad + "} = " + b + "$",
+            "Không so sánh được"
+        ]);
+    } else if (n === 5) {
+        q.tag = "Tổng/Hiệu số hữu tỉ"; q.emoji = "🧮";
+        var den = rand(2, 8);
+        var num1 = rand(-7, 7); while (num1 === 0) num1 = rand(-7, 7);
+        var num2 = rand(-7, 7); while (num2 === 0) num2 = rand(-7, 7);
+        var isAdd = rand(0, 1) === 1;
+        var resNum = isAdd ? (num1 + num2) : (num1 - num2);
+        var opStr = isAdd ? "+" : "-";
+        q.prompt = "Thực hiện phép tính: $" + formatFrac(num1, den) + " " + opStr + " " + formatFrac(num2, den) + "$";
+        q.correct = "$" + formatFrac(resNum, den) + "$";
+        q.opts = makeUniqueOptions(q.correct, [
+            "$" + formatFrac(resNum + 2, den) + "$",
+            "$" + formatFrac(resNum - 2, den) + "$",
+            "$" + formatFrac(num1 + num2, den * 2) + "$"
+        ]);
+    } else if (n === 6) {
+        q.tag = "Tích/Thương số hữu tỉ"; q.emoji = "✖️";
+        var a1 = rand(1, 5), b1 = rand(2, 6);
+        var a2 = rand(1, 5), b2 = rand(2, 6);
+        var isMul = rand(0, 1) === 1;
+        if (isMul) {
+            q.prompt = "Thực hiện phép tính: $" + formatFrac(a1, b1) + " \\cdot " + formatFrac(a2, b2) + "$";
+            q.correct = "$" + formatFrac(a1 * a2, b1 * b2) + "$";
+            q.opts = makeUniqueOptions(q.correct, [
+                "$" + formatFrac(a1 * b2, b1 * a2) + "$",
+                "$" + formatFrac(a1 + a2, b1 + b2) + "$",
+                "$" + formatFrac(a1 * a2, b1 + b2) + "$"
+            ]);
+        } else {
+            q.prompt = "Thực hiện phép tính: $" + formatFrac(a1, b1) + " : " + formatFrac(a2, b2) + "$";
+            q.correct = "$" + formatFrac(a1 * b2, b1 * a2) + "$";
+            q.opts = makeUniqueOptions(q.correct, [
+                "$" + formatFrac(a1 * a2, b1 * b2) + "$",
+                "$" + formatFrac(a1 * b2, b1 + b2) + "$",
+                "$" + formatFrac(b1 * a2, a1 * b2) + "$"
+            ]);
+        }
+    } else if (n === 7) {
+        q.tag = "Lũy thừa của lũy thừa"; q.emoji = "🚀";
+        var baseArr = ["a", "x", "2", "3", "\\left(\\dfrac{1}{2}\\right)"];
+        var base = baseArr[rand(0, baseArr.length - 1)];
+        var m = rand(2, 5), nPow = rand(2, 4);
+        var correctPow = m * nPow;
+        q.prompt = "Rút gọn biểu thức lũy thừa: $(" + base + "^{" + m + "})^{" + nPow + "}$";
+        q.correct = "$" + base + "^{" + correctPow + "}$";
+        q.opts = makeUniqueOptions(q.correct, [
+            "$" + base + "^{" + (m + nPow) + "}$",
+            "$" + base + "^{" + (m * m) + "}$",
+            "$" + base + "^{" + (correctPow + 2) + "}$"
+        ]);
+    } else if (n === 8) {
+        q.tag = "Tìm x hữu tỉ"; q.emoji = "🧩";
+        var a = rand(2, 5);
+        var bNum = rand(1, 5), bDen = rand(2, 5);
+        var xNum = rand(-4, 4); while (xNum === 0) xNum = rand(-4, 4);
+        var xDen = rand(2, 5);
+        var cNum = a * xNum * bDen + bNum * xDen;
+        var cDen = xDen * bDen;
+        q.prompt = "Tìm số hữu tỉ $x$, biết: $" + a + "x + " + formatFrac(bNum, bDen) + " = " + formatFrac(cNum, cDen) + "$";
+        q.correct = "$x = " + formatFrac(xNum, xDen) + "$";
+        q.opts = makeUniqueOptions(q.correct, [
+            "$x = " + formatFrac(-xNum, xDen) + "$",
+            "$x = " + formatFrac(xDen, xNum) + "$",
+            "$x = " + formatFrac(xNum + 1, xDen) + "$"
+        ]);
+    } else if (n === 9) {
+        q.tag = "So sánh giá trị tuyệt đối"; q.emoji = "🎯";
+        var aNum = rand(-9, 9); while (aNum === 0) aNum = rand(-9, 9);
+        var aDen = rand(2, 6);
+        var bNum = rand(-9, 9); while (bNum === 0) bNum = rand(-9, 9);
+        var bDen = rand(2, 6);
+        q.prompt = "Cho hai số $a = " + formatFrac(aNum, aDen) + "$ và $b = " + formatFrac(bNum, bDen) + "$. Hãy so sánh hai giá trị tuyệt đối $|a|$ và $|b|$:";
+        
+        var absA = Math.abs(aNum / aDen);
+        var absB = Math.abs(bNum / bDen);
+        var rel = "=";
+        if (absA > absB) rel = ">";
+        else if (absA < absB) rel = "<";
+        
+        q.correct = "$|a| " + rel + " |b|$";
+        var altRel = rel === ">" ? "<" : (rel === "<" ? ">" : "!=");
+        q.opts = makeUniqueOptions(q.correct, [
+            "$|a| " + altRel + " |b|$",
+            "$|a| = |b|$",
+            "$a " + rel + " b$"
+        ]);
+    } else if (n === 10) {
+        q.tag = "Ứng dụng thực tế"; q.emoji = "🚪";
+        var r = rand(32, 99);
+        var S = r * r;
+        var P = 4 * r;
+        q.prompt = "Một hình chữ nhật đặc biệt (hình vuông) có diện tích $S = " + S + "\\text{ m}^2$. Tính chu vi $P$ của hình đó:";
+        q.correct = "$P = " + P + "\\text{ m}$";
+        q.opts = makeUniqueOptions(q.correct, [
+            "$P = " + (r * 2) + "\\text{ m}$",
+            "$P = " + (P + 8) + "\\text{ m}$",
+            "$P = " + (P - 8) + "\\text{ m}$"
+        ]);
+    }
+    q.correctIndex = q.opts.indexOf(q.correct);
+    return q;
+}
+
+function renderQuestion() {
+    gameState.locked = false;
+    var q = gameState.questions[gameState.qIndex]; if (!q) return;
+    var num = q.n;
+    var frameInfo = STORY_FRAMES[num - 1];
+    
+    $('qStage').textContent = "Khung " + (frameInfo.frame < 10 ? "0" + frameInfo.frame : frameInfo.frame) + " · Thử thách " + (num < 10 ? "0" + num : num);
+    $('qHeader').textContent = frameInfo.title;
+    $('qSubtitle').textContent = frameInfo.desc;
+    $('qEmoji').textContent = q.emoji;
+    $('qCount').textContent = "CÂU " + num + " / 10";
+    $('qTag').textContent = q.tag;
+    
+    $('progressBar').style.width = ((num - 1) / 10 * 100) + "%";
+    $('qPrompt').innerHTML = q.prompt;
+    $('qMath').style.display = "none"; $('qMath').innerHTML = "";
+    
+    $('feedback').className = "feedback"; $('feedback').textContent = "";
+    $('nextBtn').style.display = "none";
+    
+    $('realmStat').textContent = gameState.correctCount + " / 10";
+    $('realmStep').textContent = "Cửa ải " + num;
+    $('scoreStat').textContent = gameState.score;
+    $('sideArt').textContent = q.emoji;
+    
+    $('mScore').textContent = gameState.score;
+    $('mRealm').textContent = gameState.correctCount + "/10";
+    
+    var container = $('answers'); container.innerHTML = ""; var labels = ["A", "B", "C", "D"];
+    for (var i = 0; i < q.opts.length; i++) {
+        (function(optIndex) {
+            var b = document.createElement("button"); b.className = "answer";
+            b.innerHTML = '<span class="letter">' + labels[optIndex] + '</span><span>' + q.opts[optIndex] + '</span>';
+            b.onclick = function() { answer(optIndex); };
+            container.appendChild(b);
+        })(i);
+    }
+    triggerMathRender($('qPrompt')); triggerMathRender(container);
+}
+
+function answer(i) {
+    if (gameState.locked) return;
+    gameState.locked = true;
+    var q = gameState.questions[gameState.qIndex];
+    var buttons = $('answers').querySelectorAll('button');
+    for (var j = 0; j < buttons.length; j++) {
+        buttons[j].disabled = true;
+        if (j === q.correctIndex) buttons[j].classList.add('correct');
+        if (j === i && i !== q.correctIndex) buttons[j].classList.add('wrong');
+    }
+    var isCorrect = (i === q.correctIndex);
+    var frameInfo = STORY_FRAMES[q.n - 1];
+    
+    if (isCorrect) {
+        gameState.score += 10; gameState.correctCount++;
+        $('feedback').className = "feedback show good";
+        $('feedback').innerHTML = "Chính xác! " + frameInfo.successMsg;
+    } else {
+        $('feedback').className = "feedback show bad";
+        $('feedback').innerHTML = "Chưa chính xác. Cơ quan chưa được kích hoạt, hãy tiếp tục cố gắng ở câu tiếp theo!";
+    }
+    
+    triggerMathRender($('feedback'));
+    gameState.answers.push({ n: q.n, choice: i, correct: isCorrect });
+    
+    $('scoreStat').textContent = gameState.score;
+    $('realmStat').textContent = gameState.correctCount + " / 10";
+    $('mScore').textContent = gameState.score;
+    $('mRealm').textContent = gameState.correctCount + "/10";
+    
+    $('progressBar').style.width = (q.n / 10 * 100) + "%";
+    $('nextBtn').style.display = "inline-block";
+    $('nextBtn').textContent = (q.n === 10) ? "Mở cánh cổng bí ẩn ➜" : "Thử thách tiếp theo ➜";
+    
+    setTimeout(function() { $('feedback').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+}
+
+function nextQuestion() {
+    if (!gameState.locked) return;
+    if (gameState.qIndex < 9) {
+        gameState.qIndex++;
+        renderQuestion();
+    } else {
+        go(14);
+    }
+}
+
+function showResult() {
+    var pct = Math.round(gameState.correctCount / 10 * 100);
+    $('rankText').textContent = "✦ Đã giải khai " + gameState.correctCount + "/10 Phong Ấn ✦";
+    $('finalScore').textContent = gameState.score;
+    $('finalCorrect').textContent = gameState.correctCount + "/10";
+    $('finalAccuracy').textContent = pct + "%";
+    
+    var title = "Nhà Thám Hiểm Tập Sự";
+    if (gameState.correctCount === 10) title = "Bậc Thầy Giải Mã Cổ Đại";
+    else if (gameState.correctCount >= 8) title = "Nhà Thám Hiểm Lừng Danh";
+    else if (gameState.correctCount >= 5) title = "Thám Hiểm Viên Bản Lĩnh";
+    
+    $('resultMessage').textContent = "Chúc mừng bạn đạt danh hiệu [" + title + "]! Bạn đã hoàn thành 10 thử thách Đại số để mở rộng cánh cổng dẫn sang Tu Tiên Giới.";
+    $('leaderRow').innerHTML = "<tr><td><b>" + escapeHtml(gameState.playerName) + "</b></td><td>" + escapeHtml(gameState.playerClass) + "</td><td>Chap 1: Thám Hiểm</td><td><b style='color:var(--violet)'>" + gameState.score + " pt</b></td></tr>";
+    
+    go(16);
+}
+
+function showReview() {
+    var list = $('reviewList'); list.innerHTML = "";
+    gameState.questions.forEach(function(q, i) {
+        var a = gameState.answers[i] || {}, card = document.createElement("div"); card.className = "panel";
+        card.innerHTML = "<b style='color:var(--violet)'>Câu " + q.n + " · " + q.tag + "</b><p style='font-weight:750;margin:6px 0'>" + q.prompt + "</p><p><b>Đáp án đúng:</b> " + q.correct + "</p><p style='font-weight:800;margin-top:6px;color:" + (a.correct ? 'var(--good)' : 'var(--bad)') + "'>" + (a.correct ? 'Trả lời chính xác' : 'Trả lời chưa đúng') + "</p>";
+        list.appendChild(card);
+    });
+    go('reviewScreen'); triggerMathRender(list);
+}
+
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+</script>
+</body>
+</html>
