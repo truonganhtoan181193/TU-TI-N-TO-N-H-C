@@ -25,7 +25,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenLeaderboard,
   onSwitchChapter,
 }) => {
-  const currentRealm = REALMS[realmIndex] || 'Luyện Khí';
+  const currentRealm = REALMS[realmIndex] || 'Nhập Môn';
 
   return (
     <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-amber-500/30 text-white shadow-md">

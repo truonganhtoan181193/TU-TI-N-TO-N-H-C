@@ -66,6 +66,7 @@ export type ScreenType =
   | 'c2_outro';
 
 export const REALMS = [
+  'Nhập Môn',
   'Luyện Khí',
   'Trúc Cơ',
   'Kết Đan',

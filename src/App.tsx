@@ -1170,7 +1170,7 @@ export default function App() {
                 }}
                 className="w-full min-h-[50px] bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/25 active:scale-[0.98] transition-transform"
               >
-                <span>BẮT ĐẦU HÀNH TRÌNH TU TIÊN (CHƯƠNG 2) ➜</span>
+                <span>BẮT ĐẦU HÀNH TRÌNH TU TIÊN ➜</span>
               </button>
 
               <button
@@ -1456,7 +1456,7 @@ export default function App() {
                   {REALMS[c2RealmIndex]}
                 </span>
                 <span className="text-[10px] text-slate-500 font-mono">
-                  ({c2RealmIndex + 1}/10)
+                  ({c2RealmIndex}/10)
                 </span>
               </div>
 
@@ -1736,7 +1736,7 @@ export default function App() {
                             <td className="py-2 px-3 text-slate-400 truncate max-w-[130px]">
                               {item.chapter === 1
                                 ? 'Chương 1: Di tích'
-                                : `Chương 2: ${item.realm || 'Tu Tiên Giới'}`}
+                                : `Chương 2: ${item.realm || 'Nhập Môn'}`}
                             </td>
                             <td className="py-2 px-3 text-right font-bold text-amber-400 tabular-nums">
                               {item.score} aura
