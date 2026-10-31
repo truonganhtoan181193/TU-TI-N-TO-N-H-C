@@ -111,11 +111,12 @@ export function unlockAudio() {
 }
 
 // ---------------------------------------------------------------------
-// SOUND EFFECTS (SFX) — Clearly audible & crisp
+// SOUND EFFECTS (SFX) — Rich traditional acoustic timbre & crispness
 // ---------------------------------------------------------------------
 export function playSound(
-  type: 'correct' | 'wrong' | 'levelup' | 'tick' | 'magic',
-  enabled = true
+  type: 'correct' | 'wrong' | 'levelup' | 'tick' | 'magic' | 'thunder' | 'warp',
+  enabled = true,
+  chapter: 1 | 2 = 1
 ) {
   if (!enabled) return;
   try {
@@ -125,27 +126,23 @@ export function playSound(
     const dest = masterCompressor || ctx.destination;
 
     if (type === 'correct') {
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc1.type = 'sine';
-      osc2.type = 'triangle';
-      osc1.frequency.setValueAtTime(587.33, now); // D5
-      osc1.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
-      osc2.frequency.setValueAtTime(1174.66, now + 0.08); // D6
-
-      gain.gain.setValueAtTime(0.35, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(dest);
-
-      osc1.start(now);
-      osc2.start(now + 0.06);
-      osc1.stop(now + 0.45);
-      osc2.stop(now + 0.45);
+      if (chapter === 2) {
+        // CHƯƠNG 2: TIẾNG GẢY ĐÀN TRANH (Guzheng Arpeggio Cổ Phong)
+        // Chuỗi ngũ cung ngân vang dạt dào thanh thoát: D5, E5, G5, A5, D6
+        const guzhengNotes = [587.33, 659.25, 783.99, 880.0, 1174.66];
+        guzhengNotes.forEach((freq, idx) => {
+          const t = now + idx * 0.055;
+          playGuzhengPluck(ctx, dest, freq, t, 0.95, 0.28);
+        });
+      } else {
+        // CHƯƠNG 1: TIẾNG KHÁNH ĐÁ CỔ (Ancient Stone Chime Bells)
+        // Chuỗi chuông đá cổ kính trong vắt ngân xa: F5, A5, C6
+        const stoneChimes = [698.46, 880.0, 1046.5];
+        stoneChimes.forEach((freq, idx) => {
+          const t = now + idx * 0.07;
+          playPluck(ctx, dest, freq, t, 0.85, 0.30, 'triangle', true);
+        });
+      }
     } else if (type === 'wrong') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -163,7 +160,7 @@ export function playSound(
       osc.start(now);
       osc.stop(now + 0.32);
     } else if (type === 'levelup') {
-      playLevelUpAudio(2, enabled);
+      playLevelUpAudio(chapter, enabled);
     } else if (type === 'tick') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -187,9 +184,211 @@ export function playSound(
       gain.connect(dest);
       osc.start(now);
       osc.stop(now + 0.4);
+    } else if (type === 'thunder') {
+      playTribulationThunder(enabled);
+    } else if (type === 'warp') {
+      playWarpSound(enabled);
     }
   } catch {
     // Ignore audio errors
+  }
+}
+
+/**
+ * Hiệu ứng sấm sét độ kiếp (Heavenly Tribulation Thunder)
+ * Âm thanh sấm chớp rền vang đa tầng:
+ * - Tia sét xé toạc không gian (High crackle impulse)
+ * - Sấm dội trầm hùng (Sub-bass thunder rumble 45-85Hz)
+ * - Tiếng vọng thiên lôi rền dài (Reverberant rolling decay)
+ */
+export function playTribulationThunder(enabled = true) {
+  if (!enabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const dest = masterCompressor || ctx.destination;
+
+    // 1. Initial lightning crack (Tia chớp đánh giáng)
+    const crackLen = Math.floor(ctx.sampleRate * 0.12);
+    const crackBuf = ctx.createBuffer(1, crackLen, ctx.sampleRate);
+    const crackData = crackBuf.getChannelData(0);
+    for (let i = 0; i < crackLen; i++) {
+      crackData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (crackLen * 0.2));
+    }
+    const crackSrc = ctx.createBufferSource();
+    crackSrc.buffer = crackBuf;
+
+    const crackFilter = ctx.createBiquadFilter();
+    crackFilter.type = 'highpass';
+    crackFilter.frequency.setValueAtTime(800, now);
+
+    const crackGain = ctx.createGain();
+    crackGain.gain.setValueAtTime(0.45, now);
+    crackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+    crackSrc.connect(crackFilter);
+    crackFilter.connect(crackGain);
+    crackGain.connect(dest);
+    crackSrc.start(now);
+
+    // 2. Heavy Sub-bass thunder impact (Sấm giáng trầm bổng)
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.type = 'triangle';
+    subOsc.frequency.setValueAtTime(95, now + 0.04);
+    subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.7);
+
+    subGain.gain.setValueAtTime(0.001, now);
+    subGain.gain.linearRampToValueAtTime(0.55, now + 0.08);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+    subOsc.connect(subGain);
+    subGain.connect(dest);
+    subOsc.start(now);
+    subOsc.stop(now + 1.2);
+
+    // 3. Deep rolling thunder rumble (Tiếng sấm rền cuồn cuộn 2.4s)
+    const rumbleLen = Math.floor(ctx.sampleRate * 2.2);
+    const rumbleBuf = ctx.createBuffer(1, rumbleLen, ctx.sampleRate);
+    const rumbleData = rumbleBuf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < rumbleLen; i++) {
+      // Brown noise for deep rumbling
+      const white = Math.random() * 2 - 1;
+      last = (last + 0.03 * white) / 1.03;
+      rumbleData[i] = last * 3.5;
+    }
+    const rumbleSrc = ctx.createBufferSource();
+    rumbleSrc.buffer = rumbleBuf;
+
+    const rumbleFilter = ctx.createBiquadFilter();
+    rumbleFilter.type = 'lowpass';
+    rumbleFilter.frequency.setValueAtTime(140, now);
+    rumbleFilter.frequency.linearRampToValueAtTime(80, now + 1.8);
+
+    const rumbleGain = ctx.createGain();
+    rumbleGain.gain.setValueAtTime(0.01, now);
+    rumbleGain.gain.linearRampToValueAtTime(0.48, now + 0.2);
+    rumbleGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+
+    rumbleSrc.connect(rumbleFilter);
+    rumbleFilter.connect(rumbleGain);
+    rumbleGain.connect(dest);
+    if (spaceSendGain) {
+      rumbleGain.connect(spaceSendGain);
+    }
+
+    rumbleSrc.start(now + 0.05);
+  } catch {
+    // Ignore audio errors
+  }
+}
+
+/**
+ * Âm thanh cổng xoáy dị giới (Portal Warp sound)
+ */
+export function playWarpSound(enabled = true) {
+  if (!enabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const dest = masterCompressor || ctx.destination;
+
+    // Resonant vortex sweep
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(110, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.5);
+    osc.frequency.exponentialRampToValueAtTime(220, now + 1.1);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(250, now);
+    filter.frequency.exponentialRampToValueAtTime(1600, now + 0.5);
+    filter.frequency.exponentialRampToValueAtTime(400, now + 1.1);
+    filter.Q.value = 4.0;
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.35, now + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(dest);
+    if (spaceSendGain) {
+      gain.connect(spaceSendGain);
+    }
+
+    osc.start(now);
+    osc.stop(now + 1.1);
+  } catch {
+    // Ignore
+  }
+}
+
+/**
+ * Âm thanh giọt nước thánh thót trong hang ngầm cổ tích (Chương 1 Ambient)
+ */
+function playCavernWaterDrop(ctx: AudioContext, dest: AudioNode, time: number) {
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+
+    const baseFreq = 1400 + Math.random() * 600;
+    osc.frequency.setValueAtTime(baseFreq, time);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, time + 0.02);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, time + 0.12);
+
+    gain.gain.setValueAtTime(0.0001, time);
+    gain.gain.linearRampToValueAtTime(0.14, time + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.28);
+
+    osc.connect(gain);
+    gain.connect(dest);
+    if (spaceSendGain) {
+      gain.connect(spaceSendGain); // Reverb in ancient cave
+    }
+
+    osc.start(time);
+    osc.stop(time + 0.28);
+  } catch {
+    // Ignore
+  }
+}
+
+/**
+ * Âm thanh chuông gió thanh tao trên thiên sơn (Chương 2 Ambient)
+ */
+function playCelestialWindChime(ctx: AudioContext, dest: AudioNode, time: number) {
+  try {
+    // Delicate ethereal cluster: 3 crystalline tones
+    const freqs = [2349.32, 2793.83, 3520.0];
+    freqs.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      const offset = idx * 0.04;
+      osc.frequency.setValueAtTime(freq, time + offset);
+
+      gain.gain.setValueAtTime(0.0001, time + offset);
+      gain.gain.linearRampToValueAtTime(0.08 / (idx + 1), time + offset + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + offset + 0.75);
+
+      osc.connect(gain);
+      gain.connect(dest);
+      if (spaceSendGain) {
+        gain.connect(spaceSendGain);
+      }
+
+      osc.start(time + offset);
+      osc.stop(time + offset + 0.75);
+    });
+  } catch {
+    // Ignore
   }
 }
 
@@ -581,6 +780,11 @@ function scheduleChap1Cycle(ctx: AudioContext, dest: AudioNode, startTime: numbe
     playSoftShaker(ctx, dest, startTime + s * step, 0.035);
   }
 
+  // AMBIENT SOUNDSCAPE: Tiếng giọt nước thánh thót rơi xa xa trong di tích cổ
+  playCavernWaterDrop(ctx, dest, startTime + 2.4 * step);
+  playCavernWaterDrop(ctx, dest, startTime + 14.8 * step);
+  playCavernWaterDrop(ctx, dest, startTime + 25.2 * step);
+
   return 32 * step; // ~10.24 seconds total
 }
 
@@ -634,6 +838,9 @@ function scheduleChap2Cycle(ctx: AudioContext, dest: AudioNode, startTime: numbe
   playFluteNote(ctx, dest, B4, startTime + 8.5 * step, step * 3.5, 0.19);
   playFluteNote(ctx, dest, G4, startTime + 12.5 * step, step * 3.2, 0.18);
 
+  // AMBIENT SOUNDSCAPE: Tiếng chuông gió thanh tao ngân nga lưng chừng tiên sơn
+  playCelestialWindChime(ctx, dest, startTime + 3.2 * step);
+
   // PHRASE B (Steps 16-31)
   playWarmDrone(ctx, dest, G3, startTime + step * 16, step * 8, 0.18);
   playWarmDrone(ctx, dest, D4, startTime + step * 24, step * 8, 0.18);
@@ -667,6 +874,7 @@ function scheduleChap2Cycle(ctx: AudioContext, dest: AudioNode, startTime: numbe
   playFluteNote(ctx, dest, A4, startTime + 28.5 * step, step * 3.5, 0.18);
 
   playPluck(ctx, dest, A5, startTime + 16 * step, step * 4.0, 0.12, 'sine');
+  playCelestialWindChime(ctx, dest, startTime + 19.5 * step);
 
   return 32 * step; // ~12.32 seconds total
 }

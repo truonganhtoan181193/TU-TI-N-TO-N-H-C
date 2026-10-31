@@ -46,3 +46,91 @@
 .glow-amber {
   animation: pulseGlow 3s infinite ease-in-out;
 }
+
+/* KaTeX Mathematical Formula Glowing & High Contrast Typography */
+.katex {
+  color: #f8fafc !important;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.35), 0 0 16px rgba(251, 191, 36, 0.25);
+  letter-spacing: 0.02em;
+}
+
+.katex .frac-line,
+.katex .sqrt-line,
+.katex .overline-line {
+  border-color: #e2e8f0 !important;
+  border-bottom-width: 1.5px !important;
+}
+
+.katex .mord,
+.katex .mbin,
+.katex .mrel,
+.katex .mopen,
+.katex .mclose,
+.katex .mop {
+  color: #f8fafc !important;
+  font-weight: 600;
+}
+
+/* Dimensional Portal Vortex & Warp Shake */
+@keyframes portalVortexSpin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.08);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes warpShake {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-2px, 1.5px);
+  }
+  40% {
+    transform: translate(1.5px, -1px);
+  }
+  60% {
+    transform: translate(-1.5px, -1.5px);
+  }
+  80% {
+    transform: translate(2px, 1px);
+  }
+}
+
+@keyframes lightningRumble {
+  0%, 91%, 100% {
+    opacity: 0;
+  }
+  92% {
+    opacity: 0.75;
+  }
+  93% {
+    opacity: 0.15;
+  }
+  94% {
+    opacity: 0.95;
+  }
+  96% {
+    opacity: 0.25;
+  }
+  97% {
+    opacity: 0.85;
+  }
+}
+
+.animate-portal-spin {
+  animation: portalVortexSpin 20s linear infinite;
+}
+
+.animate-warp-shake {
+  animation: warpShake 3.5s ease-in-out infinite;
+}
+
+.animate-tribulation-lightning {
+  animation: lightningRumble 7s ease-in-out infinite;
+}

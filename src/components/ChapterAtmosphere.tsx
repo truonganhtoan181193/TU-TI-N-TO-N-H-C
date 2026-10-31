@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { ChapterId, ScreenType } from '../types';
+import { ChapterId, ScreenType, REALM_THEMES } from '../types';
 import chap1Bg from '../assets/images/chap1_ruins_bg_1793444053582.jpg';
 import chap2Bg from '../assets/images/chap2_xianxia_bg_1793444115125.jpg';
 
 interface ChapterAtmosphereProps {
   chapter: ChapterId;
   screen: ScreenType;
+  realmIndex?: number;
+  isTribulationStage?: boolean;
 }
 
 interface Particle {
@@ -24,11 +26,17 @@ interface Particle {
   type: 'rune_dust' | 'ember' | 'petal' | 'qi_orb';
 }
 
-export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, screen }) => {
+export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({
+  chapter,
+  screen,
+  realmIndex = 0,
+  isTribulationStage = false,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const isTransition = screen === 'transition_to_c2';
   const effectiveChapter = isTransition ? 2 : chapter;
+  const currentRealmTheme = REALM_THEMES[realmIndex] || REALM_THEMES[0];
 
   // Particle System Weather Effect
   useEffect(() => {
@@ -48,7 +56,6 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
     };
     window.addEventListener('resize', handleResize);
 
-    // Initialize particles according to chapter weather
     const maxParticles = width < 640 ? 35 : 55;
     const particles: Particle[] = [];
 
@@ -82,8 +89,11 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
           type: isEmber ? 'ember' : 'rune_dust',
         };
       } else {
-        // CHAPTER 2 WEATHER: Celestial falling cherry blossom petals (hoa đào rơi) and spiritual qi orbs
-        const isPetal = Math.random() > 0.35;
+        // CHAPTER 2 WEATHER: Falling cherry blossom petals + Realm-colored spiritual qi orbs
+        const isPetal = Math.random() > 0.40;
+        const realmColors = currentRealmTheme.particleColors;
+        const qiColor = realmColors[Math.floor(Math.random() * realmColors.length)] || '#fcd34d';
+
         return {
           x,
           y,
@@ -96,9 +106,7 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
             ? Math.random() > 0.4
               ? '#fbcfe8' // soft pink petal
               : '#f472b6' // rose petal
-            : Math.random() > 0.5
-            ? '#fcd34d' // spiritual golden qi
-            : '#c084fc', // spiritual violet qi
+            : qiColor,
           rotation: Math.random() * Math.PI * 2,
           vRot: (Math.random() - 0.5) * 0.04,
           swayPhase: Math.random() * Math.PI * 2,
@@ -116,7 +124,6 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
       ctx.clearRect(0, 0, width, height);
 
       particles.forEach((p, idx) => {
-        // Sway movement
         p.swayPhase += p.swaySpeed;
         const currentVx = p.vx + Math.sin(p.swayPhase) * 0.5;
 
@@ -124,7 +131,6 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
         p.y += p.vy;
         p.rotation += p.vRot;
 
-        // Wrap around boundaries
         if (effectiveChapter === 1) {
           if (p.y < -20) {
             particles[idx] = createParticle(false);
@@ -141,7 +147,7 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
         ctx.globalAlpha = p.alpha;
 
         if (p.type === 'petal') {
-          // Render elegant cherry blossom / celestial petal
+          // Render cherry blossom petal
           ctx.translate(p.x, p.y);
           ctx.rotate(p.rotation);
           ctx.fillStyle = p.color;
@@ -149,7 +155,7 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
           ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2);
           ctx.fill();
         } else if (p.type === 'ember') {
-          // Render glowing fiery ancient ember with subtle radial glow
+          // Render glowing fiery ancient ember
           ctx.fillStyle = p.color;
           ctx.shadowColor = p.color;
           ctx.shadowBlur = 8;
@@ -157,10 +163,10 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fill();
         } else {
-          // Render spiritual rune dust / qi orb
+          // Render spiritual qi orb matching current realm
           ctx.fillStyle = p.color;
           ctx.shadowColor = p.color;
-          ctx.shadowBlur = 6;
+          ctx.shadowBlur = 7;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fill();
@@ -178,7 +184,7 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animId);
     };
-  }, [effectiveChapter]);
+  }, [effectiveChapter, realmIndex, currentRealmTheme]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none" aria-hidden="true">
@@ -188,63 +194,108 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({ chapter, s
       {/* ------------------------------------------------------------- */}
       {/* 1. HÌNH NỀN CHÌM TỪNG CHƯƠNG (Submerged Chapter Artwork)       */}
       {/* ------------------------------------------------------------- */}
-      {/* Chapter 1: Di tích cổ ngầm */}
+      {/* Chapter 1: Di tích cổ ngầm (Cyan & Amber torchlit ruins) */}
       <div
         className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out scale-105 ${
-          effectiveChapter === 1 && !isTransition ? 'opacity-25' : 'opacity-0'
+          effectiveChapter === 1 && !isTransition ? 'opacity-40' : 'opacity-0'
         }`}
         style={{
           backgroundImage: `url(${chap1Bg})`,
-          filter: 'contrast(1.15) brightness(0.85)',
+          filter: 'contrast(1.15) brightness(0.9)',
         }}
       />
 
-      {/* Chapter 2: Tu tiên giới thiên sơn */}
+      {/* Chapter 2: Tu tiên giới thiên sơn (Golden peaks, clouds, sakura) */}
       <div
         className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out scale-105 ${
-          effectiveChapter === 2 || isTransition ? 'opacity-28' : 'opacity-0'
+          effectiveChapter === 2 || isTransition ? 'opacity-45' : 'opacity-0'
         }`}
         style={{
           backgroundImage: `url(${chap2Bg})`,
-          filter: 'contrast(1.1) brightness(0.9)',
+          filter: 'contrast(1.1) brightness(0.95)',
         }}
       />
 
-      {/* Subtle Dark Vignette Mask to ensure 100% text/math legibility */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/70 to-slate-950/90" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(2,6,23,0.85)_100%)]" />
+      {/* Atmospheric Vignette Mask - balanced for rich artwork visibility + high text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-950/35 to-slate-950/65" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(2,6,23,0.7)_100%)]" />
 
       {/* ------------------------------------------------------------- */}
-      {/* 2. ÁNH SÁNG MÔI TRƯỜNG MỖI CHƯƠNG (Ambient Atmospheric Glows)  */}
+      {/* 2. ÁNH SÁNG MÔI TRƯỜNG & MÀU SẮC THEO CẢNH GIỚI (Ambient Glows) */}
       {/* ------------------------------------------------------------- */}
+      {/* Chapter 1 Palette: Xanh Băng Cổ (Cyan) + Vàng Đồng Đuốc (Amber) */}
       {effectiveChapter === 1 && !isTransition && (
         <>
           {/* Top-left ancient cyan runic glow */}
-          <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-cyan-500/10 blur-[100px] animate-pulse" />
+          <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-cyan-500/15 blur-[100px] animate-pulse" />
           {/* Bottom-right subterranean amber torch glow */}
-          <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-amber-500/15 blur-[120px]" />
+          <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-amber-500/20 blur-[120px]" />
           {/* Center mysterious teal mist */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-emerald-500/5 blur-[90px]" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-teal-500/10 blur-[90px]" />
         </>
       )}
 
+      {/* Chapter 2 Palette: Dynamic shift according to current Realm + Gold & Purple */}
       {(effectiveChapter === 2 || isTransition) && (
         <>
-          {/* High heavenly golden divine aura */}
-          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[450px] rounded-full bg-gradient-to-b from-amber-400/20 via-amber-500/10 to-transparent blur-[110px]" />
-          {/* Ethereal purple spiritual mist on the left */}
-          <div className="absolute top-1/4 -left-32 w-[450px] h-[450px] rounded-full bg-purple-600/15 blur-[120px] animate-pulse" />
-          {/* Ethereal jade starlight glow on the right */}
-          <div className="absolute bottom-10 -right-20 w-[420px] h-[420px] rounded-full bg-teal-500/12 blur-[100px]" />
-          {/* Transition dimensional warp highlight */}
-          {isTransition && (
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.18)_0%,rgba(168,85,247,0.15)_45%,transparent_75%)] animate-pulse" />
-          )}
+          {/* Realm Dominant Aura Glow (Top Center) */}
+          <div
+            className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[450px] rounded-full blur-[110px] transition-colors duration-1000"
+            style={{
+              background: `radial-gradient(circle, ${currentRealmTheme.glowRgba} 0%, rgba(168, 85, 247, 0.12) 60%, transparent 100%)`,
+            }}
+          />
+
+          {/* Left Spiritual Mist (Tuned to realm primary) */}
+          <div
+            className="absolute top-1/4 -left-32 w-[450px] h-[450px] rounded-full blur-[120px] transition-colors duration-1000"
+            style={{
+              backgroundColor: currentRealmTheme.primaryHex,
+              opacity: 0.12,
+            }}
+          />
+
+          {/* Right Celestial Mist (Purple & Peach blossom harmony) */}
+          <div className="absolute bottom-10 -right-20 w-[420px] h-[420px] rounded-full bg-purple-600/15 blur-[100px]" />
+
+          {/* Soft Peach Blossom ambient hue on bottom-left */}
+          <div className="absolute -bottom-20 left-10 w-[350px] h-[350px] rounded-full bg-pink-500/10 blur-[90px]" />
         </>
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 3. HIỆU ỨNG THỜI TIẾT ĐẶC TRƯNG MỖI CHƯƠNG (Canvas Particles)   */}
+      {/* 3. HIỆU ỨNG CHUYỂN CẢNH DỊCH CHUYỂN (Warp / Portal Vortex)     */}
+      {/* ------------------------------------------------------------- */}
+      {isTransition && (
+        <div className="absolute inset-0 flex items-center justify-center animate-warp-shake overflow-hidden">
+          {/* Cosmic Dimensional Portal Rays (Rotating Vortex) */}
+          <div
+            className="w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full opacity-35 animate-portal-spin"
+            style={{
+              background:
+                'conic-gradient(from 0deg, rgba(251, 191, 36, 0.5), rgba(168, 85, 247, 0.4), rgba(56, 189, 248, 0.5), rgba(244, 63, 94, 0.4), rgba(251, 191, 36, 0.5))',
+              filter: 'blur(45px)',
+            }}
+          />
+
+          {/* Portal Ripple Rings */}
+          <div className="absolute w-[320px] h-[320px] sm:w-[450px] sm:h-[450px] rounded-full border border-amber-400/40 animate-ping opacity-25" />
+          <div className="absolute w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] rounded-full border-2 border-purple-400/50 animate-pulse" />
+
+          {/* Center Dimensional Core */}
+          <div className="absolute w-40 h-40 rounded-full bg-gradient-to-tr from-amber-400/30 via-purple-500/30 to-cyan-400/30 blur-2xl animate-pulse" />
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 4. HIỆU ỨNG SẤM SÉT ĐỘ KIẾP (Tribulation Lightning Flash)      */}
+      {/* ------------------------------------------------------------- */}
+      {isTribulationStage && (
+        <div className="absolute inset-0 pointer-events-none z-10 animate-tribulation-lightning bg-gradient-to-b from-purple-500/25 via-cyan-400/15 to-transparent" />
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 5. HIỆU ỨNG THỜI TIẾT ĐẶC TRƯNG MỖI CHƯƠNG (Canvas Particles)   */}
       {/* ------------------------------------------------------------- */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
     </div>

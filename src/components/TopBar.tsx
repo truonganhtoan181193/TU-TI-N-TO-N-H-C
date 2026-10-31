@@ -1,6 +1,6 @@
 import React from 'react';
 import { Volume2, VolumeX, Sparkles, Award } from 'lucide-react';
-import { ChapterId, REALMS } from '../types';
+import { ChapterId, REALMS, REALM_THEMES } from '../types';
 
 interface TopBarProps {
   chapter: ChapterId;
@@ -26,9 +26,10 @@ export const TopBar: React.FC<TopBarProps> = ({
   onSwitchChapter,
 }) => {
   const currentRealm = REALMS[realmIndex] || 'Nhập Môn';
+  const realmTheme = REALM_THEMES[realmIndex] || REALM_THEMES[0];
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-amber-500/30 text-white shadow-md">
+    <header className="sticky top-0 z-40 bg-slate-950/60 backdrop-blur-md border-b border-slate-800/80 text-white shadow-md">
       <div className="max-w-4xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2">
         {/* Brand */}
         <div className="flex items-center gap-2 min-w-0">
@@ -56,11 +57,20 @@ export const TopBar: React.FC<TopBarProps> = ({
               </span>
               <span className="text-slate-500">·</span>
               {chapter === 1 ? (
-                <span className="text-amber-400 font-medium">
+                <span className="text-cyan-300 font-medium">
                   {chap1Seals}/10 Phong ấn
                 </span>
               ) : (
-                <span className="text-amber-400 font-medium">{currentRealm}</span>
+                <span
+                  className="font-bold px-1.5 py-0.2 rounded-full border transition-all text-[10px]"
+                  style={{
+                    color: realmTheme.secondaryHex,
+                    borderColor: `${realmTheme.primaryHex}60`,
+                    backgroundColor: `${realmTheme.primaryHex}20`,
+                  }}
+                >
+                  {currentRealm}
+                </span>
               )}
             </div>
           )}

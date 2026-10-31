@@ -81,6 +81,142 @@ export const REALMS = [
 
 export type RealmName = (typeof REALMS)[number];
 
+export interface RealmColorConfig {
+  name: RealmName;
+  tagline: string;
+  primaryHex: string;
+  secondaryHex: string;
+  glowRgba: string;
+  borderClass: string;
+  badgeClass: string;
+  textClass: string;
+  particleColors: string[];
+}
+
+export const REALM_THEMES: Record<number, RealmColorConfig> = {
+  0: {
+    name: 'Nhập Môn',
+    tagline: 'Khởi đầu sơ khai',
+    primaryHex: '#94a3b8',
+    secondaryHex: '#cbd5e1',
+    glowRgba: 'rgba(148, 163, 184, 0.25)',
+    borderClass: 'border-slate-500/40',
+    badgeClass: 'bg-slate-800 text-slate-200 border-slate-600/50',
+    textClass: 'text-slate-300',
+    particleColors: ['#cbd5e1', '#94a3b8', '#e2e8f0'],
+  },
+  1: {
+    name: 'Luyện Khí',
+    tagline: 'Thanh mộc linh khí',
+    primaryHex: '#10b981',
+    secondaryHex: '#34d399',
+    glowRgba: 'rgba(16, 185, 129, 0.28)',
+    borderClass: 'border-emerald-500/40',
+    badgeClass: 'bg-emerald-950/70 text-emerald-300 border-emerald-500/40',
+    textClass: 'text-emerald-400',
+    particleColors: ['#34d399', '#10b981', '#6ee7b7'],
+  },
+  2: {
+    name: 'Trúc Cơ',
+    tagline: 'Băng tinh lam hải',
+    primaryHex: '#06b6d4',
+    secondaryHex: '#38bdf8',
+    glowRgba: 'rgba(6, 182, 212, 0.30)',
+    borderClass: 'border-cyan-500/40',
+    badgeClass: 'bg-cyan-950/70 text-cyan-300 border-cyan-500/40',
+    textClass: 'text-cyan-400',
+    particleColors: ['#38bdf8', '#06b6d4', '#7dd3fc'],
+  },
+  3: {
+    name: 'Kết Đan',
+    tagline: 'Kim đan xán lạn',
+    primaryHex: '#f59e0b',
+    secondaryHex: '#fbbf24',
+    glowRgba: 'rgba(245, 158, 11, 0.35)',
+    borderClass: 'border-amber-500/40',
+    badgeClass: 'bg-amber-950/70 text-amber-300 border-amber-500/40',
+    textClass: 'text-amber-400',
+    particleColors: ['#fbbf24', '#f59e0b', '#fde68a'],
+  },
+  4: {
+    name: 'Nguyên Anh',
+    tagline: 'Tử phủ thần quang',
+    primaryHex: '#a855f7',
+    secondaryHex: '#c084fc',
+    glowRgba: 'rgba(168, 85, 247, 0.32)',
+    borderClass: 'border-purple-500/40',
+    badgeClass: 'bg-purple-950/70 text-purple-300 border-purple-500/40',
+    textClass: 'text-purple-400',
+    particleColors: ['#c084fc', '#a855f7', '#e9d5ff'],
+  },
+  5: {
+    name: 'Hóa Thần',
+    tagline: 'Hồng liên chu sa',
+    primaryHex: '#f43f5e',
+    secondaryHex: '#fb7185',
+    glowRgba: 'rgba(244, 63, 94, 0.30)',
+    borderClass: 'border-rose-500/40',
+    badgeClass: 'bg-rose-950/70 text-rose-300 border-rose-500/40',
+    textClass: 'text-rose-400',
+    particleColors: ['#fb7185', '#f43f5e', '#fecdd3'],
+  },
+  6: {
+    name: 'Luyện Hư',
+    tagline: 'Thái hư huyền lam',
+    primaryHex: '#6366f1',
+    secondaryHex: '#818cf8',
+    glowRgba: 'rgba(99, 102, 241, 0.30)',
+    borderClass: 'border-indigo-500/40',
+    badgeClass: 'bg-indigo-950/70 text-indigo-300 border-indigo-500/40',
+    textClass: 'text-indigo-400',
+    particleColors: ['#818cf8', '#6366f1', '#c7d2fe'],
+  },
+  7: {
+    name: 'Hợp Thể',
+    tagline: 'Vạn tượng cực quang',
+    primaryHex: '#d946ef',
+    secondaryHex: '#e879f9',
+    glowRgba: 'rgba(217, 70, 239, 0.32)',
+    borderClass: 'border-fuchsia-500/40',
+    badgeClass: 'bg-fuchsia-950/70 text-fuchsia-300 border-fuchsia-500/40',
+    textClass: 'text-fuchsia-400',
+    particleColors: ['#e879f9', '#d946ef', '#f5d0fe'],
+  },
+  8: {
+    name: 'Đại Thừa',
+    tagline: 'Hoàng kim thánh vực',
+    primaryHex: '#fbbf24',
+    secondaryHex: '#fcd34d',
+    glowRgba: 'rgba(251, 191, 36, 0.40)',
+    borderClass: 'border-amber-400/50',
+    badgeClass: 'bg-gradient-to-r from-amber-500/30 to-yellow-500/30 text-amber-200 border-amber-400/50',
+    textClass: 'text-amber-300',
+    particleColors: ['#fcd34d', '#fbbf24', '#fef08a', '#f59e0b'],
+  },
+  9: {
+    name: 'Độ Kiếp',
+    tagline: 'Ngũ sắc thiên lôi',
+    primaryHex: '#c084fc',
+    secondaryHex: '#fbbf24',
+    glowRgba: 'rgba(192, 132, 252, 0.45)',
+    borderClass: 'border-purple-400/60 ring-1 ring-amber-400/40',
+    badgeClass: 'bg-gradient-to-r from-purple-900/60 via-amber-900/50 to-indigo-900/60 text-amber-200 border-purple-400/50 animate-pulse',
+    textClass: 'text-purple-300',
+    particleColors: ['#c084fc', '#fbbf24', '#38bdf8', '#f43f5e', '#34d399'],
+  },
+  10: {
+    name: 'Phi Thăng Tiên Giới',
+    tagline: 'Thiên giới vĩnh hằng',
+    primaryHex: '#fef08a',
+    secondaryHex: '#f472b6',
+    glowRgba: 'rgba(254, 240, 138, 0.45)',
+    borderClass: 'border-amber-300/60',
+    badgeClass: 'bg-gradient-to-r from-amber-400/30 via-pink-500/20 to-cyan-400/30 text-amber-100 border-amber-300/50',
+    textClass: 'text-amber-200',
+    particleColors: ['#fef08a', '#f472b6', '#38bdf8', '#fcd34d'],
+  },
+};
+
 export const CHAP1_STORY_FRAMES: StoryFrame[] = [
   {
     frame: 4,
