@@ -163,19 +163,7 @@ export function playSound(
       osc.start(now);
       osc.stop(now + 0.32);
     } else if (type === 'levelup') {
-      const notes = [440, 554.37, 659.25, 880, 1108.73];
-      notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.32, now + idx * 0.07);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.45);
-        osc.connect(gain);
-        gain.connect(dest);
-        osc.start(now + idx * 0.07);
-        osc.stop(now + idx * 0.07 + 0.45);
-      });
+      playLevelUpAudio(2, enabled);
     } else if (type === 'tick') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -202,6 +190,130 @@ export function playSound(
     }
   } catch {
     // Ignore audio errors
+  }
+}
+
+/**
+ * Âm thanh thăng cấp cảnh giới / giải khai phong ấn đa tầng (Multi-layered Level-up Audio)
+ * - Tầng 1 (Trầm): Cú chạm âm vực thấp (Sub-bass impact 60-120Hz) tạo độ uy lực, rung chuyển
+ * - Tầng 2 (Giai điệu): Chuỗi thang ngũ cung cổ xưa (Chương 1: Tiếng chuông đá di tích; Chương 2: Đàn tranh & sáo tiên)
+ * - Tầng 3 (Cao độ): Bụi sao tinh tú lấp lánh (Crystal sparkles 2000-4500Hz)
+ * - Tầng 4 (Ngân vang): Chuông vàng đại điện / chuông bát tiên ngân vang 2.5s lan tỏa trong không gian
+ */
+export function playLevelUpAudio(chapter: 1 | 2 = 2, enabled = true) {
+  if (!enabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const dest = masterCompressor || ctx.destination;
+
+    // -------------------------------------------------------------
+    // TẦNG 1: SUB-BASS RESONANT IMPACT (Uy lực trầm bổng)
+    // -------------------------------------------------------------
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.type = 'sine';
+    const subStartFreq = chapter === 1 ? 65.41 : 73.42; // C2 / D2
+    subOsc.frequency.setValueAtTime(subStartFreq, now);
+    subOsc.frequency.exponentialRampToValueAtTime(subStartFreq * 1.5, now + 0.12);
+    subOsc.frequency.exponentialRampToValueAtTime(32.7, now + 0.6);
+
+    subGain.gain.setValueAtTime(0.001, now);
+    subGain.gain.linearRampToValueAtTime(0.38, now + 0.02);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+
+    subOsc.connect(subGain);
+    subGain.connect(dest);
+    subOsc.start(now);
+    subOsc.stop(now + 0.7);
+
+    // -------------------------------------------------------------
+    // TẦNG 2: ASCENDING MELODIC GLISSANDO / RUN (Giai điệu thăng hoa)
+    // -------------------------------------------------------------
+    // Chapter 1: Ancient Ruins stone chime run (D4, F4, A4, C5, D5, F5, A5)
+    // Chapter 2: Immortal Cultivation Guzheng ascendance (D4, E4, G4, A4, B4, D5, E5, G5, A5, D6)
+    const notes =
+      chapter === 1
+        ? [293.66, 349.23, 440.0, 523.25, 587.33, 698.46, 880.0]
+        : [293.66, 329.63, 392.0, 440.0, 493.88, 587.33, 659.25, 783.99, 880.0, 1174.66];
+
+    const noteStep = chapter === 1 ? 0.065 : 0.055;
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = chapter === 1 ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * noteStep);
+
+      const noteDuration = 0.45;
+      gain.gain.setValueAtTime(0.001, now + idx * noteStep);
+      gain.gain.linearRampToValueAtTime(0.24, now + idx * noteStep + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * noteStep + noteDuration);
+
+      osc.connect(gain);
+      gain.connect(dest);
+      if (spaceSendGain) {
+        gain.connect(spaceSendGain);
+      }
+
+      osc.start(now + idx * noteStep);
+      osc.stop(now + idx * noteStep + noteDuration);
+    });
+
+    // -------------------------------------------------------------
+    // TẦNG 3: CELESTIAL CRYSTAL SPARKLES (Bụi sao tinh thể lấp lánh)
+    // -------------------------------------------------------------
+    const sparkleCount = 6;
+    for (let i = 0; i < sparkleCount; i++) {
+      const sparkTime = now + 0.15 + i * 0.06;
+      const sparkOsc = ctx.createOscillator();
+      const sparkGain = ctx.createGain();
+      sparkOsc.type = 'sine';
+      const sparkFreq = 1800 + Math.random() * 2400; // 1800Hz - 4200Hz
+      sparkOsc.frequency.setValueAtTime(sparkFreq, sparkTime);
+
+      sparkGain.gain.setValueAtTime(0.0001, sparkTime);
+      sparkGain.gain.linearRampToValueAtTime(0.12, sparkTime + 0.01);
+      sparkGain.gain.exponentialRampToValueAtTime(0.0001, sparkTime + 0.25);
+
+      sparkOsc.connect(sparkGain);
+      sparkGain.connect(dest);
+      if (spaceSendGain) {
+        sparkGain.connect(spaceSendGain);
+      }
+
+      sparkOsc.start(sparkTime);
+      sparkOsc.stop(sparkTime + 0.25);
+    }
+
+    // -------------------------------------------------------------
+    // TẦNG 4: SACRED TEMPLE GONG / GOLDEN BELL SUSTAIN (Chuông đồng ngân dài)
+    // -------------------------------------------------------------
+    const bellFund = chapter === 1 ? 440.0 : 587.33; // A4 for Ruin bell / D5 for Xianxia Golden Bell
+    const bellHarmonics = [1, 2, 2.76, 4];
+    bellHarmonics.forEach((harmonic, idx) => {
+      const bellOsc = ctx.createOscillator();
+      const bellGain = ctx.createGain();
+      bellOsc.type = 'sine';
+      bellOsc.frequency.setValueAtTime(bellFund * harmonic, now + 0.1);
+
+      const bellVolume = 0.18 / (idx + 1);
+      const bellDuration = 2.2 - idx * 0.3;
+      bellGain.gain.setValueAtTime(0.0001, now + 0.1);
+      bellGain.gain.linearRampToValueAtTime(bellVolume, now + 0.13);
+      bellGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1 + bellDuration);
+
+      bellOsc.connect(bellGain);
+      bellGain.connect(dest);
+      if (spaceSendGain) {
+        bellGain.connect(spaceSendGain);
+      }
+
+      bellOsc.start(now + 0.1);
+      bellOsc.stop(now + 0.1 + bellDuration);
+    });
+  } catch {
+    // Ignore audio error
   }
 }
 

@@ -27,8 +27,10 @@ import { generateAllChap1Questions } from './data/chap1QuestionGenerator';
 import { generateAllQuestions as generateAllChap2Questions } from './data/questionGenerator';
 import { MathText } from './components/MathText';
 import { TopBar } from './components/TopBar';
-import { playSound, setBgmTheme, unlockAudio, triggerHaptic } from './utils/audio';
-import { fireConfetti } from './utils/confetti';
+import { ChapterAtmosphere } from './components/ChapterAtmosphere';
+import { LevelUpCelebration, LevelUpEvent } from './components/LevelUpCelebration';
+import { playSound, playLevelUpAudio, setBgmTheme, unlockAudio, triggerHaptic } from './utils/audio';
+import { fireConfetti, fireMultiWaveFireworks } from './utils/confetti';
 
 const STORAGE_KEY = 'tu_tien_toan_hoc_scores_v2';
 
@@ -41,6 +43,7 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [leaderboard, setLeaderboard] = useState<ScoreHistoryEntry[]>([]);
+  const [levelUpEvent, setLevelUpEvent] = useState<LevelUpEvent | null>(null);
 
   // CHAP 1 STATE: Thám Hiểm Di Tích Cổ
   const [c1Questions, setC1Questions] = useState<Question[]>([]);
@@ -247,6 +250,15 @@ export default function App() {
       setC1Score((prev) => prev + 10);
       setC1CorrectCount((prev) => prev + 1);
       playSound('correct', soundEnabled);
+      setTimeout(() => playLevelUpAudio(1, soundEnabled), 150);
+      fireMultiWaveFireworks('chap1');
+      setLevelUpEvent({
+        chapter: 1,
+        title: 'Giải Khai Phong Ấn Cổ',
+        badge: `Phong ấn ${q.stage}/10`,
+        subtitle: frameInfo.title,
+        auraGained: 10,
+      });
       setC1Feedback({
         text: `Chính xác! ${frameInfo.successMsg}`,
         isGood: true,
@@ -278,6 +290,8 @@ export default function App() {
       setTimeLeft(20);
     } else {
       // Completed Chap 1 10 questions -> go to Bí mật sau di tích
+      playLevelUpAudio(1, soundEnabled);
+      fireMultiWaveFireworks('chap1');
       saveScoreToLeaderboard(1, c1Score + (c1SelectedOption === c1Questions[c1Index]?.correctIndex ? 10 : 0), c1CorrectCount);
       setScreen('c1_ruins_secret');
       playSound('magic', soundEnabled);
@@ -340,7 +354,15 @@ export default function App() {
 
       playSound('correct', soundEnabled);
       if (newRealm > c2RealmIndex) {
-        setTimeout(() => playSound('levelup', soundEnabled), 200);
+        setTimeout(() => playLevelUpAudio(2, soundEnabled), 150);
+        fireMultiWaveFireworks('chap2');
+        setLevelUpEvent({
+          chapter: 2,
+          title: 'Đột Phá Cảnh Giới',
+          badge: REALMS[newRealm],
+          subtitle: `Chúc mừng thăng cấp lên [${REALMS[newRealm]}]`,
+          auraGained: 10,
+        });
       }
 
       setC2Feedback({
@@ -356,6 +378,16 @@ export default function App() {
         jadeSavedThisTurn = true;
         newRealm = Math.min(newRealm + 1, REALMS.length - 1);
         setC2RealmIndex(newRealm);
+
+        setTimeout(() => playLevelUpAudio(2, soundEnabled), 150);
+        fireMultiWaveFireworks('chap2');
+        setLevelUpEvent({
+          chapter: 2,
+          title: 'Ngọc Như Ý Hộ Thể',
+          badge: REALMS[newRealm],
+          subtitle: `Pháp bảo cứu nguy giúp bạn thăng tiến lên [${REALMS[newRealm]}]`,
+          auraGained: 0,
+        });
 
         setC2Feedback({
           text: `🟢 Ngọc Như Ý phát sáng hộ thể! Dù chưa đúng, pháp bảo cứu nguy giúp bạn vẫn thăng tiến lên [${REALMS[newRealm]}].`,
@@ -392,6 +424,16 @@ export default function App() {
     const newRealm = Math.min(c2RealmIndex + 1, REALMS.length - 1);
     setC2RealmIndex(newRealm);
 
+    playLevelUpAudio(2, soundEnabled);
+    fireMultiWaveFireworks('chap2');
+    setLevelUpEvent({
+      chapter: 2,
+      title: 'Đại Diễn Quyết Kích Hoạt',
+      badge: REALMS[newRealm],
+      subtitle: `Bỏ qua cửa ải và +1 cảnh giới lên [${REALMS[newRealm]}]`,
+      auraGained: 0,
+    });
+
     const record: UserAnswerRecord = {
       stage: q.stage,
       question: q,
@@ -414,8 +456,8 @@ export default function App() {
       setC2Feedback(null);
       setTimeLeft(c2Treasure === 'time' ? 30 : 20);
     } else {
-      fireConfetti();
-      playSound('levelup', soundEnabled);
+      fireMultiWaveFireworks('chap2');
+      playLevelUpAudio(2, soundEnabled);
       saveScoreToLeaderboard(2, c2Score, c2CorrectCount, REALMS[c2RealmIndex]);
       setScreen('c2_climax');
     }
@@ -499,16 +541,24 @@ export default function App() {
   const currentC2Question = c2Questions[c2Index];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-400/80 text-amber-300 px-4 py-2 rounded-full shadow-2xl text-xs sm:text-sm font-bold flex items-center gap-2 animate-bounce">
-          <Sparkles className="w-4 h-4 text-amber-400" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
+    <div className="relative min-h-screen text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950 overflow-x-hidden">
+      {/* 1 & 2 & 3. Dynamic Submerged Background, Ambient Environmental Lighting & Chapter Weather Particles */}
+      <ChapterAtmosphere chapter={currentChapter} screen={screen} />
 
-      {/* Top Bar Header */}
+      {/* 4. Level-Up & Seal Breakthrough Celebration Banner */}
+      <LevelUpCelebration event={levelUpEvent} onClose={() => setLevelUpEvent(null)} />
+
+      {/* Interactive Content Container */}
+      <div className="relative z-10 flex flex-col min-h-screen justify-between">
+        {/* Toast Notification */}
+        {toastMessage && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-400/80 text-amber-300 px-4 py-2 rounded-full shadow-2xl text-xs sm:text-sm font-bold flex items-center gap-2 animate-bounce">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
+        {/* Top Bar Header */}
       <TopBar
         chapter={currentChapter}
         playerName={playerName}
@@ -1927,6 +1977,7 @@ export default function App() {
       <footer className="h-10 shrink-0 border-t border-slate-900 bg-slate-950/80 flex items-center justify-center text-[10px] text-slate-500 tracking-wider">
         TU TIÊN TOÁN HỌC · {currentChapter === 1 ? 'CHƯƠNG 1: THÁM HIỂM DI TÍCH CỔ' : 'CHƯƠNG 2: TIẾN VÀO TU TIÊN GIỚI'}
       </footer>
+      </div>
     </div>
   );
 }
