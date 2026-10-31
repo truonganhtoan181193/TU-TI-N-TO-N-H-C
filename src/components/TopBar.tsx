@@ -1,5 +1,5 @@
-import React from 'react';
-import { Volume2, VolumeX, Sparkles, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Volume2, VolumeX, Sparkles, Award, Maximize2, Minimize2 } from 'lucide-react';
 import { ChapterId, REALMS, REALM_THEMES } from '../types';
 
 interface TopBarProps {
@@ -27,17 +27,34 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const currentRealm = REALMS[realmIndex] || 'Nhập Môn';
   const realmTheme = REALM_THEMES[realmIndex] || REALM_THEMES[0];
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const handleToggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/60 backdrop-blur-md border-b border-slate-800/80 text-white shadow-md">
-      <div className="max-w-4xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2">
+    <header className="sticky top-0 z-40 bg-slate-950/70 backdrop-blur-md border-b border-slate-800/80 text-white shadow-md">
+      <div className="max-w-4xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3.5 sm:px-6 2xl:px-10 h-14 xl:h-16 flex items-center justify-between gap-2">
         {/* Brand */}
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-400 to-amber-200 text-slate-950 font-black text-sm flex items-center justify-center shrink-0 shadow-sm shadow-amber-400/20">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 xl:w-9 xl:h-9 rounded-lg bg-gradient-to-tr from-amber-400 to-amber-200 text-slate-950 font-black text-sm xl:text-base flex items-center justify-center shrink-0 shadow-sm shadow-amber-400/20">
             {chapter === 1 ? '🗿' : '☯'}
           </div>
           <div className="min-w-0">
-            <h1 className="text-xs sm:text-sm font-black tracking-tight text-amber-300 truncate">
+            <h1 className="text-xs sm:text-sm xl:text-base font-black tracking-tight text-amber-300 truncate">
               {chapter === 1
                 ? 'CHƯƠNG 1: THÁM HIỂM DI TÍCH CỔ'
                 : 'CHƯƠNG 2: TIẾN VÀO TU TIÊN GIỚI'}
@@ -127,6 +144,30 @@ export const TopBar: React.FC<TopBarProps> = ({
               <Volume2 className="w-4 h-4 text-amber-300 animate-pulse" />
             ) : (
               <VolumeX className="w-4 h-4 text-slate-400" />
+            )}
+          </button>
+
+          {/* Fullscreen Presentation Mode Button */}
+          <button
+            onClick={handleToggleFullscreen}
+            aria-label={isFullscreen ? 'Thu nhỏ cửa sổ' : 'Toàn màn hình trình chiếu (16:9 / 4K)'}
+            className={`h-8 px-2.5 rounded-full border flex items-center gap-1.5 transition-all text-xs font-bold active:scale-95 ${
+              isFullscreen
+                ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-sm shadow-amber-400/30'
+                : 'bg-slate-800/90 hover:bg-slate-700/90 border-slate-700 text-slate-200'
+            }`}
+            title={isFullscreen ? 'Thoát toàn màn hình' : 'Bật toàn màn hình trình chiếu (16:9 / 4K)'}
+          >
+            {isFullscreen ? (
+              <>
+                <Minimize2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Thu nhỏ</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Trình chiếu</span>
+              </>
             )}
           </button>
 

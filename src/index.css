@@ -54,6 +54,24 @@
   letter-spacing: 0.02em;
 }
 
+@media (min-width: 1024px) {
+  .katex {
+    font-size: 1.12em !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .katex {
+    font-size: 1.25em !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .katex {
+    font-size: 1.4em !important;
+  }
+}
+
 .katex .frac-line,
 .katex .sqrt-line,
 .katex .overline-line {

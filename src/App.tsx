@@ -598,70 +598,70 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto p-3.5 sm:p-6 flex flex-col justify-center">
+      <main className="flex-1 w-full max-w-4xl xl:max-w-6xl 2xl:max-w-7xl mx-auto p-3.5 sm:p-6 2xl:p-8 flex flex-col justify-center">
         {/* ======================================================== */}
         {/* CHAP 1 - LỜI MỞ ĐẦU (Khung mở đầu Chương 1)               */}
         {/* ======================================================== */}
         {screen === 'c1_intro' && (
-          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-3xl p-6 sm:p-8 max-w-xl mx-auto w-full text-center shadow-2xl shadow-cyan-950/30 flex flex-col items-center">
+          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-3xl p-6 sm:p-8 xl:p-10 max-w-xl xl:max-w-3xl 2xl:max-w-4xl mx-auto w-full text-center shadow-2xl shadow-cyan-950/30 flex flex-col items-center">
             <div className="relative mb-4 sm:mb-6">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-cyan-400 via-amber-400 to-indigo-500 p-1 shadow-xl shadow-cyan-500/10 glow-amber flex items-center justify-center">
-                <div className="w-full h-full bg-slate-900/90 rounded-[22px] flex items-center justify-center text-4xl sm:text-5xl">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 xl:w-28 xl:h-28 rounded-3xl bg-gradient-to-tr from-cyan-400 via-amber-400 to-indigo-500 p-1 shadow-xl shadow-cyan-500/10 glow-amber flex items-center justify-center">
+                <div className="w-full h-full bg-slate-900/90 rounded-[22px] flex items-center justify-center text-4xl sm:text-5xl xl:text-6xl">
                   🏺
                 </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 bg-cyan-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow">
+              <div className="absolute -bottom-2 -right-2 bg-cyan-400 text-slate-950 text-[10px] xl:text-xs font-black px-2.5 py-0.5 rounded-full shadow">
                 CHƯƠNG 1
               </div>
             </div>
 
-            <div className="text-[11px] font-bold uppercase tracking-widest text-cyan-400 mb-1 drop-shadow-sm">
+            <div className="text-[11px] xl:text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1 drop-shadow-sm">
               Tiếng gọi từ vùng đất lạ
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black text-slate-50 tracking-tight mb-2 drop-shadow-md">
+            <h1 className="text-2xl sm:text-4xl xl:text-5xl font-black text-slate-50 tracking-tight mb-2 drop-shadow-md">
               Thám Hiểm <span className="text-cyan-300">Di Tích Cổ</span>
             </h1>
 
             {/* Motto Banner */}
             <div className="inline-block bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 backdrop-blur-sm border border-amber-400/50 rounded-xl px-4 py-2 my-2 shadow-sm">
-              <span className="text-xs sm:text-sm font-black text-amber-300 drop-shadow-sm">
+              <span className="text-xs sm:text-sm xl:text-base font-black text-amber-300 drop-shadow-sm">
                 &ldquo;ĐIỂM SỐ CỦA TA, DO TA QUYẾT ĐỊNH!&rdquo;
               </span>
             </div>
 
-            <div className="text-xs text-slate-300 font-semibold mb-4 drop-shadow-sm">
+            <div className="text-xs xl:text-sm text-slate-300 font-semibold mb-4 drop-shadow-sm">
               ✦ ĐẠI GIÁO CHỦ TRƯƠNG ANH TOÀN – 0329056500 ✦
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-6 max-w-md drop-shadow-sm font-normal">
+            <p className="text-xs sm:text-sm xl:text-base text-slate-200 leading-relaxed mb-6 max-w-md xl:max-w-xl drop-shadow-sm font-normal">
               Trong một chuyến thám hiểm đến vùng đất chưa từng được ghi chép trên bản đồ, bạn phát hiện những dấu tích kỳ lạ của một nền văn minh cổ xưa. Không ai biết nơi này chứa đựng điều gì. Nhưng một cảm giác thôi thúc khiến bạn quyết định tiến sâu hơn vào khu di tích.
             </p>
 
-            <div className="grid grid-cols-3 gap-2 w-full max-w-sm mb-6 text-center">
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-2.5 shadow-sm">
-                <div className="text-base sm:text-lg mb-0.5">📜</div>
-                <div className="text-[11px] font-bold text-slate-100">Manh Mối</div>
-                <div className="text-[9px] text-slate-300">Bản đồ cổ xưa</div>
+            <div className="grid grid-cols-3 gap-2.5 xl:gap-4 w-full max-w-sm xl:max-w-lg mb-6 text-center">
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 shadow-sm">
+                <div className="text-base sm:text-lg xl:text-2xl mb-0.5">📜</div>
+                <div className="text-[11px] xl:text-xs font-bold text-slate-100">Manh Mối</div>
+                <div className="text-[9px] xl:text-[10px] text-slate-300">Bản đồ cổ xưa</div>
               </div>
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-2.5 shadow-sm">
-                <div className="text-base sm:text-lg mb-0.5">🗝️</div>
-                <div className="text-[11px] font-bold text-slate-100">10 Phong Ấn</div>
-                <div className="text-[9px] text-slate-300">Đại số lớp 7</div>
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 shadow-sm">
+                <div className="text-base sm:text-lg xl:text-2xl mb-0.5">🗝️</div>
+                <div className="text-[11px] xl:text-xs font-bold text-slate-100">10 Phong Ấn</div>
+                <div className="text-[9px] xl:text-[10px] text-slate-300">Đại số lớp 7</div>
               </div>
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-2.5 shadow-sm">
-                <div className="text-base sm:text-lg mb-0.5">🌌</div>
-                <div className="text-[11px] font-bold text-slate-100">Dị Giới</div>
-                <div className="text-[9px] text-slate-300">Cổng sang Chương 2</div>
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 shadow-sm">
+                <div className="text-base sm:text-lg xl:text-2xl mb-0.5">🌌</div>
+                <div className="text-[11px] xl:text-xs font-bold text-slate-100">Dị Giới</div>
+                <div className="text-[9px] xl:text-[10px] text-slate-300">Cổng sang Chương 2</div>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2.5 w-full max-w-sm">
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full max-w-sm xl:max-w-md">
               <button
                 onClick={() => setScreen('c1_map')}
-                className="w-full min-h-[48px] bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform"
+                className="w-full min-h-[48px] xl:min-h-[54px] bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 text-slate-950 font-black text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform"
               >
                 <span>BẮT ĐẦU THÁM HIỂM</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 xl:w-5 xl:h-5" />
               </button>
 
               <button
@@ -669,7 +669,7 @@ export default function App() {
                   setCurrentChapter(2);
                   setScreen(playerName ? 'c2_rules' : 'transition_to_c2');
                 }}
-                className="w-full min-h-[44px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm border border-slate-700/80 text-slate-200 hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-colors"
+                className="w-full min-h-[44px] xl:min-h-[50px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm border border-slate-700/80 text-slate-200 hover:text-white font-bold text-xs xl:text-sm rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-colors"
               >
                 <span>Chuyển thẳng sang Chương 2 ➜</span>
               </button>
@@ -681,17 +681,17 @@ export default function App() {
         {/* CHAP 1 - BẢN ĐỒ BÍ ẨN                                    */}
         {/* ======================================================== */}
         {screen === 'c1_map' && (
-          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-5 sm:p-7 max-w-md mx-auto w-full text-center shadow-2xl shadow-cyan-950/30">
-            <div className="w-16 h-16 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-3xl mx-auto mb-3">
+          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-2xl lg:rounded-3xl p-5 sm:p-7 xl:p-9 max-w-md xl:max-w-xl 2xl:max-w-2xl mx-auto w-full text-center shadow-2xl shadow-cyan-950/30">
+            <div className="w-16 h-16 xl:w-20 xl:h-20 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-3xl xl:text-4xl mx-auto mb-3">
               📜
             </div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1 drop-shadow-sm">
+            <div className="text-[10px] xl:text-xs font-bold uppercase tracking-widest text-amber-400 mb-1 drop-shadow-sm">
               Mảnh bản đồ cổ
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-100 mb-3 drop-shadow-sm">
+            <h2 className="text-xl sm:text-2xl xl:text-3xl font-black text-slate-100 mb-3 drop-shadow-sm">
               Manh Mối Đầu Tiên
             </h2>
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-6 font-normal drop-shadow-sm">
+            <p className="text-xs sm:text-sm xl:text-base text-slate-200 leading-relaxed mb-6 font-normal drop-shadow-sm">
               Giữa đống tàn tích, bạn tìm thấy một mảnh bản đồ được khắc những ký hiệu khó hiểu. Trên bản đồ có ghi một dòng chữ đã phai mờ:
               <br />
               <i className="text-amber-300 font-medium block mt-2 drop-shadow-sm">
@@ -702,16 +702,16 @@ export default function App() {
             <div className="flex gap-2.5">
               <button
                 onClick={() => setScreen('c1_intro')}
-                className="flex-1 min-h-[46px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm text-slate-300 hover:text-white font-bold text-xs rounded-xl transition-colors active:scale-[0.98] border border-slate-700/60"
+                className="flex-1 min-h-[46px] xl:min-h-[52px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm text-slate-300 hover:text-white font-bold text-xs xl:text-sm rounded-xl transition-colors active:scale-[0.98] border border-slate-700/60"
               >
                 Quay lại
               </button>
               <button
                 onClick={() => setScreen('c1_register')}
-                className="flex-[2] min-h-[46px] bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 font-black text-xs sm:text-sm rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-cyan-400/20 active:scale-[0.98] transition-transform"
+                className="flex-[2] min-h-[46px] xl:min-h-[52px] bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-cyan-400/20 active:scale-[0.98] transition-transform"
               >
                 <span>TIẾN VÀO DI TÍCH</span>
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 xl:w-5 xl:h-5" />
               </button>
             </div>
           </div>
@@ -721,7 +721,7 @@ export default function App() {
         {/* CHAP 1 - GHI DANH NHÀ THÁM HIỂM                          */}
         {/* ======================================================== */}
         {screen === 'c1_register' && (
-          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-4 sm:p-7 max-w-md mx-auto w-full shadow-2xl shadow-cyan-950/30">
+          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-2xl lg:rounded-3xl p-5 sm:p-7 xl:p-9 max-w-md xl:max-w-xl 2xl:max-w-2xl mx-auto w-full shadow-2xl shadow-cyan-950/30">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-xl shrink-0">
                 🗝️
@@ -801,25 +801,25 @@ export default function App() {
         {/* CHAP 1 - 10 THỬ THÁCH ĐẠI SỐ                             */}
         {/* ======================================================== */}
         {screen === 'c1_quiz' && currentC1Question && (
-          <div className="w-full max-w-2xl mx-auto flex flex-col gap-3">
+          <div className="w-full max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-3 sm:gap-3.5">
             {/* Stage header info from CHAP1_STORY_FRAMES */}
             {(() => {
               const frameInfo = CHAP1_STORY_FRAMES[currentC1Question.stage - 1];
               return (
-                <div className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md border border-cyan-500/30 rounded-xl px-3.5 py-2 shadow-sm">
+                <div className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md border border-cyan-500/30 rounded-xl px-3.5 py-2 xl:px-5 xl:py-2.5 shadow-sm">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-black text-cyan-400 drop-shadow-sm">
+                    <span className="text-sm xl:text-base font-black text-cyan-400 drop-shadow-sm">
                       ẢI {currentC1Question.stage < 10 ? `0${currentC1Question.stage}` : currentC1Question.stage}/10
                     </span>
                     <span className="text-slate-500">·</span>
-                    <span className="text-xs font-semibold text-slate-200 truncate max-w-[140px] sm:max-w-xs drop-shadow-sm">
+                    <span className="text-xs sm:text-sm xl:text-base font-semibold text-slate-200 truncate max-w-[140px] sm:max-w-xs xl:max-w-md drop-shadow-sm">
                       {frameInfo?.title || currentC1Question.tag}
                     </span>
                   </div>
 
                   {/* Timer */}
                   <div
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold tabular-nums transition-colors ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 xl:px-4 xl:py-1.5 rounded-full text-xs xl:text-sm font-bold tabular-nums transition-colors ${
                       timeLeft <= 5
                         ? 'bg-rose-500/20 border border-rose-500/60 text-rose-300 animate-pulse'
                         : timeLeft <= 8
@@ -827,7 +827,7 @@ export default function App() {
                         : 'bg-slate-900/70 border border-slate-700/70 text-slate-200'
                     }`}
                   >
-                    <Timer className="w-3.5 h-3.5" />
+                    <Timer className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                     <span>{timeLeft}s</span>
                   </div>
                 </div>
@@ -835,7 +835,7 @@ export default function App() {
             })()}
 
             {/* Progress Bar */}
-            <div className="h-1.5 w-full bg-slate-900/80 rounded-full overflow-hidden">
+            <div className="h-1.5 xl:h-2 w-full bg-slate-900/80 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-cyan-400 to-amber-300 transition-all duration-300"
                 style={{
@@ -845,7 +845,7 @@ export default function App() {
             </div>
 
             {/* Status strip */}
-            <div className="flex items-center justify-between text-[11px] bg-slate-950/45 backdrop-blur-md border border-slate-700/50 px-3 py-1.5 rounded-lg text-slate-200">
+            <div className="flex items-center justify-between text-[11px] sm:text-xs xl:text-sm bg-slate-950/45 backdrop-blur-md border border-slate-700/50 px-3.5 py-1.5 xl:px-5 xl:py-2 rounded-lg text-slate-200">
               <div className="flex items-center gap-1.5">
                 <span>⚡ Điểm:</span>
                 <span className="font-bold text-amber-300 drop-shadow-sm">{c1Score} aura</span>
@@ -856,111 +856,125 @@ export default function App() {
               </div>
             </div>
 
-            {/* Main Question Card */}
-            <div className="bg-slate-950/50 backdrop-blur-md border border-slate-700/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col gap-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1">
-                  <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider mb-1 drop-shadow-sm">
-                    {CHAP1_STORY_FRAMES[currentC1Question.stage - 1]?.title}
+            {/* Main Question Card (Adaptive 2-column Widescreen Presentation Layout) */}
+            <div className="bg-slate-950/50 backdrop-blur-md border border-slate-700/60 rounded-2xl lg:rounded-3xl p-4 sm:p-6 xl:p-8 shadow-2xl flex flex-col gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-stretch">
+                {/* Left Presentation Column: Question Prompt & Context */}
+                <div className="lg:col-span-5 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div>
+                        <div className="text-[10px] xl:text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1 drop-shadow-sm">
+                          {CHAP1_STORY_FRAMES[currentC1Question.stage - 1]?.title}
+                        </div>
+                        <div className="text-xs text-slate-400 hidden lg:block">
+                          Thử thách số {currentC1Question.stage} · {currentC1Question.tag}
+                        </div>
+                      </div>
+                      <div className="text-2xl sm:text-3xl lg:text-4xl shrink-0 p-2.5 rounded-2xl bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 shadow-inner">
+                        {currentC1Question.emoji}
+                      </div>
+                    </div>
+
+                    <h3 className="text-base sm:text-lg lg:text-xl 2xl:text-2xl font-bold text-slate-100 leading-snug lg:leading-relaxed drop-shadow-sm">
+                      <MathText text={currentC1Question.prompt} />
+                    </h3>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-100 leading-snug drop-shadow-sm">
-                    <MathText text={currentC1Question.prompt} />
-                  </h3>
-                </div>
-                <div className="text-2xl sm:text-3xl shrink-0 p-2 rounded-xl bg-slate-900/60 backdrop-blur-sm border border-slate-700/60">
-                  {currentC1Question.emoji}
-                </div>
-              </div>
 
-              {/* Options */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                {currentC1Question.options.map((opt, idx) => {
-                  const letter = String.fromCharCode(65 + idx);
-                  const isSelected = c1SelectedOption === idx;
-                  const isCorrect = idx === currentC1Question.correctIndex;
-
-                  let btnStyle =
-                    'bg-slate-950/60 backdrop-blur-sm border-slate-700/70 text-slate-100 hover:border-cyan-400/60 hover:bg-slate-900/70';
-                  let badgeStyle = 'bg-slate-800 text-slate-200';
-
-                  if (c1Locked) {
-                    if (isCorrect) {
-                      btnStyle =
-                        'bg-emerald-950/60 border-emerald-500 text-emerald-200 ring-1 ring-emerald-500/40';
-                      badgeStyle = 'bg-emerald-500 text-slate-950 font-black';
-                    } else if (isSelected) {
-                      btnStyle =
-                        'bg-rose-950/60 border-rose-500 text-rose-200 ring-1 ring-rose-500/40';
-                      badgeStyle = 'bg-rose-500 text-white font-black';
-                    } else {
-                      btnStyle = 'opacity-40 bg-slate-950/40 border-slate-800/60 text-slate-400';
-                    }
-                  }
-
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      disabled={c1Locked}
-                      onClick={() => handleC1Answer(idx)}
-                      className={`min-h-[50px] sm:min-h-[54px] p-2.5 sm:p-3 rounded-xl border text-left flex items-center gap-3 transition-all active:scale-[0.98] ${btnStyle}`}
+                  {/* Feedback Banner on Desktop */}
+                  {c1Feedback && (
+                    <div
+                      className={`mt-4 p-3 xl:p-3.5 rounded-xl text-xs sm:text-sm xl:text-base font-bold flex items-center gap-2.5 transition-all ${
+                        c1Feedback.isGood
+                          ? 'bg-emerald-950/70 border border-emerald-500/60 text-emerald-200 backdrop-blur-sm'
+                          : 'bg-rose-950/70 border border-rose-500/60 text-rose-200 backdrop-blur-sm'
+                      }`}
                     >
-                      <span
-                        className={`w-7 h-7 rounded-lg text-xs font-black flex items-center justify-center shrink-0 shadow-sm ${badgeStyle}`}
-                      >
-                        {letter}
-                      </span>
-                      <span className="flex-1 font-semibold text-xs sm:text-sm overflow-x-auto drop-shadow-sm">
-                        <MathText text={opt} />
-                      </span>
-                      {c1Locked && isCorrect && (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      {c1Feedback.isGood ? (
+                        <CheckCircle2 className="w-4 h-4 xl:w-5 xl:h-5 shrink-0 text-emerald-400" />
+                      ) : (
+                        <AlertCircle className="w-4 h-4 xl:w-5 xl:h-5 shrink-0 text-rose-400" />
                       )}
-                      {c1Locked && isSelected && !isCorrect && (
-                        <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Feedback Banner */}
-              {c1Feedback && (
-                <div
-                  className={`p-3 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2.5 transition-all ${
-                    c1Feedback.isGood
-                      ? 'bg-emerald-950/70 border border-emerald-500/60 text-emerald-200 backdrop-blur-sm'
-                      : 'bg-rose-950/70 border border-rose-500/60 text-rose-200 backdrop-blur-sm'
-                  }`}
-                >
-                  {c1Feedback.isGood ? (
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
-                  ) : (
-                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                      <span className="leading-relaxed">{c1Feedback.text}</span>
+                    </div>
                   )}
-                  <span className="leading-relaxed">{c1Feedback.text}</span>
-                </div>
-              )}
-
-              {/* Action Controls */}
-              <div className="flex items-center justify-between gap-2.5 pt-2 border-t border-slate-800/80">
-                <div className="text-slate-400 text-[11px]">
-                  {!c1Locked && 'Chọn một đáp án để kích hoạt cơ quan.'}
                 </div>
 
-                {c1Locked && (
-                  <button
-                    type="button"
-                    onClick={handleC1NextQuestion}
-                    className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 font-black text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform ml-auto"
-                  >
-                    <span>
-                      {currentC1Question.stage === 10
-                        ? 'Mở cánh cổng bí ẩn ➜'
-                        : 'Thử thách tiếp theo ➜'}
-                    </span>
-                  </button>
-                )}
+                {/* Right Presentation Column: Options & Controls */}
+                <div className="lg:col-span-7 flex flex-col justify-between gap-3">
+                  {/* Options */}
+                  <div className="grid grid-cols-1 gap-2.5 xl:gap-3">
+                    {currentC1Question.options.map((opt, idx) => {
+                      const letter = String.fromCharCode(65 + idx);
+                      const isSelected = c1SelectedOption === idx;
+                      const isCorrect = idx === currentC1Question.correctIndex;
+
+                      let btnStyle =
+                        'bg-slate-950/60 backdrop-blur-sm border-slate-700/70 text-slate-100 hover:border-cyan-400/60 hover:bg-slate-900/70';
+                      let badgeStyle = 'bg-slate-800 text-slate-200';
+
+                      if (c1Locked) {
+                        if (isCorrect) {
+                          btnStyle =
+                            'bg-emerald-950/60 border-emerald-500 text-emerald-200 ring-1 ring-emerald-500/40';
+                          badgeStyle = 'bg-emerald-500 text-slate-950 font-black';
+                        } else if (isSelected) {
+                          btnStyle =
+                            'bg-rose-950/60 border-rose-500 text-rose-200 ring-1 ring-rose-500/40';
+                          badgeStyle = 'bg-rose-500 text-white font-black';
+                        } else {
+                          btnStyle = 'opacity-40 bg-slate-950/40 border-slate-800/60 text-slate-400';
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          disabled={c1Locked}
+                          onClick={() => handleC1Answer(idx)}
+                          className={`min-h-[50px] sm:min-h-[54px] lg:min-h-[60px] xl:min-h-[66px] p-2.5 sm:p-3 xl:p-3.5 rounded-xl lg:rounded-2xl border text-left flex items-center gap-3.5 transition-all active:scale-[0.98] ${btnStyle}`}
+                        >
+                          <span
+                            className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 rounded-lg text-xs sm:text-sm lg:text-base font-black flex items-center justify-center shrink-0 shadow-sm ${badgeStyle}`}
+                          >
+                            {letter}
+                          </span>
+                          <span className="flex-1 font-semibold text-xs sm:text-sm xl:text-base overflow-x-auto drop-shadow-sm">
+                            <MathText text={opt} />
+                          </span>
+                          {c1Locked && isCorrect && (
+                            <CheckCircle2 className="w-4 h-4 xl:w-5 xl:h-5 text-emerald-400 shrink-0" />
+                          )}
+                          {c1Locked && isSelected && !isCorrect && (
+                            <XCircle className="w-4 h-4 xl:w-5 xl:h-5 text-rose-400 shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Action Controls */}
+                  <div className="flex items-center justify-between gap-2.5 pt-3 border-t border-slate-800/80">
+                    <div className="text-slate-400 text-[11px] xl:text-xs">
+                      {!c1Locked && 'Chọn một đáp án để kích hoạt cơ quan.'}
+                    </div>
+
+                    {c1Locked && (
+                      <button
+                        type="button"
+                        onClick={handleC1NextQuestion}
+                        className="w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform ml-auto"
+                      >
+                        <span>
+                          {currentC1Question.stage === 10
+                            ? 'Mở cánh cổng bí ẩn ➜'
+                            : 'Thử thách tiếp theo ➜'}
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1362,48 +1376,48 @@ export default function App() {
         {/* CHAP 2 - TREASURE SELECTION                              */}
         {/* ======================================================== */}
         {screen === 'c2_treasure' && (
-          <div className="bg-slate-950/45 backdrop-blur-md border border-amber-500/30 rounded-2xl p-4 sm:p-6 max-w-xl mx-auto w-full shadow-2xl shadow-amber-950/30">
+          <div className="bg-slate-950/45 backdrop-blur-md border border-amber-500/30 rounded-2xl lg:rounded-3xl p-5 sm:p-7 xl:p-8 max-w-xl xl:max-w-4xl 2xl:max-w-5xl mx-auto w-full shadow-2xl shadow-amber-950/30">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-xl shrink-0">
+              <div className="w-10 h-10 xl:w-12 xl:h-12 rounded-xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-xl xl:text-2xl shrink-0">
                 💎
               </div>
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-400 drop-shadow-sm">
+                <div className="text-[10px] xl:text-xs font-bold uppercase tracking-wider text-amber-400 drop-shadow-sm">
                   Chương 2 · Chọn đạo cụ
                 </div>
-                <h2 className="text-lg sm:text-xl font-black text-slate-100 drop-shadow-sm">
+                <h2 className="text-lg sm:text-xl xl:text-2xl font-black text-slate-100 drop-shadow-sm">
                   Chọn Một Pháp Bảo Đồng Hành
                 </h2>
               </div>
             </div>
 
-            <p className="text-xs text-slate-300 mb-4 drop-shadow-sm">
+            <p className="text-xs sm:text-sm text-slate-300 mb-5 drop-shadow-sm">
               Mỗi tu sĩ chỉ được chọn <b>một</b> pháp bảo duy nhất xuyên suốt game.
             </p>
 
-            <div className="space-y-3 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-6">
               {/* Jade */}
               <button
                 type="button"
                 onClick={() => setC2Treasure('jade')}
-                className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-3.5 active:scale-[0.99] backdrop-blur-sm ${
+                className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
                   c2Treasure === 'jade'
                     ? 'bg-emerald-950/60 border-emerald-400 ring-2 ring-emerald-400/30 shadow-lg shadow-emerald-900/30'
                     : 'bg-slate-900/50 border-slate-700/70 hover:border-slate-600'
                 }`}
               >
-                <div className="text-3xl shrink-0 mt-0.5">🟢</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-sm font-black text-emerald-300">
-                      Ngọc Như Ý
-                    </h3>
-                    {c2Treasure === 'jade' && (
-                      <span className="text-[10px] font-bold bg-emerald-400 text-slate-950 px-2 py-0.5 rounded-full">
-                        Đang chọn
-                      </span>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between w-full">
+                  <div className="text-3xl">🟢</div>
+                  {c2Treasure === 'jade' && (
+                    <span className="text-[10px] font-bold bg-emerald-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow">
+                      Đang chọn
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-sm xl:text-base font-black text-emerald-300 mb-1">
+                    Ngọc Như Ý
+                  </h3>
                   <p className="text-xs text-slate-200 leading-relaxed">
                     <b>Cứu sai 1 lần:</b> Tự động kích hoạt khi trả lời sai lần đầu tiên (từ câu 1 đến 9), giúp bạn vẫn được{' '}
                     <span className="text-emerald-300 font-bold">+1 cảnh giới</span>.
@@ -1415,24 +1429,24 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setC2Treasure('time')}
-                className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-3.5 active:scale-[0.99] backdrop-blur-sm ${
+                className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
                   c2Treasure === 'time'
                     ? 'bg-amber-950/60 border-amber-400 ring-2 ring-amber-400/30 shadow-lg shadow-amber-900/30'
                     : 'bg-slate-900/50 border-slate-700/70 hover:border-slate-600'
                 }`}
               >
-                <div className="text-3xl shrink-0 mt-0.5">⌛</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-sm font-black text-amber-300">
-                      Pháp Tắc Thời Gian
-                    </h3>
-                    {c2Treasure === 'time' && (
-                      <span className="text-[10px] font-bold bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full">
-                        Đang chọn
-                      </span>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between w-full">
+                  <div className="text-3xl">⌛</div>
+                  {c2Treasure === 'time' && (
+                    <span className="text-[10px] font-bold bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow">
+                      Đang chọn
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-sm xl:text-base font-black text-amber-300 mb-1">
+                    Pháp Tắc Thời Gian
+                  </h3>
                   <p className="text-xs text-slate-200 leading-relaxed">
                     <b>Thêm thời gian suy nghĩ:</b> Tăng thời gian làm bài cho tất cả 10 câu hỏi từ <span className="font-bold">20 giây</span> lên{' '}
                     <span className="text-amber-300 font-bold">30 giây</span>.
@@ -1444,24 +1458,24 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setC2Treasure('skip')}
-                className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-3.5 active:scale-[0.99] backdrop-blur-sm ${
+                className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
                   c2Treasure === 'skip'
                     ? 'bg-indigo-950/60 border-indigo-400 ring-2 ring-indigo-400/30 shadow-lg shadow-indigo-900/30'
                     : 'bg-slate-900/50 border-slate-700/70 hover:border-slate-600'
                 }`}
               >
-                <div className="text-3xl shrink-0 mt-0.5">🔮</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-sm font-black text-indigo-300">
-                      Đại Diễn Quyết
-                    </h3>
-                    {c2Treasure === 'skip' && (
-                      <span className="text-[10px] font-bold bg-indigo-400 text-slate-950 px-2 py-0.5 rounded-full">
-                        Đang chọn
-                      </span>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between w-full">
+                  <div className="text-3xl">🔮</div>
+                  {c2Treasure === 'skip' && (
+                    <span className="text-[10px] font-bold bg-indigo-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow">
+                      Đang chọn
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-sm xl:text-base font-black text-indigo-300 mb-1">
+                    Đại Diễn Quyết
+                  </h3>
                   <p className="text-xs text-slate-200 leading-relaxed">
                     <b>Bỏ qua cửa ải:</b> Chủ động bỏ qua 1 câu hỏi khó (từ câu 1 đến 9) và tiến thẳng lên{' '}
                     <span className="text-indigo-300 font-bold">+1 cảnh giới</span>.
@@ -1497,30 +1511,30 @@ export default function App() {
           const isTribulationStage = currentC2Question.stage === 10;
 
           return (
-            <div className="w-full max-w-2xl mx-auto flex flex-col gap-3">
+            <div className="w-full max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-3 sm:gap-3.5">
               {/* Stage Bar */}
               <div
-                className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md rounded-xl px-3.5 py-2 shadow-sm border transition-colors duration-500"
+                className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md rounded-xl px-3.5 py-2 xl:px-5 xl:py-2.5 shadow-sm border transition-colors duration-500"
                 style={{
                   borderColor: isTribulationStage ? '#c084fc' : `${currentRealmTheme.primaryHex}60`,
                 }}
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className="text-sm font-black drop-shadow-sm transition-colors duration-500"
+                    className="text-sm xl:text-base font-black drop-shadow-sm transition-colors duration-500"
                     style={{ color: isTribulationStage ? '#e9d5ff' : currentRealmTheme.secondaryHex }}
                   >
                     ẢI {currentC2Question.stage < 10 ? `0${currentC2Question.stage}` : currentC2Question.stage}/10
                   </span>
                   <span className="text-slate-500">·</span>
-                  <span className="text-xs font-semibold text-slate-200 truncate max-w-[140px] sm:max-w-xs drop-shadow-sm">
+                  <span className="text-xs sm:text-sm xl:text-base font-semibold text-slate-200 truncate max-w-[140px] sm:max-w-xs xl:max-w-md drop-shadow-sm">
                     {currentC2Question.tag}
                   </span>
                 </div>
 
                 {/* Timer */}
                 <div
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold tabular-nums transition-colors ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1 xl:px-4 xl:py-1.5 rounded-full text-xs xl:text-sm font-bold tabular-nums transition-colors ${
                     timeLeft <= 5
                       ? 'bg-rose-500/20 border border-rose-500/60 text-rose-300 animate-pulse'
                       : timeLeft <= 8
@@ -1528,13 +1542,13 @@ export default function App() {
                       : 'bg-slate-900/70 border border-slate-700/70 text-slate-200'
                   }`}
                 >
-                  <Timer className="w-3.5 h-3.5" />
+                  <Timer className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                   <span>{timeLeft}s</span>
                 </div>
               </div>
 
               {/* Progress */}
-              <div className="h-1.5 w-full bg-slate-900/80 rounded-full overflow-hidden">
+              <div className="h-1.5 xl:h-2 w-full bg-slate-900/80 rounded-full overflow-hidden">
                 <div
                   className="h-full transition-all duration-500"
                   style={{
@@ -1548,7 +1562,7 @@ export default function App() {
 
               {/* Status Strip */}
               <div
-                className="flex items-center justify-between text-[11px] bg-slate-950/45 backdrop-blur-md px-3 py-1.5 rounded-lg text-slate-200 border transition-colors duration-500"
+                className="flex items-center justify-between text-[11px] sm:text-xs xl:text-sm bg-slate-950/45 backdrop-blur-md px-3.5 py-1.5 xl:px-5 xl:py-2 rounded-lg text-slate-200 border transition-colors duration-500"
                 style={{
                   borderColor: `${currentRealmTheme.primaryHex}40`,
                 }}
@@ -1557,7 +1571,7 @@ export default function App() {
                   <span>☯</span>
                   <span className="text-slate-300">Cảnh giới:</span>
                   <span
-                    className="px-2 py-0.5 rounded-md font-bold text-[11px] border shadow-sm transition-all duration-500"
+                    className="px-2.5 py-0.5 rounded-md font-bold text-[11px] xl:text-xs border shadow-sm transition-all duration-500"
                     style={{
                       backgroundColor: `${currentRealmTheme.primaryHex}25`,
                       borderColor: `${currentRealmTheme.primaryHex}70`,
@@ -1566,37 +1580,37 @@ export default function App() {
                   >
                     {REALMS[c2RealmIndex]}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-mono">
+                  <span className="text-[10px] xl:text-xs text-slate-400 font-mono">
                     ({c2RealmIndex}/10)
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <span>💎</span>
-                  <span className="font-medium text-slate-200 truncate max-w-[120px]">
+                  <span className="font-medium text-slate-200 truncate max-w-[120px] sm:max-w-xs">
                     {getTreasureDisplayName(c2Treasure)}
                   </span>
                   {c2Treasure === 'jade' && c2JadeUsed && (
-                    <span className="text-[9px] text-rose-300 font-bold">(đã dùng)</span>
+                    <span className="text-[9px] xl:text-[10px] text-rose-300 font-bold">(đã dùng)</span>
                   )}
                   {c2Treasure === 'skip' && c2SkipUsed && (
-                    <span className="text-[9px] text-slate-400 font-bold">(đã dùng)</span>
+                    <span className="text-[9px] xl:text-[10px] text-slate-400 font-bold">(đã dùng)</span>
                   )}
                 </div>
               </div>
 
               {/* Heavenly Tribulation Banner (Special Ải 10) */}
               {isTribulationStage && (
-                <div className="bg-gradient-to-r from-purple-950/90 via-amber-950/80 to-purple-950/90 border border-purple-400/80 p-3 rounded-xl text-center text-xs font-bold text-amber-200 animate-pulse shadow-xl flex items-center justify-center gap-2">
-                  <span className="text-base animate-bounce">⚡</span>
+                <div className="bg-gradient-to-r from-purple-950/90 via-amber-950/80 to-purple-950/90 border border-purple-400/80 p-3 xl:p-3.5 rounded-xl text-center text-xs xl:text-sm font-bold text-amber-200 animate-pulse shadow-xl flex items-center justify-center gap-2">
+                  <span className="text-base xl:text-lg animate-bounce">⚡</span>
                   <span>THIÊN MÔN ĐỘ KIẾP: Sấm sét thiên kiếp thử thách tu vi! Toàn bộ pháp bảo bị phong tỏa.</span>
-                  <span className="text-base animate-bounce">🌩️</span>
+                  <span className="text-base xl:text-lg animate-bounce">🌩️</span>
                 </div>
               )}
 
-              {/* Question Card */}
+              {/* Question Card (Adaptive 2-column Widescreen Presentation Layout) */}
               <div
-                className="bg-slate-950/50 backdrop-blur-md rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col gap-4 border transition-all duration-500"
+                className="bg-slate-950/50 backdrop-blur-md rounded-2xl lg:rounded-3xl p-4 sm:p-6 xl:p-8 shadow-2xl flex flex-col gap-4 border transition-all duration-500"
                 style={{
                   borderColor: isTribulationStage ? '#c084fc' : `${currentRealmTheme.primaryHex}60`,
                   boxShadow: isTribulationStage
@@ -1604,127 +1618,141 @@ export default function App() {
                     : `0 0 25px ${currentRealmTheme.glowRgba}`,
                 }}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div
-                      className="text-[10px] font-bold uppercase tracking-wider mb-1 drop-shadow-sm transition-colors duration-500"
-                      style={{ color: isTribulationStage ? '#e9d5ff' : currentRealmTheme.secondaryHex }}
-                    >
-                      {isTribulationStage
-                        ? 'Thiên Môn Độ Kiếp · Cửa ải quyết định'
-                        : `Thử thách Cửa Ải ${currentC2Question.stage}`}
-                    </div>
-                    <h3 className="text-base sm:text-lg font-bold text-slate-100 leading-snug drop-shadow-sm">
-                      <MathText text={currentC2Question.prompt} />
-                    </h3>
-                  </div>
-                  <div
-                    className="text-2xl sm:text-3xl shrink-0 p-2 rounded-xl bg-slate-900/60 backdrop-blur-sm border transition-colors duration-500"
-                    style={{ borderColor: `${currentRealmTheme.primaryHex}45` }}
-                  >
-                    {currentC2Question.emoji}
-                  </div>
-                </div>
-
-                {/* Options */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                  {currentC2Question.options.map((opt, idx) => {
-                    const letter = String.fromCharCode(65 + idx);
-                    const isSelected = c2SelectedOption === idx;
-                    const isCorrect = idx === currentC2Question.correctIndex;
-
-                    let btnStyle =
-                      'bg-slate-950/60 backdrop-blur-sm border-slate-700/70 text-slate-100 hover:border-amber-400/60 hover:bg-slate-900/70';
-                    let badgeStyle = 'bg-slate-800 text-slate-200';
-
-                    if (c2Locked) {
-                      if (isCorrect) {
-                        btnStyle =
-                          'bg-emerald-950/60 border-emerald-500 text-emerald-200 ring-1 ring-emerald-500/40';
-                        badgeStyle = 'bg-emerald-500 text-slate-950 font-black';
-                      } else if (isSelected) {
-                        btnStyle =
-                          'bg-rose-950/60 border-rose-500 text-rose-200 ring-1 ring-rose-500/40';
-                        badgeStyle = 'bg-rose-500 text-white font-black';
-                      } else {
-                        btnStyle = 'opacity-40 bg-slate-950/40 border-slate-800/60 text-slate-400';
-                      }
-                    }
-
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        disabled={c2Locked}
-                        onClick={() => handleC2Answer(idx)}
-                        className={`min-h-[50px] sm:min-h-[54px] p-2.5 sm:p-3 rounded-xl border text-left flex items-center gap-3 transition-all active:scale-[0.98] ${btnStyle}`}
-                      >
-                        <span
-                          className={`w-7 h-7 rounded-lg text-xs font-black flex items-center justify-center shrink-0 shadow-sm ${badgeStyle}`}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-stretch">
+                  {/* Left Presentation Column: Question & Info */}
+                  <div className="lg:col-span-5 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div>
+                          <div
+                            className="text-[10px] xl:text-xs font-bold uppercase tracking-wider mb-1 drop-shadow-sm transition-colors duration-500"
+                            style={{ color: isTribulationStage ? '#e9d5ff' : currentRealmTheme.secondaryHex }}
+                          >
+                            {isTribulationStage
+                              ? 'Thiên Môn Độ Kiếp · Cửa ải quyết định'
+                              : `Thử thách Cửa Ải ${currentC2Question.stage}`}
+                          </div>
+                          <div className="text-xs text-slate-400 hidden lg:block">
+                            Chương 2 · {currentC2Question.tag}
+                          </div>
+                        </div>
+                        <div
+                          className="text-2xl sm:text-3xl lg:text-4xl shrink-0 p-2.5 rounded-2xl bg-slate-900/60 backdrop-blur-sm border transition-colors duration-500 shadow-inner"
+                          style={{ borderColor: `${currentRealmTheme.primaryHex}45` }}
                         >
-                          {letter}
-                        </span>
-                        <span className="flex-1 font-semibold text-xs sm:text-sm overflow-x-auto drop-shadow-sm">
-                          <MathText text={opt} />
-                        </span>
-                        {c2Locked && isCorrect && (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                        )}
-                        {c2Locked && isSelected && !isCorrect && (
-                          <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                          {currentC2Question.emoji}
+                        </div>
+                      </div>
 
-                {/* Feedback Banner (No lengthy explanation) */}
-                {c2Feedback && (
-                  <div
-                    className={`p-3 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2.5 transition-all ${
-                      c2Feedback.isGood
-                        ? 'bg-emerald-950/70 border border-emerald-500/60 text-emerald-200 backdrop-blur-sm'
-                        : 'bg-rose-950/70 border border-rose-500/60 text-rose-200 backdrop-blur-sm'
-                    }`}
-                  >
-                    {c2Feedback.isGood ? (
-                      <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
-                    ) : (
-                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                      <h3 className="text-base sm:text-lg lg:text-xl 2xl:text-2xl font-bold text-slate-100 leading-snug lg:leading-relaxed drop-shadow-sm">
+                        <MathText text={currentC2Question.prompt} />
+                      </h3>
+                    </div>
+
+                    {/* Feedback Banner (No lengthy explanation) */}
+                    {c2Feedback && (
+                      <div
+                        className={`mt-4 p-3 xl:p-3.5 rounded-xl text-xs sm:text-sm xl:text-base font-bold flex items-center gap-2.5 transition-all ${
+                          c2Feedback.isGood
+                            ? 'bg-emerald-950/70 border border-emerald-500/60 text-emerald-200 backdrop-blur-sm'
+                            : 'bg-rose-950/70 border border-rose-500/60 text-rose-200 backdrop-blur-sm'
+                        }`}
+                      >
+                        {c2Feedback.isGood ? (
+                          <CheckCircle2 className="w-4 h-4 xl:w-5 xl:h-5 shrink-0 text-emerald-400" />
+                        ) : (
+                          <AlertCircle className="w-4 h-4 xl:w-5 xl:h-5 shrink-0 text-rose-400" />
+                        )}
+                        <span className="leading-relaxed">{c2Feedback.text}</span>
+                      </div>
                     )}
-                    <span className="leading-relaxed">{c2Feedback.text}</span>
-                  </div>
-                )}
-
-                {/* Action Controls */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-2 border-t border-slate-800/80">
-                  {c2Treasure === 'skip' && !c2SkipUsed && currentC2Question.stage <= 9 && !c2Locked && (
-                    <button
-                      type="button"
-                      onClick={handleC2UseSkip}
-                      className="w-full sm:w-auto px-4 py-2.5 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-200 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all backdrop-blur-sm"
-                    >
-                      <span>🔮 Dùng Đại Diễn Quyết (Bỏ qua câu này)</span>
-                    </button>
-                  )}
-
-                  <div className="flex-1 hidden sm:block text-slate-400 text-[11px]">
-                    {!c2Locked && 'Chọn một đáp án để xác nhận lựa chọn.'}
                   </div>
 
-                  {c2Locked && (
-                    <button
-                      type="button"
-                      onClick={handleC2NextQuestion}
-                      className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 active:scale-[0.98] transition-transform ml-auto"
-                    >
-                      <span>
-                        {currentC2Question.stage === 10
-                          ? 'Hoàn tất độ kiếp ➜'
-                          : 'Cửa ải tiếp theo ➜'}
-                      </span>
-                    </button>
-                  )}
+                  {/* Right Presentation Column: Options & Controls */}
+                  <div className="lg:col-span-7 flex flex-col justify-between gap-3">
+                    {/* Options */}
+                    <div className="grid grid-cols-1 gap-2.5 xl:gap-3">
+                      {currentC2Question.options.map((opt, idx) => {
+                        const letter = String.fromCharCode(65 + idx);
+                        const isSelected = c2SelectedOption === idx;
+                        const isCorrect = idx === currentC2Question.correctIndex;
+
+                        let btnStyle =
+                          'bg-slate-950/60 backdrop-blur-sm border-slate-700/70 text-slate-100 hover:border-amber-400/60 hover:bg-slate-900/70';
+                        let badgeStyle = 'bg-slate-800 text-slate-200';
+
+                        if (c2Locked) {
+                          if (isCorrect) {
+                            btnStyle =
+                              'bg-emerald-950/60 border-emerald-500 text-emerald-200 ring-1 ring-emerald-500/40';
+                            badgeStyle = 'bg-emerald-500 text-slate-950 font-black';
+                          } else if (isSelected) {
+                            btnStyle =
+                              'bg-rose-950/60 border-rose-500 text-rose-200 ring-1 ring-rose-500/40';
+                            badgeStyle = 'bg-rose-500 text-white font-black';
+                          } else {
+                            btnStyle = 'opacity-40 bg-slate-950/40 border-slate-800/60 text-slate-400';
+                          }
+                        }
+
+                        return (
+                          <button
+                            key={idx}
+                            type="button"
+                            disabled={c2Locked}
+                            onClick={() => handleC2Answer(idx)}
+                            className={`min-h-[50px] sm:min-h-[54px] lg:min-h-[60px] xl:min-h-[66px] p-2.5 sm:p-3 xl:p-3.5 rounded-xl lg:rounded-2xl border text-left flex items-center gap-3.5 transition-all active:scale-[0.98] ${btnStyle}`}
+                          >
+                            <span
+                              className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 rounded-lg text-xs sm:text-sm lg:text-base font-black flex items-center justify-center shrink-0 shadow-sm ${badgeStyle}`}
+                            >
+                              {letter}
+                            </span>
+                            <span className="flex-1 font-semibold text-xs sm:text-sm xl:text-base overflow-x-auto drop-shadow-sm">
+                              <MathText text={opt} />
+                            </span>
+                            {c2Locked && isCorrect && (
+                              <CheckCircle2 className="w-4 h-4 xl:w-5 xl:h-5 text-emerald-400 shrink-0" />
+                            )}
+                            {c2Locked && isSelected && !isCorrect && (
+                              <XCircle className="w-4 h-4 xl:w-5 xl:h-5 text-rose-400 shrink-0" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Action Controls */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 border-t border-slate-800/80">
+                      {c2Treasure === 'skip' && !c2SkipUsed && currentC2Question.stage <= 9 && !c2Locked && (
+                        <button
+                          type="button"
+                          onClick={handleC2UseSkip}
+                          className="w-full sm:w-auto px-4 py-2.5 xl:px-5 xl:py-3 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-200 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all backdrop-blur-sm"
+                        >
+                          <span>🔮 Dùng Đại Diễn Quyết (Bỏ qua câu này)</span>
+                        </button>
+                      )}
+
+                      <div className="flex-1 hidden sm:block text-slate-400 text-[11px] xl:text-xs">
+                        {!c2Locked && 'Chọn một đáp án để xác nhận lựa chọn.'}
+                      </div>
+
+                      {c2Locked && (
+                        <button
+                          type="button"
+                          onClick={handleC2NextQuestion}
+                          className="w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 active:scale-[0.98] transition-transform ml-auto"
+                        >
+                          <span>
+                            {currentC2Question.stage === 10
+                              ? 'Hoàn tất độ kiếp ➜'
+                              : 'Cửa ải tiếp theo ➜'}
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

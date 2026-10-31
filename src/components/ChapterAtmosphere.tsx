@@ -189,7 +189,7 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none" aria-hidden="true">
       {/* Base deep background */}
-      <div className="absolute inset-0 bg-slate-950" />
+      <div className="absolute inset-0 bg-slate-900" />
 
       {/* ------------------------------------------------------------- */}
       {/* 1. HÌNH NỀN CHÌM TỪNG CHƯƠNG (Submerged Chapter Artwork)       */}
@@ -197,28 +197,28 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({
       {/* Chapter 1: Di tích cổ ngầm (Cyan & Amber torchlit ruins) */}
       <div
         className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out scale-105 ${
-          effectiveChapter === 1 && !isTransition ? 'opacity-40' : 'opacity-0'
+          effectiveChapter === 1 && !isTransition ? 'opacity-70' : 'opacity-0'
         }`}
         style={{
           backgroundImage: `url(${chap1Bg})`,
-          filter: 'contrast(1.15) brightness(0.9)',
+          filter: 'contrast(1.1) brightness(1.22)',
         }}
       />
 
       {/* Chapter 2: Tu tiên giới thiên sơn (Golden peaks, clouds, sakura) */}
       <div
         className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out scale-105 ${
-          effectiveChapter === 2 || isTransition ? 'opacity-45' : 'opacity-0'
+          effectiveChapter === 2 || isTransition ? 'opacity-75' : 'opacity-0'
         }`}
         style={{
           backgroundImage: `url(${chap2Bg})`,
-          filter: 'contrast(1.1) brightness(0.95)',
+          filter: 'contrast(1.08) brightness(1.28)',
         }}
       />
 
-      {/* Atmospheric Vignette Mask - balanced for rich artwork visibility + high text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-950/35 to-slate-950/65" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(2,6,23,0.7)_100%)]" />
+      {/* Atmospheric Vignette Mask - tuned to be lighter so background artwork shines clearly */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-slate-950/10 to-slate-950/35" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(2,6,23,0.45)_100%)]" />
 
       {/* ------------------------------------------------------------- */}
       {/* 2. ÁNH SÁNG MÔI TRƯỜNG & MÀU SẮC THEO CẢNH GIỚI (Ambient Glows) */}
@@ -227,11 +227,11 @@ export const ChapterAtmosphere: React.FC<ChapterAtmosphereProps> = ({
       {effectiveChapter === 1 && !isTransition && (
         <>
           {/* Top-left ancient cyan runic glow */}
-          <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-cyan-500/15 blur-[100px] animate-pulse" />
+          <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-cyan-500/25 blur-[100px] animate-pulse" />
           {/* Bottom-right subterranean amber torch glow */}
-          <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-amber-500/20 blur-[120px]" />
+          <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-amber-500/30 blur-[120px]" />
           {/* Center mysterious teal mist */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-teal-500/10 blur-[90px]" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-teal-500/20 blur-[90px]" />
         </>
       )}
 
