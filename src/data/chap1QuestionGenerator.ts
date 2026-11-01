@@ -68,7 +68,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       while (a === 0 || Math.abs(a) === b) a = rand(-15, 15);
       const absA = Math.abs(a);
 
-      prompt = `Tính giá trị tuyệt đối của số hữu tỉ $x = \\dfrac{${a}}{${b}}$:`;
+      prompt = `Tính giá trị tuyệt đối của số hữu tỉ:\n$x = \\dfrac{${a}}{${b}}$`;
       correct = `$|x| = \\dfrac{${absA}}{${b}}$`;
       distractors = [
         `$|x| = -\\dfrac{${absA}}{${b}}$`,
@@ -85,7 +85,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       if (type === 1) {
         let val = rand(-25, 25);
         while (val === 0) val = rand(-25, 25);
-        prompt = `Tìm số đối của số thực $x = ${val}$:`;
+        prompt = `Tìm số đối của số thực:\n$x = ${val}$`;
         correct = `$${-val}$`;
         const diff = -val > 0 ? -val + 5 : -val - 5;
         distractors = [`$${val}$`, `$${diff}$`, `$\\dfrac{1}{${Math.abs(val)}}$`];
@@ -93,7 +93,7 @@ export function generateChap1QuestionForStage(n: number): Question {
         const b = rand(2, 7);
         let a = rand(-11, 11);
         while (a === 0 || Math.abs(a) === b) a = rand(-11, 11);
-        prompt = `Tìm số đối của số thực $x = \\dfrac{${a}}{${b}}$:`;
+        prompt = `Tìm số đối của số thực:\n$x = \\dfrac{${a}}{${b}}$`;
         correct = `$${formatFrac(-a, b)}$`;
         distractors = [
           `$${formatFrac(a, b)}$`,
@@ -102,7 +102,7 @@ export function generateChap1QuestionForStage(n: number): Question {
         ];
       } else {
         const k = rand(2, 19);
-        prompt = `Tìm số đối của số thực $x = \\sqrt{${k}}$:`;
+        prompt = `Tìm số đối của số thực:\n$x = \\sqrt{${k}}$`;
         correct = `$-\\sqrt{${k}}$`;
         distractors = [
           `$\\sqrt{${k}}$`,
@@ -118,7 +118,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       emoji = '⚡';
       const r = rand(2, 25);
       const x = r * r;
-      prompt = `Tìm căn bậc hai số học của $x = ${x}$:`;
+      prompt = `Tìm căn bậc hai số học của số:\n$x = ${x}$`;
       correct = `$\\sqrt{${x}} = ${r}$`;
       distractors = [
         `$\\sqrt{${x}} = -${r}$`,
@@ -138,7 +138,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       if (aRad < 2) aRad = b * b + 2;
       const realValA = Math.sqrt(aRad);
       const relation = realValA > b ? '>' : '<';
-      prompt = `So sánh hai số thực $a = \\sqrt{${aRad}}$ và $b = ${b}$:`;
+      prompt = `So sánh hai số thực:\n$a = \\sqrt{${aRad}}$ và $b = ${b}$`;
       correct = `$\\sqrt{${aRad}} ${relation} ${b}$`;
       const altRel = relation === '>' ? '<' : '>';
       distractors = [
@@ -160,7 +160,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       const isAdd = rand(0, 1) === 1;
       const resNum = isAdd ? num1 + num2 : num1 - num2;
       const opStr = isAdd ? '+' : '-';
-      prompt = `Thực hiện phép tính: $${formatFrac(num1, den)} ${opStr} ${formatFrac(num2, den)}$`;
+      prompt = `Thực hiện phép tính:\n$${formatFrac(num1, den)} ${opStr} ${formatFrac(num2, den)}$`;
       correct = `$${formatFrac(resNum, den)}$`;
       distractors = [
         `$${formatFrac(resNum + 2, den)}$`,
@@ -179,7 +179,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       const b2 = rand(2, 6);
       const isMul = rand(0, 1) === 1;
       if (isMul) {
-        prompt = `Thực hiện phép tính: $${formatFrac(a1, b1)} \\cdot ${formatFrac(a2, b2)}$`;
+        prompt = `Thực hiện phép tính:\n$${formatFrac(a1, b1)} \\cdot ${formatFrac(a2, b2)}$`;
         correct = `$${formatFrac(a1 * a2, b1 * b2)}$`;
         distractors = [
           `$${formatFrac(a1 * b2, b1 * a2)}$`,
@@ -187,7 +187,7 @@ export function generateChap1QuestionForStage(n: number): Question {
           `$${formatFrac(a1 * a2, b1 + b2)}$`,
         ];
       } else {
-        prompt = `Thực hiện phép tính: $${formatFrac(a1, b1)} : ${formatFrac(a2, b2)}$`;
+        prompt = `Thực hiện phép tính:\n$${formatFrac(a1, b1)} : ${formatFrac(a2, b2)}$`;
         correct = `$${formatFrac(a1 * b2, b1 * a2)}$`;
         distractors = [
           `$${formatFrac(a1 * a2, b1 * b2)}$`,
@@ -209,7 +209,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       const isFractionBase = base.includes('dfrac');
       const openOuter = isFractionBase ? '\\left[' : '\\left(';
       const closeOuter = isFractionBase ? '\\right]' : '\\right)';
-      prompt = `Rút gọn biểu thức lũy thừa: $${openOuter} ${base}^{${m}} ${closeOuter}^{${nPow}}$:`;
+      prompt = `Rút gọn biểu thức lũy thừa:\n$${openOuter} ${base}^{${m}} ${closeOuter}^{${nPow}}$`;
       correct = `$${base}^{${correctPow}}$`;
       distractors = [
         `$${base}^{${m + nPow}}$`,
@@ -230,7 +230,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       const xDen = rand(2, 5);
       const cNum = a * xNum * bDen + bNum * xDen;
       const cDen = xDen * bDen;
-      prompt = `Tìm số hữu tỉ $x$, biết: $${a}x + ${formatFrac(bNum, bDen)} = ${formatFrac(cNum, cDen)}$`;
+      prompt = `Tìm số hữu tỉ $x$, biết:\n$${a}x + ${formatFrac(bNum, bDen)} = ${formatFrac(cNum, cDen)}$`;
       correct = `$x = ${formatFrac(xNum, xDen)}$`;
       distractors = [
         `$x = ${formatFrac(-xNum, xDen)}$`,
@@ -251,7 +251,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       while (bNum === 0 || Math.abs(aNum * bDen) === Math.abs(bNum * aDen)) {
         bNum = rand(-9, 9);
       }
-      prompt = `Cho hai số $a = ${formatFrac(aNum, aDen)}$ và $b = ${formatFrac(bNum, bDen)}$. Hãy so sánh hai giá trị tuyệt đối $|a|$ và $|b|$:`;
+      prompt = `Cho hai số: $a = ${formatFrac(aNum, aDen)}$ và $b = ${formatFrac(bNum, bDen)}$.\nSo sánh hai giá trị tuyệt đối $|a|$ và $|b|$:`;
 
       const absA = Math.abs(aNum / aDen);
       const absB = Math.abs(bNum / bDen);
@@ -273,7 +273,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       const r = rand(32, 99);
       const S = r * r;
       const P = 4 * r;
-      prompt = `Một hình chữ nhật đặc biệt (hình vuông) có diện tích $S = ${S}\\text{ m}^2$. Tính chu vi $P$ của hình đó:`;
+      prompt = `Một hình chữ nhật đặc biệt (hình vuông) có diện tích $S = ${S}\\text{ m}^2$.\nTính chu vi $P$ của hình đó:`;
       correct = `$P = ${P}\\text{ m}$`;
       distractors = [
         `$P = ${r * 2}\\text{ m}$`,
@@ -282,6 +282,7 @@ export function generateChap1QuestionForStage(n: number): Question {
       ];
       break;
     }
+
   }
 
   const options = makeUniqueOptions(correct, distractors);

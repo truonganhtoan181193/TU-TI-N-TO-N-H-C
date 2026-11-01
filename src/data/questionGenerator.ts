@@ -46,7 +46,7 @@ export function generateQuestionForStage(stage: number): Question {
       tag = 'Góc đối đỉnh';
       emoji = '⚔️';
       const deg = rand(25, 145);
-      prompt = `Cho hai góc $\\widehat{xAy}$ và $\\widehat{zAt}$ là hai góc đối đỉnh. Biết $\\widehat{xAy} = ${deg}^\\circ$. Tìm số đo góc $\\widehat{zAt}$:`;
+      prompt = `Cho hai góc $\\widehat{xAy}$ và $\\widehat{zAt}$ là hai góc đối đỉnh.\nBiết $\\widehat{xAy} = ${deg}^\\circ$. Tìm số đo góc $\\widehat{zAt}$:`;
       correct = `$\\widehat{zAt} = ${deg}^\\circ$`;
       distractors = [
         `$\\widehat{zAt} = ${180 - deg}^\\circ$`,
@@ -61,7 +61,7 @@ export function generateQuestionForStage(stage: number): Question {
       emoji = '🔄';
       const deg = rand(20, 160);
       const ans = 180 - deg;
-      prompt = `Cho $\\widehat{xAy}$ và $\\widehat{yAz}$ là hai góc kề bù. Biết $\\widehat{xAy} = ${deg}^\\circ$. Tính số đo của góc $\\widehat{yAz}$:`;
+      prompt = `Cho $\\widehat{xAy}$ và $\\widehat{yAz}$ là hai góc kề bù.\nBiết $\\widehat{xAy} = ${deg}^\\circ$. Tính số đo của góc $\\widehat{yAz}$:`;
       correct = `$\\widehat{yAz} = ${ans}^\\circ$`;
       distractors = [
         `$\\widehat{yAz} = ${deg}^\\circ$`,
@@ -75,7 +75,7 @@ export function generateQuestionForStage(stage: number): Question {
       tag = 'So le trong';
       emoji = '🔀';
       const deg = rand(30, 150);
-      prompt = `Cho hai đường thẳng song song $a // b$ bị cắt bởi một cát tuyến. Góc $\\widehat{A}$ và góc $\\widehat{B}$ là hai góc so le trong. Biết $\\widehat{A} = ${deg}^\\circ$, tìm số đo $\\widehat{B}$:`;
+      prompt = `Cho hai đường thẳng song song $a // b$ bị cắt bởi một cát tuyến.\nGóc $\\widehat{A}$ và $\\widehat{B}$ là hai góc so le trong. Biết $\\widehat{A} = ${deg}^\\circ$,\ntìm số đo góc $\\widehat{B}$:`;
       correct = `$\\widehat{B} = ${deg}^\\circ$`;
       distractors = [
         `$\\widehat{B} = ${180 - deg}^\\circ$`,
@@ -89,7 +89,7 @@ export function generateQuestionForStage(stage: number): Question {
       tag = 'Đồng vị';
       emoji = '⬆️';
       const deg = rand(35, 145);
-      prompt = `Cho hai đường thẳng $a // b$ cắt bởi đường thẳng $c$. Cho biết góc $\\widehat{A}_1$ và $\\widehat{B}_1$ là hai góc đồng vị. Nếu $\\widehat{A}_1 = ${deg}^\\circ$ thì số đo góc $\\widehat{B}_1$ là:`;
+      prompt = `Cho hai đường thẳng $a // b$ cắt bởi đường thẳng $c$.\nBiết $\\widehat{A}_1$ và $\\widehat{B}_1$ là hai góc đồng vị, với $\\widehat{A}_1 = ${deg}^\\circ$.\nSố đo góc $\\widehat{B}_1$ là:`;
       correct = `$\\widehat{B}_1 = ${deg}^\\circ$`;
       distractors = [
         `$\\widehat{B}_1 = ${180 - deg}^\\circ$`,
@@ -104,7 +104,7 @@ export function generateQuestionForStage(stage: number): Question {
       emoji = '✂️';
       const half = rand(15, 75);
       const total = half * 2;
-      prompt = `Cho góc $\\widehat{xAy} = ${total}^\\circ$ và tia $At$ là tia phân giác của góc $\\widehat{xAy}$. Số đo của góc $\\widehat{xAt}$ bằng:`;
+      prompt = `Cho góc $\\widehat{xAy} = ${total}^\\circ$ và tia $At$ là tia phân giác của $\\widehat{xAy}$.\nSố đo của góc $\\widehat{xAt}$ bằng:`;
       correct = `$\\widehat{xAt} = ${half}^\\circ$`;
       distractors = [
         `$\\widehat{xAt} = ${total}^\\circ$`,
@@ -120,7 +120,7 @@ export function generateQuestionForStage(stage: number): Question {
       const degB = rand(30, 75);
       const degC = rand(25, 150 - degB);
       const degA = 180 - degB - degC;
-      prompt = `Cho $\\triangle ABC$ có $\\widehat{B} = ${degB}^\\circ$ và $\\widehat{C} = ${degC}^\\circ$. Số đo của góc $\\widehat{A}$ là:`;
+      prompt = `Cho $\\triangle ABC$ có $\\widehat{B} = ${degB}^\\circ$ và $\\widehat{C} = ${degC}^\\circ$.\nSố đo của góc $\\widehat{A}$ là:`;
       correct = `$\\widehat{A} = ${degA}^\\circ$`;
       distractors = [
         `$\\widehat{A} = ${degB + degC}^\\circ$`,
@@ -135,7 +135,7 @@ export function generateQuestionForStage(stage: number): Question {
       emoji = '📐';
       const degB = rand(20, 70);
       const degC = 90 - degB;
-      prompt = `Cho $\\triangle ABC$ vuông tại $A$. Biết góc $\\widehat{B} = ${degB}^\\circ$. Số đo của góc nhọn $\\widehat{C}$ là:`;
+      prompt = `Cho $\\triangle ABC$ vuông tại $A$, biết góc $\\widehat{B} = ${degB}^\\circ$.\nSố đo của góc nhọn $\\widehat{C}$ là:`;
       correct = `$\\widehat{C} = ${degC}^\\circ$`;
       distractors = [
         `$\\widehat{C} = ${180 - degB}^\\circ$`,
@@ -171,7 +171,7 @@ export function generateQuestionForStage(stage: number): Question {
         correctType = 'Tam giác nhọn';
       }
 
-      prompt = `Cho $\\triangle ABC$ có số đo hai góc là $\\widehat{B} = ${degB}^\\circ$ và $\\widehat{C} = ${degC}^\\circ$. Hỏi $\\triangle ABC$ là loại tam giác nào?`;
+      prompt = `Cho $\\triangle ABC$ có số đo hai góc là $\\widehat{B} = ${degB}^\\circ$ và $\\widehat{C} = ${degC}^\\circ$.\nHỏi $\\triangle ABC$ là loại tam giác nào?`;
       correct = correctType;
       distractors = ['Tam giác nhọn', 'Tam giác vuông', 'Tam giác tù', 'Tam giác đều'].filter(
         (t) => t !== correctType
@@ -185,7 +185,7 @@ export function generateQuestionForStage(stage: number): Question {
       const xVal = rand(25, 42);
       const a = rand(6, 18);
       const b = 180 - 3 * xVal - a;
-      prompt = `Cho $\\triangle ABC$ có $\\widehat{A} = x$, $\\widehat{B} = x + ${a}^\\circ$, $\\widehat{C} = x + ${b}^\\circ$. Giá trị của $x$ là:`;
+      prompt = `Cho $\\triangle ABC$ có $\\widehat{A} = x$, $\\widehat{B} = x + ${a}^\\circ$, $\\widehat{C} = x + ${b}^\\circ$.\nGiá trị của $x$ là:`;
       correct = `$x = ${xVal}^\\circ$`;
       distractors = [
         `$x = ${xVal + 5}^\\circ$`,
@@ -201,7 +201,7 @@ export function generateQuestionForStage(stage: number): Question {
       const degB = rand(25, 55);
       const degC = rand(30, 75);
       const extA = degB + degC;
-      prompt = `Cho $\\triangle ABC$ có $\\widehat{B} = ${degB}^\\circ$ và $\\widehat{C} = ${degC}^\\circ$. Số đo của góc ngoài tại đỉnh $A$ bằng:`;
+      prompt = `Cho $\\triangle ABC$ có $\\widehat{B} = ${degB}^\\circ$ và $\\widehat{C} = ${degC}^\\circ$.\nSố đo của góc ngoài tại đỉnh $A$ bằng:`;
       correct = `$${extA}^\\circ$`;
       distractors = [
         `$${180 - extA}^\\circ$`,
@@ -210,6 +210,7 @@ export function generateQuestionForStage(stage: number): Question {
       ];
       break;
     }
+
   }
 
   const options = makeUniqueOptions(correct, distractors);

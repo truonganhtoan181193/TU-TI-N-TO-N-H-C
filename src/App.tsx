@@ -75,17 +75,24 @@ export default function App() {
   const c2MaxTime = c2Treasure === 'time' ? 30 : 20;
   const [timeLeft, setTimeLeft] = useState(20);
 
-  // Load history on mount
+  // Load history on mount & normalize any inflated scores from previous bug
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        setLeaderboard(JSON.parse(saved));
+        const parsed: ScoreHistoryEntry[] = JSON.parse(saved);
+        const normalized = parsed.map((entry) => ({
+          ...entry,
+          score: Math.min(entry.score, entry.correctCount * 10),
+        }));
+        setLeaderboard(normalized);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
       }
     } catch {
       // Ignore localStorage read errors
     }
   }, []);
+
 
   // Unlock Web Audio on first user interaction (tap/click/press anywhere)
   useEffect(() => {
@@ -293,7 +300,7 @@ export default function App() {
       // Completed Chap 1 10 questions -> go to Bí mật sau di tích
       playLevelUpAudio(1, soundEnabled);
       fireMultiWaveFireworks('chap1');
-      saveScoreToLeaderboard(1, c1Score + (c1SelectedOption === c1Questions[c1Index]?.correctIndex ? 10 : 0), c1CorrectCount);
+      saveScoreToLeaderboard(1, c1Score, c1CorrectCount);
       setScreen('c1_ruins_secret');
       playSound('magic', soundEnabled);
     }

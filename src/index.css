@@ -52,6 +52,27 @@
   color: #f8fafc !important;
   text-shadow: 0 0 8px rgba(56, 189, 248, 0.35), 0 0 16px rgba(251, 191, 36, 0.25);
   letter-spacing: 0.02em;
+  white-space: nowrap !important;
+  display: inline-block !important;
+  vertical-align: middle;
+}
+
+.katex * {
+  white-space: nowrap !important;
+}
+
+.math-formula-unit {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.math-display-unit {
+  display: block !important;
+  width: 100%;
+  white-space: nowrap !important;
+  overflow-x: auto;
 }
 
 @media (min-width: 1024px) {

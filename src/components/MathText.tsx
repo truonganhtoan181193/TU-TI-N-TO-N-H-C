@@ -35,33 +35,39 @@ export const MathText: React.FC<MathTextProps> = ({
         if (part.startsWith('$$') && part.endsWith('$$')) {
           const math = part.slice(2, -2);
           try {
-            return katex.renderToString(math, {
+            const html = katex.renderToString(math, {
               displayMode: true,
               throwOnError: false,
             });
+            return `<div class="math-display-unit my-2 overflow-x-auto text-center">${html}</div>`;
           } catch {
-            return part;
+            return `<div class="math-display-unit my-2">${part}</div>`;
           }
         } else if (part.startsWith('$') && part.endsWith('$')) {
           const math = part.slice(1, -1);
           try {
-            return katex.renderToString(math, {
+            const html = katex.renderToString(math, {
               displayMode: false,
               throwOnError: false,
             });
+            // Wrap in an indivisible inline-block with whitespace-nowrap.
+            // If the formula does not fit on the current line, the browser breaks line BEFORE the formula.
+            return `<span class="math-formula-unit inline-block whitespace-nowrap align-middle my-0.5 mx-0.5">${html}</span>`;
           } catch {
-            return part;
+            return `<span class="math-formula-unit inline-block whitespace-nowrap">${part}</span>`;
           }
         }
-        return part;
+        // Handle explicit newlines in text parts (convert \n to <br class="formula-break" />)
+        return part.replace(/\n/g, '<br class="formula-break leading-relaxed" />');
       })
       .join('');
   }, [text, displayMode]);
 
   return (
     <span
-      className={`inline-block leading-relaxed ${className}`}
+      className={`inline-block leading-relaxed max-w-full ${className}`}
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
   );
 };
+
