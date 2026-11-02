@@ -711,6 +711,73 @@ export default function App() {
         }
       />
 
+      {/* Heavenly Tribulation Gate (Thiên Môn Độ Kiếp) Full-Screen Visual Overlay for Chapter 2 Stage 10 */}
+      {screen === 'c2_quiz' && c2Index === 9 && (
+        <div className="fixed inset-0 pointer-events-none z-20 overflow-hidden select-none">
+          {/* Pulsating celestial storm atmospheric border vignette */}
+          <div className="absolute inset-0 animate-tribulation-vignette" />
+
+          {/* Periodic thunder sky flash across the entire viewport */}
+          <div className="absolute inset-0 animate-lightning-sky-flash" />
+
+          {/* Crackling lightning bolt arcs shimmering along screen edges */}
+          <svg
+            className="absolute inset-0 w-full h-full opacity-65 animate-tribulation-bolt"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="tribulationGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.95" />
+                <stop offset="50%" stopColor="#c084fc" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.95" />
+              </linearGradient>
+            </defs>
+            {/* Left thunder bolt arc */}
+            <path
+              d="M 45,0 L 68,170 L 32,250 L 85,420 L 40,540 L 76,700 L 28,880 L 55,1080"
+              stroke="url(#tribulationGrad)"
+              strokeWidth="2.5"
+              fill="none"
+              strokeDasharray="9 4"
+            />
+            {/* Right thunder bolt arc */}
+            <path
+              d="M 96%,0 L 93%,210 L 98%,330 L 92%,500 L 97%,660 L 93%,840 L 96%,1080"
+              stroke="url(#tribulationGrad)"
+              strokeWidth="2.5"
+              fill="none"
+              strokeDasharray="7 3"
+            />
+          </svg>
+
+          {/* Drifting Heavenly Tribulation Runes */}
+          <div
+            className="absolute top-16 left-6 text-2xl text-purple-300 opacity-60 animate-tribulation-rune drop-shadow-[0_0_8px_#c084fc]"
+            style={{ animationDelay: '0s' }}
+          >
+            ⚡
+          </div>
+          <div
+            className="absolute top-1/3 right-8 text-3xl text-amber-300 opacity-65 animate-tribulation-rune drop-shadow-[0_0_10px_#fbbf24]"
+            style={{ animationDelay: '1.2s' }}
+          >
+            🌩️
+          </div>
+          <div
+            className="absolute bottom-24 left-10 text-2xl text-purple-200 opacity-55 animate-tribulation-rune drop-shadow-[0_0_8px_#a855f7]"
+            style={{ animationDelay: '2.5s' }}
+          >
+            ☯
+          </div>
+          <div
+            className="absolute bottom-1/3 right-12 text-3xl text-yellow-300 opacity-70 animate-tribulation-rune drop-shadow-[0_0_12px_#fef08a]"
+            style={{ animationDelay: '0.8s' }}
+          >
+            ⚡
+          </div>
+        </div>
+      )}
+
       {/* 4. Level-Up & Seal Breakthrough Celebration Banner */}
       <LevelUpCelebration event={levelUpEvent} onClose={() => setLevelUpEvent(null)} />
 
@@ -2041,44 +2108,117 @@ export default function App() {
         {/* ======================================================== */}
         {/* CHAP 2 - CLIMAX (ĐỘ KIẾP HOÀN THÀNH)                    */}
         {/* ======================================================== */}
-        {screen === 'c2_climax' && (
-          <div className="bg-slate-950/45 backdrop-blur-md border border-amber-500/40 rounded-2xl p-6 sm:p-8 max-w-md mx-auto w-full text-center shadow-2xl shadow-amber-950/30">
-            <div className="text-[11px] font-black uppercase tracking-widest text-amber-400 mb-2 drop-shadow-sm">
-              Chương 2 · Thiên kiếp đã qua
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-50 mb-3 drop-shadow-md">
-              Thiên Kiếp Đã Qua!
-            </h2>
+        {/* ======================================================== */}
+        {/* CHAP 2 - CLIMAX (ĐỘ KIẾP HOÀN THÀNH / PHI THĂNG)         */}
+        {/* ======================================================== */}
+        {screen === 'c2_climax' && (() => {
+          const isHighestRealm = c2RealmIndex >= 10 || REALMS[c2RealmIndex] === 'Phi Thăng Tiên Giới';
 
-            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400/20 to-purple-500/20 border border-amber-400/50 flex items-center justify-center text-4xl mx-auto my-4 glow-amber">
-              🌩️
-            </div>
-
-            <p className="text-sm text-slate-200 leading-relaxed mb-6 drop-shadow-sm">
-              Tu sĩ <b className="text-amber-300">{playerName || 'Tu sĩ'}</b> ({playerClass || 'Lớp'}) đã kiên cường vượt qua trọn vẹn 10 cửa ải tu luyện!
-            </p>
-
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3.5 mb-6 text-xs text-slate-200 space-y-1">
-              <div>
-                Số câu đúng (cả 2 phần): <b className="text-emerald-400">{c1CorrectCount + c2CorrectCount}/20</b>
-              </div>
-              <div>
-                Tổng aura (cả 2 phần): <b className="text-amber-400">{c1Score + c2Score} aura</b>
-              </div>
-              <div>
-                Cảnh giới cuối cùng đạt được:{' '}
-                <b className="text-purple-300 font-bold">{REALMS[c2RealmIndex]}</b>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setScreen('c2_leaderboard')}
-              className="w-full min-h-[48px] bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 active:scale-[0.98] transition-transform"
+          return (
+            <div
+              className={`relative overflow-hidden backdrop-blur-xl rounded-3xl p-6 sm:p-9 max-w-lg mx-auto w-full text-center shadow-2xl transition-all ${
+                isHighestRealm
+                  ? 'bg-slate-950/85 border-2 border-amber-300/80 shadow-[0_0_70px_rgba(254,240,138,0.5)] ring-2 ring-yellow-400/30'
+                  : 'bg-slate-950/45 border border-amber-500/40 shadow-2xl shadow-amber-950/30'
+              }`}
             >
-              <span>Mở Bảng Phong Thần ➜</span>
-            </button>
-          </div>
-        )}
+              {/* PHI THĂNG TIÊN GIỚI: Full Background Light Radiance Animation */}
+              {isHighestRealm && (
+                <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+                  {/* Ascending Heavenly Spiritual Beam */}
+                  <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-24 sm:w-32 bg-gradient-to-t from-amber-400/10 via-pink-400/25 to-yellow-200/50 blur-lg animate-ascension-beam" />
+                  {/* Ambient Celestial Warm Radial Glow */}
+                  <div className="absolute inset-0 bg-radial from-yellow-300/20 via-pink-500/10 to-transparent" />
+                </div>
+              )}
+
+              <div className="relative z-10">
+                <div
+                  className={`text-[11px] font-black uppercase tracking-widest mb-2 drop-shadow-sm ${
+                    isHighestRealm ? 'text-yellow-300' : 'text-amber-400'
+                  }`}
+                >
+                  {isHighestRealm
+                    ? '✨ CHƯƠNG 2 · ĐẮC ĐẠO PHI THĂNG ✨'
+                    : 'Chương 2 · Thiên kiếp đã qua'}
+                </div>
+
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-50 mb-3 drop-shadow-md">
+                  {isHighestRealm ? 'Phi Thăng Tiên Giới!' : 'Thiên Kiếp Đã Qua!'}
+                </h2>
+
+                {/* Character Spotlight with Radiating Light Rays when reaching highest realm */}
+                <div className="relative my-6 flex items-center justify-center">
+                  {isHighestRealm ? (
+                    <div className="relative flex items-center justify-center">
+                      {/* 1. Rotating Conical Light Rays Burst radiating 360 degrees from character */}
+                      <div className="absolute top-1/2 left-1/2 w-64 h-64 sm:w-80 sm:h-80 -translate-x-1/2 -translate-y-1/2 rounded-full ascension-rays-bg animate-ascension-rays pointer-events-none opacity-85" />
+
+                      {/* 2. Pulsating Center Light Aura Bloom */}
+                      <div className="absolute top-1/2 left-1/2 w-44 h-44 sm:w-56 sm:h-56 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-yellow-300/60 via-pink-400/50 to-purple-500/60 animate-ascension-pulse pointer-events-none" />
+
+                      {/* 3. Expanding Celestial Halo Waves */}
+                      <div className="absolute top-1/2 left-1/2 w-36 h-36 rounded-full border-2 border-yellow-200 animate-ascension-halo-1 pointer-events-none" />
+                      <div className="absolute top-1/2 left-1/2 w-36 h-36 rounded-full border-2 border-pink-300 animate-ascension-halo-2 pointer-events-none" />
+
+                      {/* 4. Ascending Floating Character with Celestial Wings */}
+                      <div className="animate-ascension-levitate relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-amber-400 via-yellow-200 to-pink-300 border-2 border-yellow-100 flex items-center justify-center text-5xl sm:text-6xl shadow-[0_0_50px_rgba(254,240,138,0.95)]">
+                        🪽
+                        <div className="absolute -top-3 -right-2 bg-gradient-to-r from-yellow-300 to-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg border border-yellow-100 uppercase">
+                          CỰC PHẨM
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400/20 to-purple-500/20 border border-amber-400/50 flex items-center justify-center text-4xl glow-amber">
+                      🌩️
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-sm text-slate-200 leading-relaxed mb-6 drop-shadow-sm">
+                  {isHighestRealm ? (
+                    <>
+                      Ngũ Sắc Thần Quang Quán Đỉnh! Tu sĩ{' '}
+                      <b className="text-yellow-300">{playerName || 'Tu sĩ'}</b> ({playerClass || 'Lớp'}) đã vượt qua trọn vẹn 10 cửa ải, phá toái hư không và chính thức đạt cảnh giới tối cao{' '}
+                      <b className="text-pink-300">[Phi Thăng Tiên Giới]</b>!
+                    </>
+                  ) : (
+                    <>
+                      Tu sĩ <b className="text-amber-300">{playerName || 'Tu sĩ'}</b> ({playerClass || 'Lớp'}) đã kiên cường vượt qua trọn vẹn 10 cửa ải tu luyện!
+                    </>
+                  )}
+                </p>
+
+                <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3.5 mb-6 text-xs text-slate-200 space-y-1">
+                  <div>
+                    Số câu đúng (cả 2 phần): <b className="text-emerald-400">{c1CorrectCount + c2CorrectCount}/20</b>
+                  </div>
+                  <div>
+                    Tổng aura (cả 2 phần): <b className="text-amber-400">{c1Score + c2Score} aura</b>
+                  </div>
+                  <div>
+                    Cảnh giới cuối cùng đạt được:{' '}
+                    <b className={isHighestRealm ? 'text-yellow-300 font-black' : 'text-purple-300 font-bold'}>
+                      {REALMS[c2RealmIndex]}
+                    </b>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setScreen('c2_leaderboard')}
+                  className={`w-full min-h-[48px] text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-[0.98] ${
+                    isHighestRealm
+                      ? 'bg-gradient-to-r from-yellow-300 via-amber-300 to-pink-300 hover:brightness-105 shadow-yellow-300/30'
+                      : 'bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 shadow-amber-400/20'
+                  }`}
+                >
+                  <span>Mở Bảng Phong Thần ➜</span>
+                </button>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* ======================================================== */}
         {/* CHAP 2 - BẢNG PHONG THẦN & KẾT QUẢ                      */}

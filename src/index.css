@@ -476,3 +476,364 @@
 .animate-crit-spark-4 {
   animation: critSparkFly4 0.75s ease-out forwards;
 }
+
+/* ===================================================================== */
+/* CHƯƠNG 2: ĐỐN NGỘ ĐẠI ĐẠO (DAO ENLIGHTENMENT) ANIMATIONS             */
+/* ===================================================================== */
+
+/* 1. Cultivator Sacred Ascension Animation (Tu sĩ đốn ngộ thăng hoa) */
+@keyframes daoAscend {
+  0% {
+    transform: translateY(35px) scale(0.75);
+    opacity: 0;
+    filter: brightness(2.2) drop-shadow(0 0 0 rgba(192, 132, 252, 0));
+  }
+  35% {
+    transform: translateY(-10px) scale(1.22);
+    opacity: 1;
+    filter: brightness(1.7) drop-shadow(0 0 35px rgba(251, 191, 36, 0.95)) drop-shadow(0 0 55px rgba(192, 132, 252, 0.9));
+  }
+  65% {
+    transform: translateY(2px) scale(1.04);
+    filter: brightness(1.2) drop-shadow(0 0 22px rgba(168, 85, 247, 0.7));
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 16px rgba(251, 191, 36, 0.5));
+  }
+}
+
+.animate-dao-ascend {
+  animation: daoAscend 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 2. Explosive Dao Enlightenment Badge Pop */
+@keyframes daoBadgePop {
+  0% {
+    transform: scale(0.2) rotate(12deg);
+    opacity: 0;
+    filter: brightness(2.6);
+  }
+  30% {
+    transform: scale(1.35) rotate(-3deg);
+    opacity: 1;
+    filter: brightness(1.75) drop-shadow(0 0 25px rgba(192, 132, 252, 0.95));
+  }
+  55% {
+    transform: scale(0.96) rotate(1deg);
+  }
+  75% {
+    transform: scale(1.06) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 16px rgba(192, 132, 252, 0.7));
+  }
+}
+
+.animate-dao-badge {
+  animation: daoBadgePop 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 3. Vertical Spiritual Qi Pillar (Linh quang quán đỉnh / Cột sáng phi thăng) */
+@keyframes daoQiPillar {
+  0% {
+    transform: scaleY(0.05);
+    opacity: 0;
+  }
+  30% {
+    transform: scaleY(1.35);
+    opacity: 1;
+    filter: blur(0px) brightness(2.5);
+  }
+  60% {
+    transform: scaleY(1);
+    opacity: 0.85;
+    filter: blur(2px) brightness(1.8);
+  }
+  100% {
+    transform: scaleY(0.1);
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+.animate-dao-qi-pillar {
+  animation: daoQiPillar 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 4. Expanding Sacred Lotus Mandala Shockwave (Vòng sen tâm pháp lan tỏa) */
+@keyframes daoLotusShockwave {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1) rotate(0deg);
+    opacity: 1;
+    border-width: 5px;
+  }
+  50% {
+    opacity: 0.85;
+    border-width: 3px;
+    transform: translate(-50%, -50%) scale(1.4) rotate(90deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.6) rotate(180deg);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+.animate-dao-lotus {
+  animation: daoLotusShockwave 0.85s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+/* 5. Flying Spiritual Lotus Petals / Starlight Sparks */
+@keyframes daoPetal1 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-75px, -65px) scale(0) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes daoPetal2 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(80px, -70px) scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes daoPetal3 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(75px, 65px) scale(0) rotate(140deg);
+    opacity: 0;
+  }
+}
+
+@keyframes daoPetal4 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-70px, 75px) scale(0) rotate(-140deg);
+    opacity: 0;
+  }
+}
+
+.animate-dao-petal-1 {
+  animation: daoPetal1 0.75s ease-out forwards;
+}
+.animate-dao-petal-2 {
+  animation: daoPetal2 0.8s ease-out forwards;
+}
+.animate-dao-petal-3 {
+  animation: daoPetal3 0.7s ease-out forwards;
+}
+.animate-dao-petal-4 {
+  animation: daoPetal4 0.85s ease-out forwards;
+}
+
+/* ===================================================================== */
+/* STAGE 10: THIÊN MÔN ĐỘ KIẾP (HEAVENLY TRIBULATION GATE) OVERLAY       */
+/* ===================================================================== */
+
+/* Pulsating ominous tribulation vignette */
+@keyframes tribulationVignettePulse {
+  0%, 100% {
+    opacity: 0.75;
+    box-shadow: inset 0 0 60px rgba(147, 51, 234, 0.35), inset 0 0 120px rgba(88, 28, 135, 0.5);
+  }
+  50% {
+    opacity: 0.95;
+    box-shadow: inset 0 0 90px rgba(217, 70, 239, 0.55), inset 0 0 160px rgba(107, 33, 168, 0.75), inset 0 0 40px rgba(251, 191, 36, 0.35);
+  }
+}
+
+.animate-tribulation-vignette {
+  animation: tribulationVignettePulse 3.5s ease-in-out infinite;
+}
+
+/* Periodic lightning flash across the entire sky */
+@keyframes lightningSkyFlash {
+  0%, 92%, 100% {
+    opacity: 0;
+  }
+  93% {
+    opacity: 0.85;
+    background-color: rgba(238, 210, 255, 0.45);
+  }
+  94% {
+    opacity: 0.15;
+  }
+  95% {
+    opacity: 0.95;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+  97% {
+    opacity: 0.2;
+  }
+  98% {
+    opacity: 0.75;
+    background-color: rgba(192, 132, 252, 0.4);
+  }
+}
+
+.animate-lightning-sky-flash {
+  animation: lightningSkyFlash 6.5s ease-in-out infinite;
+}
+
+/* Crackling lightning bolt shimmer */
+@keyframes lightningBoltShimmer {
+  0%, 100% {
+    opacity: 0.2;
+    filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.4));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 25px rgba(251, 191, 36, 0.9)) drop-shadow(0 0 45px rgba(192, 132, 252, 0.8));
+  }
+}
+
+.animate-tribulation-bolt {
+  animation: lightningBoltShimmer 2s ease-in-out infinite;
+}
+
+/* Floating tribulation rune drifting upward */
+@keyframes tribulationRuneFloat {
+  0% {
+    transform: translateY(15px) rotate(0deg) scale(0.9);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-8px) rotate(8deg) scale(1.05);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-25px) rotate(-5deg) scale(0.9);
+    opacity: 0.2;
+  }
+}
+
+.animate-tribulation-rune {
+  animation: tribulationRuneFloat 4.5s ease-in-out infinite alternate;
+}
+
+/* ===================================================================== */
+/* PHI THĂNG TIÊN GIỚI (CELESTIAL ASCENSION) RADIANT LIGHT ANIMATIONS   */
+/* For highest realm achieved in c2_climax                               */
+/* ===================================================================== */
+
+/* 1. Character Ethereal Floating / Levitation */
+@keyframes ascensionLevitate {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.85)) drop-shadow(0 0 55px rgba(244, 114, 182, 0.65));
+  }
+  50% {
+    transform: translateY(-16px) scale(1.1);
+    filter: drop-shadow(0 0 50px rgba(254, 240, 138, 1)) drop-shadow(0 0 85px rgba(236, 72, 153, 0.95)) drop-shadow(0 0 110px rgba(192, 132, 252, 0.8));
+  }
+}
+
+.animate-ascension-levitate {
+  animation: ascensionLevitate 3.2s ease-in-out infinite;
+}
+
+/* 2. Rotating Radial Light Rays Burst (Tia sáng hào quang tỏa ra 360 độ) */
+@keyframes ascensionRaysSpin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.animate-ascension-rays {
+  animation: ascensionRaysSpin 24s linear infinite;
+}
+
+.ascension-rays-bg {
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(254, 240, 138, 0.5) 0deg 10deg,
+    transparent 10deg 20deg,
+    rgba(244, 114, 182, 0.4) 20deg 30deg,
+    transparent 30deg 40deg,
+    rgba(192, 132, 252, 0.45) 40deg 50deg,
+    transparent 50deg 60deg
+  );
+}
+
+/* 3. Pulsating Radiant Light Glow from Character Center */
+@keyframes ascensionLightPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.65;
+    filter: blur(25px);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.45);
+    opacity: 1;
+    filter: blur(40px);
+  }
+}
+
+.animate-ascension-pulse {
+  animation: ascensionLightPulse 2.8s ease-in-out infinite;
+}
+
+/* 4. Expanding Celestial Halo Ring radiating outwards */
+@keyframes ascensionHaloExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.95;
+    border-color: rgba(254, 240, 138, 0.9);
+  }
+  50% {
+    opacity: 0.7;
+    border-color: rgba(244, 114, 182, 0.75);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+    border-color: rgba(192, 132, 252, 0.3);
+  }
+}
+
+.animate-ascension-halo-1 {
+  animation: ascensionHaloExpand 3s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+.animate-ascension-halo-2 {
+  animation: ascensionHaloExpand 3s cubic-bezier(0.1, 0.8, 0.3, 1) infinite 1.5s;
+}
+
+/* 5. Ascending Heavenly Spiritual Beam */
+@keyframes ascensionPillarBeam {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scaleX(0.85);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scaleX(1.3);
+    filter: drop-shadow(0 0 35px rgba(254, 240, 138, 0.9)) drop-shadow(0 0 65px rgba(236, 72, 153, 0.85));
+  }
+}
+
+.animate-ascension-beam {
+  animation: ascensionPillarBeam 2.5s ease-in-out infinite;
+}
+
