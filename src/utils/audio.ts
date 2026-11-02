@@ -114,7 +114,7 @@ export function unlockAudio() {
 // SOUND EFFECTS (SFX) — Rich traditional acoustic timbre & crispness
 // ---------------------------------------------------------------------
 export function playSound(
-  type: 'correct' | 'wrong' | 'levelup' | 'tick' | 'magic' | 'thunder' | 'warp',
+  type: 'correct' | 'wrong' | 'levelup' | 'tick' | 'magic' | 'thunder' | 'warp' | 'crit',
   enabled = true,
   chapter: 1 | 2 = 1
 ) {
@@ -124,6 +124,11 @@ export function playSound(
     if (!ctx) return;
     const now = ctx.currentTime;
     const dest = masterCompressor || ctx.destination;
+
+    if (type === 'crit') {
+      playCriticalStrikeSound(enabled);
+      return;
+    }
 
     if (type === 'correct') {
       if (chapter === 2) {
@@ -191,6 +196,89 @@ export function playSound(
     }
   } catch {
     // Ignore audio errors
+  }
+}
+
+/**
+ * Hiệu ứng âm thanh đòn đánh chí mạng (Critical Strike Sound Synthesis)
+ * - Vút kiếm bén lẹm (Sword slash whoosh)
+ * - Va chạm bộc phá uy lực (Impact sub-bass punch)
+ * - Kim quang rung rinh (Crystal resonance chime ring)
+ */
+export function playCriticalStrikeSound(enabled = true) {
+  if (!enabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const dest = masterCompressor || ctx.destination;
+
+    // 1. Sword slash whoosh (Tiếng kiếm xé gió bén ngọt)
+    const whooshLen = Math.floor(ctx.sampleRate * 0.18);
+    const whooshBuf = ctx.createBuffer(1, whooshLen, ctx.sampleRate);
+    const whooshData = whooshBuf.getChannelData(0);
+    for (let i = 0; i < whooshLen; i++) {
+      whooshData[i] = (Math.random() * 2 - 1) * Math.sin((i / whooshLen) * Math.PI);
+    }
+    const whooshSrc = ctx.createBufferSource();
+    whooshSrc.buffer = whooshBuf;
+
+    const whooshFilter = ctx.createBiquadFilter();
+    whooshFilter.type = 'bandpass';
+    whooshFilter.frequency.setValueAtTime(1400, now);
+    whooshFilter.frequency.exponentialRampToValueAtTime(3800, now + 0.12);
+    whooshFilter.Q.setValueAtTime(3.2, now);
+
+    const whooshGain = ctx.createGain();
+    whooshGain.gain.setValueAtTime(0.01, now);
+    whooshGain.gain.linearRampToValueAtTime(0.4, now + 0.04);
+    whooshGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+    whooshSrc.connect(whooshFilter);
+    whooshFilter.connect(whooshGain);
+    whooshGain.connect(dest);
+    whooshSrc.start(now);
+
+    // 2. Heavy Sub-bass Critical Strike Impact (Chấn động va chạm trầm mạnh)
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.type = 'triangle';
+    subOsc.frequency.setValueAtTime(130, now + 0.05);
+    subOsc.frequency.exponentialRampToValueAtTime(45, now + 0.38);
+
+    subGain.gain.setValueAtTime(0.001, now);
+    subGain.gain.setValueAtTime(0.65, now + 0.05);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.42);
+
+    subOsc.connect(subGain);
+    subGain.connect(dest);
+    subOsc.start(now + 0.05);
+    subOsc.stop(now + 0.45);
+
+    // 3. Metallic Sword Clash / Ring (Tiếng kiếm khí va đập vang dội)
+    const ringOsc1 = ctx.createOscillator();
+    const ringOsc2 = ctx.createOscillator();
+    const ringGain = ctx.createGain();
+
+    ringOsc1.type = 'sine';
+    ringOsc1.frequency.setValueAtTime(987.77, now + 0.05); // B5
+    ringOsc2.type = 'triangle';
+    ringOsc2.frequency.setValueAtTime(1479.98, now + 0.05); // F#6
+
+    ringGain.gain.setValueAtTime(0.001, now);
+    ringGain.gain.setValueAtTime(0.45, now + 0.06);
+    ringGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+
+    ringOsc1.connect(ringGain);
+    ringOsc2.connect(ringGain);
+    ringGain.connect(dest);
+
+    ringOsc1.start(now + 0.05);
+    ringOsc2.start(now + 0.05);
+    ringOsc1.stop(now + 0.7);
+    ringOsc2.stop(now + 0.7);
+  } catch {
+    // Ignore audio error
   }
 }
 
@@ -286,7 +374,10 @@ export function playTribulationThunder(enabled = true) {
 }
 
 /**
- * Âm thanh cổng xoáy dị giới (Portal Warp sound)
+ * Âm thanh cổng xoáy dị giới dồn dập (Cinematic Vortex Warp sound)
+ * - Xung kích xoáy dồn dập (Accelerating rapid vortex pulses 6Hz -> 22Hz)
+ * - Trầm hưởng u uẩn không thời gian (Sub-bass gravitational rumble)
+ * - Tiếng xé toạc chân không ngân vang (Cosmic resonant portal sweep)
  */
 export function playWarpSound(enabled = true) {
   if (!enabled) return;
@@ -296,36 +387,87 @@ export function playWarpSound(enabled = true) {
     const now = ctx.currentTime;
     const dest = masterCompressor || ctx.destination;
 
-    // Resonant vortex sweep
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(110, now);
-    osc.frequency.exponentialRampToValueAtTime(880, now + 0.5);
-    osc.frequency.exponentialRampToValueAtTime(220, now + 1.1);
+    // 1. Chuỗi xung nhịp xoáy không gian dồn dập (Accelerating rapid vortex pulses)
+    const pulseCount = 7;
+    let pulseTime = now;
+    let pulseGap = 0.16; // bắt đầu từ 160ms và dồn dập dần xuống 45ms
+    for (let i = 0; i < pulseCount; i++) {
+      const pOsc = ctx.createOscillator();
+      const pGain = ctx.createGain();
+      const pFilter = ctx.createBiquadFilter();
 
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(250, now);
-    filter.frequency.exponentialRampToValueAtTime(1600, now + 0.5);
-    filter.frequency.exponentialRampToValueAtTime(400, now + 1.1);
-    filter.Q.value = 4.0;
+      pOsc.type = i % 2 === 0 ? 'sawtooth' : 'triangle';
+      const startFreq = 120 + i * 45;
+      pOsc.frequency.setValueAtTime(startFreq, pulseTime);
+      pOsc.frequency.exponentialRampToValueAtTime(startFreq * 2.2, pulseTime + pulseGap * 0.85);
 
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.35, now + 0.3);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+      pFilter.type = 'bandpass';
+      pFilter.frequency.setValueAtTime(300 + i * 160, pulseTime);
+      pFilter.Q.setValueAtTime(3.5, pulseTime);
 
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(dest);
-    if (spaceSendGain) {
-      gain.connect(spaceSendGain);
+      const amp = 0.22 + (i / pulseCount) * 0.25; // tăng dần độ mãnh liệt
+      pGain.gain.setValueAtTime(0.001, pulseTime);
+      pGain.gain.linearRampToValueAtTime(amp, pulseTime + pulseGap * 0.3);
+      pGain.gain.exponentialRampToValueAtTime(0.001, pulseTime + pulseGap * 0.95);
+
+      pOsc.connect(pFilter);
+      pFilter.connect(pGain);
+      pGain.connect(dest);
+      if (spaceSendGain) pGain.connect(spaceSendGain);
+
+      pOsc.start(pulseTime);
+      pOsc.stop(pulseTime + pulseGap);
+
+      pulseTime += pulseGap;
+      pulseGap = Math.max(0.045, pulseGap * 0.82); // dồn dập tăng tốc!
     }
 
-    osc.start(now);
-    osc.stop(now + 1.1);
+    // 2. Trọng trường trầm sâu (Sub-bass Gravitational Swell 45Hz -> 150Hz)
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.type = 'sine';
+    subOsc.frequency.setValueAtTime(48, now);
+    subOsc.frequency.exponentialRampToValueAtTime(155, now + 1.2);
+    subOsc.frequency.exponentialRampToValueAtTime(65, now + 1.8);
+
+    subGain.gain.setValueAtTime(0.001, now);
+    subGain.gain.linearRampToValueAtTime(0.48, now + 0.65);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+
+    subOsc.connect(subGain);
+    subGain.connect(dest);
+    subOsc.start(now);
+    subOsc.stop(now + 1.8);
+
+    // 3. Vòng xoáy cộng hưởng không gian (Resonant High Vortex Shimmer)
+    const sweepOsc = ctx.createOscillator();
+    const sweepFilter = ctx.createBiquadFilter();
+    const sweepGain = ctx.createGain();
+
+    sweepOsc.type = 'sawtooth';
+    sweepOsc.frequency.setValueAtTime(160, now);
+    sweepOsc.frequency.exponentialRampToValueAtTime(980, now + 0.9);
+    sweepOsc.frequency.exponentialRampToValueAtTime(320, now + 1.7);
+
+    sweepFilter.type = 'bandpass';
+    sweepFilter.frequency.setValueAtTime(400, now);
+    sweepFilter.frequency.exponentialRampToValueAtTime(2400, now + 0.9);
+    sweepFilter.frequency.exponentialRampToValueAtTime(600, now + 1.7);
+    sweepFilter.Q.setValueAtTime(4.5, now);
+
+    sweepGain.gain.setValueAtTime(0.001, now);
+    sweepGain.gain.linearRampToValueAtTime(0.32, now + 0.6);
+    sweepGain.gain.exponentialRampToValueAtTime(0.001, now + 1.7);
+
+    sweepOsc.connect(sweepFilter);
+    sweepFilter.connect(sweepGain);
+    sweepGain.connect(dest);
+    if (spaceSendGain) sweepGain.connect(spaceSendGain);
+
+    sweepOsc.start(now);
+    sweepOsc.stop(now + 1.7);
   } catch {
-    // Ignore
+    // Ignore audio errors
   }
 }
 

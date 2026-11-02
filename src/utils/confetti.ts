@@ -84,3 +84,45 @@ export function fireMultiWaveFireworks(theme: 'chap1' | 'chap2' = 'chap2') {
     // Graceful fallback
   }
 }
+
+/**
+ * Pháo hoa mini (canvas-confetti) tự động bắn nhẹ quanh khung huy hiệu khi học sinh thăng cấp cảnh giới
+ */
+export function fireMiniMilestoneConfetti(
+  origin = { x: 0.5, y: 0.2 },
+  customColors?: string[]
+) {
+  try {
+    const colors =
+      customColors || ['#fbbf24', '#f59e0b', '#c084fc', '#38bdf8', '#34d399', '#ffffff'];
+
+    // Left cannon mini burst
+    confetti({
+      particleCount: 28,
+      angle: 70,
+      spread: 45,
+      startVelocity: 26,
+      origin: { x: Math.max(0.1, origin.x - 0.15), y: origin.y },
+      colors,
+      ticks: 130,
+      gravity: 1.1,
+      scalar: 0.9,
+    });
+
+    // Right cannon mini burst
+    confetti({
+      particleCount: 28,
+      angle: 110,
+      spread: 45,
+      startVelocity: 26,
+      origin: { x: Math.min(0.9, origin.x + 0.15), y: origin.y },
+      colors,
+      ticks: 130,
+      gravity: 1.1,
+      scalar: 0.9,
+    });
+  } catch {
+    // Graceful fallback
+  }
+}
+

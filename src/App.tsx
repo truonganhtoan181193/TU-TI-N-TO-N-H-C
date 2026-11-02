@@ -30,8 +30,9 @@ import { MathText } from './components/MathText';
 import { TopBar } from './components/TopBar';
 import { ChapterAtmosphere } from './components/ChapterAtmosphere';
 import { LevelUpCelebration, LevelUpEvent } from './components/LevelUpCelebration';
+import { ResultModal, ResultType } from './components/ResultModal';
 import { playSound, playLevelUpAudio, setBgmTheme, unlockAudio, triggerHaptic } from './utils/audio';
-import { fireConfetti, fireMultiWaveFireworks } from './utils/confetti';
+import { fireConfetti, fireMultiWaveFireworks, fireMiniMilestoneConfetti } from './utils/confetti';
 
 const STORAGE_KEY = 'tu_tien_toan_hoc_scores_v2';
 
@@ -45,6 +46,19 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [leaderboard, setLeaderboard] = useState<ScoreHistoryEntry[]>([]);
   const [levelUpEvent, setLevelUpEvent] = useState<LevelUpEvent | null>(null);
+  const [resultModal, setResultModal] = useState<{
+    isOpen: boolean;
+    result: ResultType;
+    chapter: ChapterId;
+    stageNumber: number;
+    stageTitle?: string;
+    feedbackText: string;
+    auraGained?: number;
+    realmName?: string;
+    nextRealmName?: string;
+    correctAnswerText?: string;
+    isLastQuestion?: boolean;
+  } | null>(null);
 
   // CHAP 1 STATE: Thám Hiểm Di Tích Cổ
   const [c1Questions, setC1Questions] = useState<Question[]>([]);
@@ -75,7 +89,7 @@ export default function App() {
   const c2MaxTime = c2Treasure === 'time' ? 30 : 20;
   const [timeLeft, setTimeLeft] = useState(20);
 
-  // Load history on mount & normalize any inflated scores from previous bug
+  // Load history on mount & normalize scores
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -83,8 +97,10 @@ export default function App() {
         const parsed: ScoreHistoryEntry[] = JSON.parse(saved);
         const normalized = parsed.map((entry) => ({
           ...entry,
-          score: Math.min(entry.score, entry.correctCount * 10),
+          realm: entry.realm || 'Nhập Môn',
+          score: typeof entry.score === 'number' ? entry.score : 0,
         }));
+        normalized.sort((a, b) => b.score - a.score);
         setLeaderboard(normalized);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
       }
@@ -191,9 +207,21 @@ export default function App() {
         isTimeout: true,
       };
       setC1Answers((prev) => [...prev, record]);
+      const feedbackMsg = '⌛ Hết thời gian suy nghĩ! Cơ quan chưa được kích hoạt.';
       setC1Feedback({
-        text: '⌛ Hết thời gian suy nghĩ! Cơ quan chưa được kích hoạt.',
+        text: feedbackMsg,
         isGood: false,
+      });
+      setResultModal({
+        isOpen: true,
+        result: 'timeout',
+        chapter: 1,
+        stageNumber: q.stage,
+        stageTitle: CHAP1_STORY_FRAMES[q.stage - 1]?.title,
+        feedbackText: feedbackMsg,
+        auraGained: 0,
+        correctAnswerText: q.correctAnswerText,
+        isLastQuestion: q.stage === 10,
       });
     } else if (screen === 'c2_quiz') {
       if (c2Locked) return;
@@ -210,9 +238,22 @@ export default function App() {
         isTimeout: true,
       };
       setC2Answers((prev) => [...prev, record]);
+      const feedbackMsg = `⌛ Hết thời gian suy nghĩ! Cảnh giới giữ nguyên: [${REALMS[c2RealmIndex]}].`;
       setC2Feedback({
-        text: `⌛ Hết thời gian suy nghĩ! Cảnh giới giữ nguyên: [${REALMS[c2RealmIndex]}].`,
+        text: feedbackMsg,
         isGood: false,
+      });
+      setResultModal({
+        isOpen: true,
+        result: 'timeout',
+        chapter: 2,
+        stageNumber: q.stage,
+        stageTitle: q.tag,
+        feedbackText: feedbackMsg,
+        auraGained: 0,
+        realmName: REALMS[c2RealmIndex],
+        correctAnswerText: q.correctAnswerText,
+        isLastQuestion: q.stage === 10,
       });
     }
   };
@@ -235,6 +276,7 @@ export default function App() {
     setC1SelectedOption(null);
     setC1Locked(false);
     setC1Feedback(null);
+    setResultModal(null);
     setTimeLeft(20);
     setCurrentChapter(1);
     setScreen('c1_quiz');
@@ -267,15 +309,39 @@ export default function App() {
         subtitle: frameInfo.title,
         auraGained: 10,
       });
+      const successText = `Chính xác! ${frameInfo.successMsg}`;
       setC1Feedback({
-        text: `Chính xác! ${frameInfo.successMsg}`,
+        text: successText,
         isGood: true,
+      });
+      setResultModal({
+        isOpen: true,
+        result: 'correct',
+        chapter: 1,
+        stageNumber: q.stage,
+        stageTitle: frameInfo?.title,
+        feedbackText: successText,
+        auraGained: 10,
+        correctAnswerText: q.correctAnswerText,
+        isLastQuestion: q.stage === 10,
       });
     } else {
       playSound('wrong', soundEnabled);
+      const wrongText = 'Chưa chính xác. Cơ quan chưa được kích hoạt, hãy tiếp tục cố gắng ở câu tiếp theo!';
       setC1Feedback({
-        text: 'Chưa chính xác. Cơ quan chưa được kích hoạt, hãy tiếp tục cố gắng ở câu tiếp theo!',
+        text: wrongText,
         isGood: false,
+      });
+      setResultModal({
+        isOpen: true,
+        result: 'wrong',
+        chapter: 1,
+        stageNumber: q.stage,
+        stageTitle: frameInfo?.title,
+        feedbackText: wrongText,
+        auraGained: 0,
+        correctAnswerText: q.correctAnswerText,
+        isLastQuestion: q.stage === 10,
       });
     }
 
@@ -289,6 +355,7 @@ export default function App() {
   };
 
   const handleC1NextQuestion = () => {
+    setResultModal(null);
     if (c1Index < 9) {
       const nextIdx = c1Index + 1;
       setC1Index(nextIdx);
@@ -328,6 +395,7 @@ export default function App() {
     setC2SelectedOption(null);
     setC2Locked(false);
     setC2Feedback(null);
+    setResultModal(null);
     setTimeLeft(c2Treasure === 'time' ? 30 : 20);
 
     setCurrentChapter(2);
@@ -365,6 +433,7 @@ export default function App() {
       if (newRealm > c2RealmIndex) {
         setTimeout(() => playLevelUpAudio(2, soundEnabled), 150);
         fireMultiWaveFireworks('chap2');
+        fireMiniMilestoneConfetti({ x: 0.5, y: 0.28 });
         setLevelUpEvent({
           chapter: 2,
           title: 'Đột Phá Cảnh Giới',
@@ -374,9 +443,23 @@ export default function App() {
         });
       }
 
+      const successText = `Chính xác! +10 aura tri thức. Thăng cấp cảnh giới lên [${REALMS[newRealm]}].`;
       setC2Feedback({
-        text: `Chính xác! +10 aura tu vi. Thăng cấp cảnh giới lên [${REALMS[newRealm]}].`,
+        text: successText,
         isGood: true,
+      });
+      setResultModal({
+        isOpen: true,
+        result: 'correct',
+        chapter: 2,
+        stageNumber: q.stage,
+        stageTitle: q.tag,
+        feedbackText: successText,
+        auraGained: 10,
+        realmName: REALMS[c2RealmIndex],
+        nextRealmName: REALMS[newRealm],
+        correctAnswerText: q.correctAnswerText,
+        isLastQuestion: q.stage === 10,
       });
     } else {
       playSound('wrong', soundEnabled);
@@ -390,6 +473,7 @@ export default function App() {
 
         setTimeout(() => playLevelUpAudio(2, soundEnabled), 150);
         fireMultiWaveFireworks('chap2');
+        fireMiniMilestoneConfetti({ x: 0.5, y: 0.28 });
         setLevelUpEvent({
           chapter: 2,
           title: 'Ngọc Như Ý Hộ Thể',
@@ -398,14 +482,41 @@ export default function App() {
           auraGained: 0,
         });
 
+        const jadeText = `🟢 Ngọc Như Ý phát sáng hộ thể! Dù chưa đúng, pháp bảo cứu nguy giúp bạn vẫn thăng tiến lên [${REALMS[newRealm]}].`;
         setC2Feedback({
-          text: `🟢 Ngọc Như Ý phát sáng hộ thể! Dù chưa đúng, pháp bảo cứu nguy giúp bạn vẫn thăng tiến lên [${REALMS[newRealm]}].`,
+          text: jadeText,
           isGood: true,
         });
+        setResultModal({
+          isOpen: true,
+          result: 'correct',
+          chapter: 2,
+          stageNumber: q.stage,
+          stageTitle: q.tag,
+          feedbackText: jadeText,
+          auraGained: 0,
+          realmName: REALMS[c2RealmIndex],
+          nextRealmName: REALMS[newRealm],
+          correctAnswerText: q.correctAnswerText,
+          isLastQuestion: q.stage === 10,
+        });
       } else {
+        const wrongText = `Chưa chính xác. Cảnh giới giữ nguyên: [${REALMS[c2RealmIndex]}].`;
         setC2Feedback({
-          text: `Chưa chính xác. Cảnh giới giữ nguyên: [${REALMS[c2RealmIndex]}].`,
+          text: wrongText,
           isGood: false,
+        });
+        setResultModal({
+          isOpen: true,
+          result: 'wrong',
+          chapter: 2,
+          stageNumber: q.stage,
+          stageTitle: q.tag,
+          feedbackText: wrongText,
+          auraGained: 0,
+          realmName: REALMS[c2RealmIndex],
+          correctAnswerText: q.correctAnswerText,
+          isLastQuestion: q.stage === 10,
         });
       }
     }
@@ -435,6 +546,7 @@ export default function App() {
 
     playLevelUpAudio(2, soundEnabled);
     fireMultiWaveFireworks('chap2');
+    fireMiniMilestoneConfetti({ x: 0.5, y: 0.28 });
     setLevelUpEvent({
       chapter: 2,
       title: 'Đại Diễn Quyết Kích Hoạt',
@@ -457,6 +569,7 @@ export default function App() {
   };
 
   const handleC2NextQuestion = () => {
+    setResultModal(null);
     if (c2Index < 9) {
       const nextIdx = c2Index + 1;
       setC2Index(nextIdx);
@@ -475,12 +588,14 @@ export default function App() {
       playSound('thunder', soundEnabled);
       fireMultiWaveFireworks('chap2');
       playLevelUpAudio(2, soundEnabled);
-      saveScoreToLeaderboard(2, c2Score, c2CorrectCount, REALMS[c2RealmIndex]);
+      const combinedTotalAura = c1Score + c2Score;
+      const combinedCorrect = c1CorrectCount + c2CorrectCount;
+      saveScoreToLeaderboard(2, combinedTotalAura, combinedCorrect, REALMS[c2RealmIndex]);
       setScreen('c2_climax');
     }
   };
 
-  // Save score helper
+  // Save score helper (Tổng hợp thành tích cả 2 chương)
   const saveScoreToLeaderboard = (
     chap: number,
     finalScore: number,
@@ -493,28 +608,53 @@ export default function App() {
       skip: 'Đại Diễn Quyết',
     };
 
+    const currentName = playerName.trim() || 'Nhà thám hiểm';
+    const currentClass = playerClass.trim() || 'Tự do';
+    const resolvedRealm = finalRealm || (chap === 2 ? REALMS[c2RealmIndex] : 'Nhập Môn');
+
     const entry: ScoreHistoryEntry = {
       id: Date.now().toString(),
-      name: playerName || 'Nhà thám hiểm',
-      className: playerClass || 'Tự do',
-      score: finalScore,
+      name: currentName,
+      className: currentClass,
+      score: finalScore, // Tổng aura 2 phần
       correctCount: finalCorrect,
-      realm: finalRealm,
+      realm: resolvedRealm, // Cảnh giới cuối cùng
       treasureName: chap === 2 ? treasureNames[c2Treasure] || 'Không' : undefined,
       chapter: chap,
-      chapterTitle:
-        chap === 1 ? 'Chương 1: Thám Hiểm Di Tích' : 'Chương 2: Tiến Vào Tu Tiên Giới',
+      chapterTitle: chap === 1 ? 'Chương 1' : 'Chương 2',
       timestamp: Date.now(),
     };
 
-    const updated = [entry, ...leaderboard].slice(0, 20);
-    setLeaderboard(updated);
+    // Khi hoàn thành Chương 2, cập nhật bản ghi của tu sĩ đó để lưu kết quả tổng hợp thay vì để 2 dòng tách rời
+    let updated: ScoreHistoryEntry[];
+    const existingIndex = leaderboard.findIndex(
+      (item) =>
+        item.name.trim().toLowerCase() === currentName.toLowerCase() &&
+        item.className.trim().toLowerCase() === currentClass.toLowerCase()
+    );
+
+    if (existingIndex !== -1) {
+      updated = [...leaderboard];
+      updated[existingIndex] = {
+        ...entry,
+        score: Math.max(updated[existingIndex].score, finalScore),
+        realm: chap === 2 ? resolvedRealm : (updated[existingIndex].realm || resolvedRealm),
+      };
+    } else {
+      updated = [entry, ...leaderboard];
+    }
+
+    // Sắp xếp Bảng Phong Thần theo Tổng Aura giảm dần
+    updated.sort((a, b) => b.score - a.score);
+    const trimmed = updated.slice(0, 30);
+    setLeaderboard(trimmed);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
     } catch {
       // Ignore
     }
   };
+
 
   // Full restart
   const handleFullRestart = () => {
@@ -573,6 +713,36 @@ export default function App() {
 
       {/* 4. Level-Up & Seal Breakthrough Celebration Banner */}
       <LevelUpCelebration event={levelUpEvent} onClose={() => setLevelUpEvent(null)} />
+
+      {/* 5. ResultModal with simulated Critical Strike (Cú đánh chí mạng) on 'correct' */}
+      {resultModal && (
+        <ResultModal
+          isOpen={resultModal.isOpen}
+          result={resultModal.result}
+          chapter={resultModal.chapter}
+          stageNumber={resultModal.stageNumber}
+          stageTitle={resultModal.stageTitle}
+          feedbackText={resultModal.feedbackText}
+          auraGained={resultModal.auraGained}
+          realmName={resultModal.realmName}
+          nextRealmName={resultModal.nextRealmName}
+          correctAnswerText={resultModal.correctAnswerText}
+          soundEnabled={soundEnabled}
+          isLastQuestion={resultModal.isLastQuestion}
+          onNext={() => {
+            const chap = resultModal.chapter;
+            setResultModal(null);
+            if (chap === 1) {
+              handleC1NextQuestion();
+            } else {
+              handleC2NextQuestion();
+            }
+          }}
+          onClose={() => {
+            setResultModal((prev) => (prev ? { ...prev, isOpen: false } : null));
+          }}
+        />
+      )}
 
       {/* Interactive Content Container */}
       <div className="relative z-10 flex flex-col min-h-screen justify-between">
@@ -923,8 +1093,9 @@ export default function App() {
                       if (c1Locked) {
                         if (isCorrect) {
                           btnStyle =
-                            'bg-emerald-950/60 border-emerald-500 text-emerald-200 ring-1 ring-emerald-500/40';
-                          badgeStyle = 'bg-emerald-500 text-slate-950 font-black';
+                            'bg-cyan-950/70 border-cyan-400 text-cyan-100 ring-2 ring-cyan-400/80 shadow-lg shadow-cyan-500/30 correct-seal-glow-cyan';
+                          badgeStyle =
+                            'bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 font-black shadow-md shadow-cyan-400/50 scale-105';
                         } else if (isSelected) {
                           btnStyle =
                             'bg-rose-950/60 border-rose-500 text-rose-200 ring-1 ring-rose-500/40';
@@ -1249,6 +1420,7 @@ export default function App() {
               <b className="text-amber-300">Tu Tiên Giới</b> — nơi những thử thách mới đang chờ đợi, và tri thức sẽ trở thành chìa khóa để thăng tiến cảnh giới!
             </p>
 
+
             {playerName && (
               <div className="bg-slate-900/50 backdrop-blur-sm border border-amber-500/30 rounded-xl px-3.5 py-2 mb-4 text-xs text-slate-200 inline-flex items-center gap-2 shadow-sm">
                 <span>Tu sĩ:</span>
@@ -1554,57 +1726,156 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Progress */}
-              <div className="h-1.5 xl:h-2 w-full bg-slate-900/80 rounded-full overflow-hidden">
-                <div
-                  className="h-full transition-all duration-500"
-                  style={{
-                    width: `${((currentC2Question.stage - 1) / 10) * 100}%`,
-                    background: isTribulationStage
-                      ? 'linear-gradient(90deg, #c084fc, #f59e0b)'
-                      : `linear-gradient(90deg, ${currentRealmTheme.primaryHex}, ${currentRealmTheme.secondaryHex})`,
-                  }}
-                />
-              </div>
-
-              {/* Status Strip */}
+              {/* Realm Progress Bar & Animated Milestone Badge */}
               <div
-                className="flex items-center justify-between text-[11px] sm:text-xs xl:text-sm bg-slate-950/45 backdrop-blur-md px-3.5 py-1.5 xl:px-5 xl:py-2 rounded-lg text-slate-200 border transition-colors duration-500"
+                className="bg-slate-950/50 backdrop-blur-md rounded-2xl p-3 sm:p-4 border transition-all duration-500 shadow-lg flex flex-col gap-2.5"
                 style={{
-                  borderColor: `${currentRealmTheme.primaryHex}40`,
+                  borderColor: isTribulationStage ? '#c084fc' : `${currentRealmTheme.primaryHex}60`,
+                  boxShadow: isTribulationStage
+                    ? '0 0 25px rgba(192, 132, 252, 0.3)'
+                    : `0 0 20px ${currentRealmTheme.glowRgba}`,
                 }}
               >
-                <div className="flex items-center gap-1.5">
-                  <span>☯</span>
-                  <span className="text-slate-300">Cảnh giới:</span>
-                  <span
-                    className="px-2.5 py-0.5 rounded-md font-bold text-[11px] xl:text-xs border shadow-sm transition-all duration-500"
+                {/* Row 1: Animated Realm Badge & Milestone Leap Indicator */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  {/* Left: Animated Badge */}
+                  <div
+                    key={`badge-${c2RealmIndex}`}
+                    className="animate-milestone-pop inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all duration-500 shadow-md"
                     style={{
-                      backgroundColor: `${currentRealmTheme.primaryHex}25`,
-                      borderColor: `${currentRealmTheme.primaryHex}70`,
-                      color: currentRealmTheme.secondaryHex,
+                      backgroundColor: `${currentRealmTheme.primaryHex}20`,
+                      borderColor: `${currentRealmTheme.primaryHex}80`,
+                      boxShadow: `0 0 15px ${currentRealmTheme.glowRgba}`,
                     }}
                   >
-                    {REALMS[c2RealmIndex]}
-                  </span>
-                  <span className="text-[10px] xl:text-xs text-slate-400 font-mono">
-                    ({c2RealmIndex}/10)
-                  </span>
+                    <div
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-sm sm:text-base font-black shadow-inner"
+                      style={{
+                        backgroundColor: `${currentRealmTheme.primaryHex}40`,
+                        color: currentRealmTheme.secondaryHex,
+                      }}
+                    >
+                      {c2RealmIndex >= 10
+                        ? '🪽'
+                        : c2RealmIndex >= 9
+                        ? '⚡'
+                        : c2RealmIndex >= 8
+                        ? '👑'
+                        : c2RealmIndex >= 7
+                        ? '✨'
+                        : c2RealmIndex >= 5
+                        ? '🔥'
+                        : c2RealmIndex >= 3
+                        ? '☀️'
+                        : c2RealmIndex >= 1
+                        ? '🌿'
+                        : '🌱'}
+                    </div>
+                    <div>
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400 flex items-center gap-1">
+                        <span>Huy Hiệu Cảnh Giới</span>
+                        <Sparkles className="w-3 h-3 text-amber-300 animate-spin" />
+                      </div>
+                      <div
+                        className="text-xs sm:text-sm font-black tracking-wide"
+                        style={{ color: currentRealmTheme.secondaryHex }}
+                      >
+                        {REALMS[c2RealmIndex]}
+                        <span className="text-[11px] font-normal text-slate-300 ml-1.5">
+                          ({currentRealmTheme.tagline})
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Milestone Transition (e.g. Luyện Khí ➔ Trúc Cơ) */}
+                  <div className="flex items-center gap-2 text-xs bg-slate-900/60 border border-slate-700/60 px-3 py-1.5 rounded-xl text-slate-200">
+                    <span className="text-[11px] text-slate-400">Cột mốc thăng cấp:</span>
+                    <span
+                      className="font-bold px-2 py-0.5 rounded text-[11px]"
+                      style={{
+                        backgroundColor: `${currentRealmTheme.primaryHex}30`,
+                        color: currentRealmTheme.secondaryHex,
+                      }}
+                    >
+                      {REALMS[c2RealmIndex]}
+                    </span>
+                    <span className="text-amber-400 font-black animate-pulse">➜</span>
+                    <span
+                      className={`font-bold px-2 py-0.5 rounded text-[11px] border border-dashed ${
+                        c2RealmIndex < 10
+                          ? 'border-amber-400/60 text-amber-300 bg-amber-500/15'
+                          : 'border-emerald-400 text-emerald-300'
+                      }`}
+                    >
+                      {c2RealmIndex < 10 ? REALMS[c2RealmIndex + 1] : 'Viên Mãn'}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                  <span>💎</span>
-                  <span className="font-medium text-slate-200 truncate max-w-[120px] sm:max-w-xs">
-                    {getTreasureDisplayName(c2Treasure)}
-                  </span>
-                  {c2Treasure === 'jade' && c2JadeUsed && (
-                    <span className="text-[9px] xl:text-[10px] text-rose-300 font-bold">(đã dùng)</span>
-                  )}
-                  {c2Treasure === 'skip' && c2SkipUsed && (
-                    <span className="text-[9px] xl:text-[10px] text-slate-400 font-bold">(đã dùng)</span>
-                  )}
+                {/* Row 2: Progress Track & 10 Realm Nodes */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="h-2 w-full bg-slate-900/90 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                    <div
+                      className="h-full rounded-full transition-all duration-700 ease-out"
+                      style={{
+                        width: `${Math.max(4, (c2RealmIndex / 10) * 100)}%`,
+                        background: isTribulationStage
+                          ? 'linear-gradient(90deg, #c084fc, #f59e0b, #ec4899)'
+                          : `linear-gradient(90deg, ${currentRealmTheme.primaryHex}, ${currentRealmTheme.secondaryHex})`,
+                        boxShadow: `0 0 12px ${currentRealmTheme.primaryHex}`,
+                      }}
+                    />
+                  </div>
+
+                  {/* 10 Milestone Segments Track */}
+                  <div className="grid grid-cols-10 gap-1 text-center">
+                    {REALMS.slice(1).map((realmName, idx) => {
+                      const stageNum = idx + 1;
+                      const isReached = c2RealmIndex >= stageNum;
+                      const isCurrentTarget = c2RealmIndex + 1 === stageNum;
+                      return (
+                        <div
+                          key={realmName}
+                          title={`Ải ${stageNum}: ${realmName}`}
+                          className={`h-1.5 rounded-full transition-all duration-500 ${
+                            isReached
+                              ? 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
+                              : isCurrentTarget
+                              ? 'bg-purple-400 animate-pulse ring-1 ring-purple-300'
+                              : 'bg-slate-800/80'
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Row 3: Status Summary (Tu vi, Số ải đã vượt, Pháp bảo) */}
+                <div className="flex items-center justify-between text-[11px] sm:text-xs text-slate-300 pt-1 border-t border-slate-800/60">
+                  <div className="flex items-center gap-1.5">
+                    <span>⚡ Tu vi:</span>
+                    <span className="font-bold text-amber-300">{c2Score} aura</span>
+                    <span className="text-slate-500">·</span>
+                    <span>Đã vượt:</span>
+                    <span className="font-bold text-emerald-400">{c2CorrectCount}/10 ải</span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <span>💎 Pháp bảo:</span>
+                    <span className="font-semibold text-slate-200">
+                      {getTreasureDisplayName(c2Treasure)}
+                    </span>
+                    {c2Treasure === 'jade' && c2JadeUsed && (
+                      <span className="text-[10px] text-rose-300 font-bold">(đã dùng)</span>
+                    )}
+                    {c2Treasure === 'skip' && c2SkipUsed && (
+                      <span className="text-[10px] text-slate-400 font-bold">(đã dùng)</span>
+                    )}
+                  </div>
                 </div>
               </div>
+
 
               {/* Heavenly Tribulation Banner (Special Ải 10) */}
               {isTribulationStage && (
@@ -1691,8 +1962,9 @@ export default function App() {
                         if (c2Locked) {
                           if (isCorrect) {
                             btnStyle =
-                              'bg-emerald-950/60 border-emerald-500 text-emerald-200 ring-1 ring-emerald-500/40';
-                            badgeStyle = 'bg-emerald-500 text-slate-950 font-black';
+                              'bg-amber-950/70 border-amber-400 text-amber-100 ring-2 ring-amber-400/80 shadow-lg shadow-amber-500/30 correct-seal-glow-amber';
+                            badgeStyle =
+                              'bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 font-black shadow-md shadow-amber-400/50 scale-105';
                           } else if (isSelected) {
                             btnStyle =
                               'bg-rose-950/60 border-rose-500 text-rose-200 ring-1 ring-rose-500/40';
@@ -1788,13 +2060,13 @@ export default function App() {
 
             <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3.5 mb-6 text-xs text-slate-200 space-y-1">
               <div>
-                Số câu đúng: <b className="text-emerald-400">{c2CorrectCount}/10</b>
+                Số câu đúng (cả 2 phần): <b className="text-emerald-400">{c1CorrectCount + c2CorrectCount}/20</b>
               </div>
               <div>
-                Tổng tu vi: <b className="text-amber-400">{c2Score} aura</b>
+                Tổng aura (cả 2 phần): <b className="text-amber-400">{c1Score + c2Score} aura</b>
               </div>
               <div>
-                Cảnh giới đạt được:{' '}
+                Cảnh giới cuối cùng đạt được:{' '}
                 <b className="text-purple-300 font-bold">{REALMS[c2RealmIndex]}</b>
               </div>
             </div>
@@ -1815,36 +2087,36 @@ export default function App() {
           <div className="bg-slate-950/50 backdrop-blur-md border border-amber-500/30 rounded-2xl p-4 sm:p-6 max-w-xl mx-auto w-full shadow-2xl shadow-amber-950/30">
             <div className="text-center mb-4">
               <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1 drop-shadow-sm">
-                Bảng Phong Thần · Chương 2
+                Bảng Phong Thần · Cả 2 Chương
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-slate-100 drop-shadow-sm">
-                Thành Tích Tu Luyện
+                Bảng Phong Thần Tu Tiên
               </h2>
               <div className="text-sm sm:text-base font-black text-purple-300 mt-1 drop-shadow-sm">
-                ✦ Cảnh giới: {REALMS[c2RealmIndex]} ✦
+                ✦ Cảnh giới cuối cùng: {REALMS[c2RealmIndex]} ✦
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-2.5 mb-5">
               <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 text-center">
                 <div className="text-lg sm:text-2xl font-black text-amber-400 tabular-nums drop-shadow-sm">
-                  {c2Score}
+                  {c1Score + c2Score}
                 </div>
                 <div className="text-[10px] text-slate-300 font-bold uppercase">
-                  Tổng aura
+                  Tổng aura (2 phần)
                 </div>
               </div>
               <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 text-center">
                 <div className="text-lg sm:text-2xl font-black text-emerald-400 tabular-nums drop-shadow-sm">
-                  {c2CorrectCount}/10
+                  {c1CorrectCount + c2CorrectCount}/20
                 </div>
                 <div className="text-[10px] text-slate-300 font-bold uppercase">
-                  Câu đúng
+                  Câu đúng (Cả 2 phần)
                 </div>
               </div>
               <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 text-center">
                 <div className="text-lg sm:text-2xl font-black text-indigo-400 tabular-nums drop-shadow-sm">
-                  {Math.round((c2CorrectCount / 10) * 100)}%
+                  {Math.round(((c1CorrectCount + c2CorrectCount) / 20) * 100)}%
                 </div>
                 <div className="text-[10px] text-slate-300 font-bold uppercase">
                   Độ chính xác
@@ -1882,10 +2154,10 @@ export default function App() {
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-950/60 text-[10px] text-slate-300 uppercase border-b border-slate-700/60">
                       <tr>
-                        <th className="py-2 px-3">Tu sĩ</th>
-                        <th className="py-2 px-3">Lớp</th>
-                        <th className="py-2 px-3">Chặng</th>
-                        <th className="py-2 px-3 text-right">Aura</th>
+                        <th className="py-2.5 px-3">Tu sĩ</th>
+                        <th className="py-2.5 px-3">Lớp</th>
+                        <th className="py-2.5 px-3">Cảnh giới cuối cùng</th>
+                        <th className="py-2.5 px-3 text-right">Tổng Aura</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800/60 text-slate-200">
@@ -1897,18 +2169,18 @@ export default function App() {
                               item.name === playerName ? 'bg-amber-400/10' : ''
                             }
                           >
-                            <td className="py-2 px-3 font-semibold text-slate-100 truncate max-w-[110px]">
+                            <td className="py-2.5 px-3 font-semibold text-slate-100 truncate max-w-[110px]">
                               {item.name}
                             </td>
-                            <td className="py-2 px-3 text-slate-300">
+                            <td className="py-2.5 px-3 text-slate-300">
                               {item.className}
                             </td>
-                            <td className="py-2 px-3 text-slate-300 truncate max-w-[130px]">
-                              {item.chapter === 1
-                                ? 'Chương 1: Di tích'
-                                : `Chương 2: ${item.realm || 'Nhập Môn'}`}
+                            <td className="py-2.5 px-3">
+                              <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/15 border border-amber-400/40 text-amber-300 shadow-sm">
+                                {item.realm || 'Nhập Môn'}
+                              </span>
                             </td>
-                            <td className="py-2 px-3 text-right font-bold text-amber-400 tabular-nums">
+                            <td className="py-2.5 px-3 text-right font-black text-amber-400 tabular-nums">
                               {item.score} aura
                             </td>
                           </tr>

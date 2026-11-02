@@ -55,6 +55,7 @@
   white-space: nowrap !important;
   display: inline-block !important;
   vertical-align: middle;
+  font-size: 1.15em !important;
 }
 
 .katex * {
@@ -77,19 +78,19 @@
 
 @media (min-width: 1024px) {
   .katex {
-    font-size: 1.12em !important;
+    font-size: 1.28em !important;
   }
 }
 
 @media (min-width: 1536px) {
   .katex {
-    font-size: 1.25em !important;
+    font-size: 1.45em !important;
   }
 }
 
 @media (min-width: 2560px) {
   .katex {
-    font-size: 1.4em !important;
+    font-size: 1.62em !important;
   }
 }
 
@@ -110,6 +111,67 @@
   font-weight: 600;
 }
 
+/* Correct Answer "Seal Break" Glowing Effects (Phá Giải Phong Ấn) */
+@keyframes correctSealGlowCyan {
+  0% {
+    box-shadow: 0 0 0 rgba(34, 211, 238, 0);
+  }
+  35% {
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.85), inset 0 0 16px rgba(34, 211, 238, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 18px rgba(34, 211, 238, 0.55), inset 0 0 8px rgba(34, 211, 238, 0.25);
+  }
+}
+
+@keyframes correctSealGlowAmber {
+  0% {
+    box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+  }
+  35% {
+    box-shadow: 0 0 32px rgba(245, 158, 11, 0.9), inset 0 0 18px rgba(251, 191, 36, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6), inset 0 0 10px rgba(251, 191, 36, 0.3);
+  }
+}
+
+.correct-seal-glow-cyan {
+  animation: correctSealGlowCyan 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.correct-seal-glow-amber {
+  animation: correctSealGlowAmber 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.correct-seal-glow-cyan .katex {
+  text-shadow: 0 0 10px #22d3ee, 0 0 22px #06b6d4, 0 0 35px #0284c7 !important;
+}
+
+.correct-seal-glow-amber .katex {
+  text-shadow: 0 0 10px #fbbf24, 0 0 22px #f59e0b, 0 0 35px #d97706 !important;
+}
+
+/* Animated Milestone Badge Pop for Realm Progress Bar */
+@keyframes milestoneBadgePop {
+  0% {
+    transform: scale(0.92);
+    filter: brightness(1);
+  }
+  45% {
+    transform: scale(1.08);
+    filter: brightness(1.35);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.animate-milestone-pop {
+  animation: milestoneBadgePop 0.85s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 /* Dimensional Portal Vortex & Warp Shake */
 @keyframes portalVortexSpin {
   0% {
@@ -125,21 +187,28 @@
 
 @keyframes warpShake {
   0%, 100% {
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
   }
-  20% {
-    transform: translate(-2px, 1.5px);
+  15% {
+    transform: translate(-3.5px, 2.5px) scale(1.006);
   }
-  40% {
-    transform: translate(1.5px, -1px);
+  30% {
+    transform: translate(3px, -2px) scale(0.996);
+  }
+  45% {
+    transform: translate(-2.5px, -3px) scale(1.004);
   }
   60% {
-    transform: translate(-1.5px, -1.5px);
+    transform: translate(3.5px, 2px) scale(1.008);
   }
-  80% {
-    transform: translate(2px, 1px);
+  75% {
+    transform: translate(-2px, 3px) scale(0.998);
+  }
+  90% {
+    transform: translate(2.5px, -1.5px) scale(1.004);
   }
 }
+
 
 @keyframes lightningRumble {
   0%, 91%, 100% {
@@ -172,4 +241,238 @@
 
 .animate-tribulation-lightning {
   animation: lightningRumble 7s ease-in-out infinite;
+}
+
+/* ===================================================================== */
+/* CRITICAL STRIKE (CÚ ĐÁNH CHÍ MẠNG) ANIMATIONS FOR RESULT MODAL       */
+/* ===================================================================== */
+
+/* 1. Dramatic Screen / Modal Impact Shake */
+@keyframes critScreenShake {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  15% {
+    transform: translate(-8px, 6px) scale(1.02);
+  }
+  30% {
+    transform: translate(7px, -5px) scale(1.01);
+  }
+  45% {
+    transform: translate(-5px, -4px) scale(1.005);
+  }
+  65% {
+    transform: translate(4px, 3px) scale(1);
+  }
+  85% {
+    transform: translate(-2px, 1px) scale(1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-crit-impact-shake {
+  animation: critScreenShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* 2. Character Critical Strike Attack Lunge (Lao tới chém chí mạng) */
+@keyframes critCharacterLunge {
+  0% {
+    transform: translateX(-50px) translateY(15px) scale(0.75) rotate(-14deg);
+    opacity: 0;
+    filter: brightness(2) drop-shadow(0 0 0 rgba(251, 191, 36, 0));
+  }
+  20% {
+    opacity: 1;
+  }
+  35% {
+    /* Impact peak: forward dash, sword thrust */
+    transform: translateX(18px) translateY(-8px) scale(1.22) rotate(6deg);
+    filter: brightness(1.6) drop-shadow(0 0 25px rgba(251, 191, 36, 0.9)) drop-shadow(0 0 45px rgba(245, 158, 11, 0.8));
+  }
+  55% {
+    /* Recoil rebound */
+    transform: translateX(-6px) translateY(2px) scale(1.05) rotate(-3deg);
+    filter: brightness(1.2) drop-shadow(0 0 16px rgba(56, 189, 248, 0.6));
+  }
+  75% {
+    transform: translateX(2px) translateY(-1px) scale(1.02) rotate(1deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 12px rgba(245, 158, 11, 0.4));
+  }
+}
+
+.animate-crit-character {
+  animation: critCharacterLunge 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 3. Sword Slash Energy Beam (Vết kiếm quang xé gió chí mạng) */
+@keyframes critSlashCut {
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+    opacity: 0;
+    transform: scaleX(0.1) rotate(-35deg);
+  }
+  20% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: scaleX(1) scaleY(1.4) rotate(-35deg);
+  }
+  45% {
+    opacity: 1;
+    transform: scaleX(1.1) scaleY(1.6) rotate(-35deg);
+    filter: blur(0px) brightness(2.2);
+  }
+  70% {
+    opacity: 0.85;
+    transform: scaleX(1.15) scaleY(0.9) rotate(-35deg);
+    filter: blur(1px) brightness(1.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.25) scaleY(0.2) rotate(-35deg);
+    filter: blur(3px) brightness(1);
+  }
+}
+
+.animate-crit-slash {
+  animation: critSlashCut 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 4. Critical Strike Badge Explosive Pop */
+@keyframes critBadgePop {
+  0% {
+    transform: scale(0.2) rotate(-15deg);
+    opacity: 0;
+    filter: brightness(2.5);
+  }
+  30% {
+    transform: scale(1.35) rotate(4deg);
+    opacity: 1;
+    filter: brightness(1.7) drop-shadow(0 0 20px rgba(245, 158, 11, 0.9));
+  }
+  55% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+  75% {
+    transform: scale(1.08) rotate(1deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 12px rgba(245, 158, 11, 0.6));
+  }
+}
+
+.animate-crit-badge {
+  animation: critBadgePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 5. Floating Critical Damage Numbers Pop */
+@keyframes critDamagePop {
+  0% {
+    transform: translateY(10px) scale(0.7);
+    opacity: 0;
+  }
+  40% {
+    transform: translateY(0px) scale(1.15);
+    opacity: 1;
+    filter: drop-shadow(0 0 16px rgba(251, 191, 36, 1));
+  }
+  70% {
+    transform: translateY(2px) scale(0.98);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.75));
+  }
+}
+
+.animate-crit-damage {
+  animation: critDamagePop 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 6. Expanding Critical Shockwave Ring */
+@keyframes critShockwave {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 1;
+    border-width: 6px;
+  }
+  50% {
+    opacity: 0.85;
+    border-width: 3px;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+.animate-crit-shockwave {
+  animation: critShockwave 0.8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+/* 7. Critical Impact Sparks Flying */
+@keyframes critSparkFly1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-65px, -55px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes critSparkFly2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(70px, -60px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes critSparkFly3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(60px, 50px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes critSparkFly4 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-55px, 60px) scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-crit-spark-1 {
+  animation: critSparkFly1 0.65s ease-out forwards;
+}
+.animate-crit-spark-2 {
+  animation: critSparkFly2 0.7s ease-out forwards;
+}
+.animate-crit-spark-3 {
+  animation: critSparkFly3 0.6s ease-out forwards;
+}
+.animate-crit-spark-4 {
+  animation: critSparkFly4 0.75s ease-out forwards;
 }
