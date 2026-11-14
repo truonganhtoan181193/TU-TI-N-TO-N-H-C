@@ -481,6 +481,35 @@
 /* CHƯƠNG 2: ĐỐN NGỘ ĐẠI ĐẠO (DAO ENLIGHTENMENT) ANIMATIONS             */
 /* ===================================================================== */
 
+/* 0. Short Kinetic Screen-Shake Impact when achieving Đốn Ngộ Đại Đạo */
+@keyframes screenShake {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  12% {
+    transform: translate3d(-10px, -6px, 0) rotate(-0.8deg);
+  }
+  26% {
+    transform: translate3d(9px, 7px, 0) rotate(0.8deg);
+  }
+  42% {
+    transform: translate3d(-8px, 5px, 0) rotate(-0.5deg);
+  }
+  58% {
+    transform: translate3d(6px, -4px, 0) rotate(0.4deg);
+  }
+  74% {
+    transform: translate3d(-4px, 2px, 0) rotate(-0.2deg);
+  }
+  88% {
+    transform: translate3d(2px, -1px, 0) rotate(0.1deg);
+  }
+}
+
+.screen-shake {
+  animation: screenShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
 /* 1. Cultivator Sacred Ascension Animation (Tu sĩ đốn ngộ thăng hoa) */
 @keyframes daoAscend {
   0% {
@@ -835,5 +864,45 @@
 
 .animate-ascension-beam {
   animation: ascensionPillarBeam 2.5s ease-in-out infinite;
+}
+
+/* ===================================================================== */
+/* CHAPTER INTRODUCTION TITLE SUBTLE FLOATING ANIMATION                  */
+/* ===================================================================== */
+@keyframes chapterTitleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-chapter-float {
+  animation: chapterTitleFloat 4.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ===================================================================== */
+/* REALM BREAKTHROUGH: SCREEN FADE-TO-WHITE TRANSITION                   */
+/* ===================================================================== */
+@keyframes realmFadeToWhite {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.96;
+  }
+  36% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-realm-fade-white {
+  animation: realmFadeToWhite 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: opacity;
 }
 

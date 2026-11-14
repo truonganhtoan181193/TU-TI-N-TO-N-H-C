@@ -31,6 +31,7 @@ import { TopBar } from './components/TopBar';
 import { ChapterAtmosphere } from './components/ChapterAtmosphere';
 import { LevelUpCelebration, LevelUpEvent } from './components/LevelUpCelebration';
 import { ResultModal, ResultType } from './components/ResultModal';
+import { TribulationSparkParticles } from './components/TribulationSparkParticles';
 import { playSound, playLevelUpAudio, setBgmTheme, unlockAudio, triggerHaptic } from './utils/audio';
 import { fireConfetti, fireMultiWaveFireworks, fireMiniMilestoneConfetti } from './utils/confetti';
 
@@ -88,6 +89,24 @@ export default function App() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const c2MaxTime = c2Treasure === 'time' ? 30 : 20;
   const [timeLeft, setTimeLeft] = useState(20);
+
+  // Realm Breakthrough Screen Fade-to-White Transition
+  const prevRealmIndexRef = useRef(0);
+  const [realmFadeActive, setRealmFadeActive] = useState(false);
+  const [realmFadeCount, setRealmFadeCount] = useState(0);
+
+  useEffect(() => {
+    if (c2RealmIndex > prevRealmIndexRef.current) {
+      prevRealmIndexRef.current = c2RealmIndex;
+      setRealmFadeActive(true);
+      setRealmFadeCount((prev) => prev + 1);
+      const timer = setTimeout(() => {
+        setRealmFadeActive(false);
+      }, 1100);
+      return () => clearTimeout(timer);
+    }
+    prevRealmIndexRef.current = c2RealmIndex;
+  }, [c2RealmIndex]);
 
   // Load history on mount & normalize scores
   useEffect(() => {
@@ -711,6 +730,15 @@ export default function App() {
         }
       />
 
+      {/* Screen Fade-to-White Transition Overlay on Realm Breakthrough (c2RealmIndex increase) */}
+      {realmFadeActive && (
+        <div
+          key={`realm-fade-${realmFadeCount}`}
+          aria-hidden="true"
+          className="fixed inset-0 pointer-events-none z-[60] bg-gradient-to-b from-white via-amber-50/95 to-white animate-realm-fade-white"
+        />
+      )}
+
       {/* Heavenly Tribulation Gate (Thiên Môn Độ Kiếp) Full-Screen Visual Overlay for Chapter 2 Stage 10 */}
       {screen === 'c2_quiz' && c2Index === 9 && (
         <div className="fixed inset-0 pointer-events-none z-20 overflow-hidden select-none">
@@ -722,6 +750,8 @@ export default function App() {
 
           {/* Crackling lightning bolt arcs shimmering along screen edges */}
           <svg
+            viewBox="0 0 1920 1080"
+            preserveAspectRatio="none"
             className="absolute inset-0 w-full h-full opacity-65 animate-tribulation-bolt"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -736,15 +766,15 @@ export default function App() {
             <path
               d="M 45,0 L 68,170 L 32,250 L 85,420 L 40,540 L 76,700 L 28,880 L 55,1080"
               stroke="url(#tribulationGrad)"
-              strokeWidth="2.5"
+              strokeWidth="3"
               fill="none"
               strokeDasharray="9 4"
             />
             {/* Right thunder bolt arc */}
             <path
-              d="M 96%,0 L 93%,210 L 98%,330 L 92%,500 L 97%,660 L 93%,840 L 96%,1080"
+              d="M 1843,0 L 1785,210 L 1882,330 L 1766,500 L 1862,660 L 1785,840 L 1843,1080"
               stroke="url(#tribulationGrad)"
-              strokeWidth="2.5"
+              strokeWidth="3"
               fill="none"
               strokeDasharray="7 3"
             />
@@ -862,7 +892,7 @@ export default function App() {
             <div className="text-[11px] xl:text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1 drop-shadow-sm">
               Tiếng gọi từ vùng đất lạ
             </div>
-            <h1 className="text-2xl sm:text-4xl xl:text-5xl font-black text-slate-50 tracking-tight mb-2 drop-shadow-md">
+            <h1 className="animate-chapter-float text-2xl sm:text-4xl xl:text-5xl font-black text-slate-50 tracking-tight mb-2 drop-shadow-md">
               Thám Hiểm <span className="text-cyan-300">Di Tích Cổ</span>
             </h1>
 
@@ -1472,7 +1502,7 @@ export default function App() {
               </div>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-100 mb-2 drop-shadow-md">
+            <h2 className="animate-chapter-float text-2xl sm:text-3xl font-black text-slate-100 mb-2 drop-shadow-md">
               Tiến Vào Tu Tiên Giới
             </h2>
 
@@ -1946,10 +1976,22 @@ export default function App() {
 
               {/* Heavenly Tribulation Banner (Special Ải 10) */}
               {isTribulationStage && (
-                <div className="bg-gradient-to-r from-purple-950/90 via-amber-950/80 to-purple-950/90 border border-purple-400/80 p-3 xl:p-3.5 rounded-xl text-center text-xs xl:text-sm font-bold text-amber-200 animate-pulse shadow-xl flex items-center justify-center gap-2">
-                  <span className="text-base xl:text-lg animate-bounce">⚡</span>
-                  <span>THIÊN MÔN ĐỘ KIẾP: Sấm sét thiên kiếp thử thách tu vi! Toàn bộ pháp bảo bị phong tỏa.</span>
-                  <span className="text-base xl:text-lg animate-bounce">🌩️</span>
+                <div className="relative overflow-visible">
+                  {/* Tiny Lightning Particle System crackling around THIÊN MÔN ĐỘ KIẾP */}
+                  <div className="absolute -inset-x-4 -inset-y-3 pointer-events-none z-20 overflow-hidden rounded-2xl">
+                    <TribulationSparkParticles />
+                  </div>
+
+                  <div className="relative z-10 bg-gradient-to-r from-purple-950/90 via-amber-950/80 to-purple-950/90 border border-purple-400/80 p-3 xl:p-3.5 rounded-xl text-center text-xs xl:text-sm font-bold text-amber-200 shadow-[0_0_25px_rgba(192,132,252,0.45)] flex items-center justify-center gap-2">
+                    <span className="text-base xl:text-lg animate-bounce">⚡</span>
+                    <span>
+                      <strong className="text-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.85)]">
+                        THIÊN MÔN ĐỘ KIẾP
+                      </strong>
+                      : Sấm sét thiên kiếp thử thách tu vi! Toàn bộ pháp bảo bị phong tỏa.
+                    </span>
+                    <span className="text-base xl:text-lg animate-bounce">🌩️</span>
+                  </div>
                 </div>
               )}
 
@@ -2268,7 +2310,9 @@ export default function App() {
               Chúc mừng bạn đã đạt danh hiệu{' '}
               <b className="text-amber-300">
                 [
-                {c2RealmIndex === 9
+                {c2RealmIndex >= 10
+                  ? 'Thiên Tôn Phi Thăng'
+                  : c2RealmIndex >= 9
                   ? 'Đại Năng Toán Học'
                   : c2RealmIndex >= 7
                   ? 'Cao Thủ Tư Duy'

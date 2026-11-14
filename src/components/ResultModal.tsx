@@ -91,17 +91,30 @@ export const ResultModal: React.FC<ResultModalProps> = ({
   isLastQuestion = false,
 }) => {
   const [animKey, setAnimKey] = useState(0);
+  const [isScreenShaking, setIsScreenShaking] = useState(false);
 
-  // Trigger sound effect and vibration on open when correct
+  // Trigger sound effect, vibration, and short screen-shake on open when correct
   useEffect(() => {
-    if (isOpen) {
-      setAnimKey((prev) => prev + 1);
-      if (result === 'correct') {
-        playCriticalStrikeSound(soundEnabled);
-        triggerHaptic();
+    if (!isOpen) {
+      setIsScreenShaking(false);
+      return;
+    }
+
+    setAnimKey((prev) => prev + 1);
+    if (result === 'correct') {
+      playCriticalStrikeSound(soundEnabled);
+      triggerHaptic();
+
+      // Short screen-shake impact when achieving "Đốn Ngộ Đại Đạo" (Chapter 2)
+      if (chapter === 2) {
+        setIsScreenShaking(true);
+        const shakeTimer = setTimeout(() => {
+          setIsScreenShaking(false);
+        }, 450);
+        return () => clearTimeout(shakeTimer);
       }
     }
-  }, [isOpen, result, soundEnabled]);
+  }, [isOpen, result, chapter, soundEnabled]);
 
   // Keyboard shortcut: Press Enter or Space to advance quickly
   useEffect(() => {
@@ -128,7 +141,9 @@ export const ResultModal: React.FC<ResultModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 select-none animate-in fade-in duration-200"
+      className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 select-none animate-in fade-in duration-200 ${
+        isScreenShaking ? 'screen-shake' : ''
+      }`}
     >
       {/* Darkened backdrop with blur */}
       <div
@@ -143,7 +158,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({
           isCorrect
             ? isChap1
               ? 'animate-crit-impact-shake bg-slate-950/95 border-amber-400/80 shadow-[0_0_50px_rgba(245,158,11,0.35)] ring-2 ring-amber-400/30'
-              : 'animate-crit-impact-shake bg-slate-950/95 border-purple-400/80 shadow-[0_0_50px_rgba(192,132,252,0.4)] ring-2 ring-purple-400/30'
+              : 'bg-slate-950/95 border-purple-400/80 shadow-[0_0_50px_rgba(192,132,252,0.4)] ring-2 ring-purple-400/30'
             : isTimeout
             ? 'bg-slate-950/95 border-rose-500/70 shadow-[0_0_35px_rgba(244,63,94,0.25)]'
             : 'bg-slate-950/95 border-rose-500/70 shadow-[0_0_35px_rgba(244,63,94,0.25)]'
@@ -224,7 +239,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({
 
             {/* Flying Spiritual Petals / Starlight particles */}
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <span className="absolute text-base animate-dao-petal-1">🪷</span>
+              <span className="absolute text-base animate-dao-petal-1">🌸</span>
               <span className="absolute text-base animate-dao-petal-2">✨</span>
               <span className="absolute text-base animate-dao-petal-3">🌸</span>
               <span className="absolute text-base animate-dao-petal-4">☯</span>
@@ -316,7 +331,21 @@ export const ResultModal: React.FC<ResultModalProps> = ({
               <div className="animate-dao-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500 via-amber-300 to-yellow-300 text-slate-950 font-black text-xs sm:text-sm tracking-wider uppercase shadow-[0_0_25px_rgba(192,132,252,0.95)] border border-yellow-200 ring-2 ring-purple-400/40">
                 <Sparkles className="w-4 h-4 text-slate-950 animate-spin" />
                 <span>☯ ĐỐN NGỘ ĐẠI ĐẠO! ☯</span>
-                <span className="text-base">🪷</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-4 h-4 text-slate-950 shrink-0"
+                  aria-hidden="true"
+                >
+                  <path d="M12 3c-2.2 2.8-3 5.5-3 8.2 0 2.5 1.3 4.8 3 4.8s3-2.3 3-4.8C15 8.5 14.2 5.8 12 3Z" />
+                  <path d="M9 12.2C6.5 10.5 4.2 9.8 2 10c1 3.3 3.4 6 6.8 6.8" />
+                  <path d="M15 12.2c2.5-1.7 4.8-2.4 7-2.2-1 3.3-3.4 6-6.8 6.8" />
+                  <path d="M5 17.5c2.2 1.8 4.6 2.5 7 2.5s4.8-.7 7-2.5" />
+                </svg>
               </div>
             )}
 
