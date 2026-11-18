@@ -54,6 +54,7 @@ export type ScreenType =
   | 'c1_boundary'
   | 'c1_result'
   | 'c1_review'
+  | 'c1_gameover'
   // Transition screen between Chap 1 and Chap 2
   | 'transition_to_c2'
   // Chap 2 screens
@@ -61,6 +62,7 @@ export type ScreenType =
   | 'c2_treasure'
   | 'c2_quiz'
   | 'c2_climax'
+  | 'c2_gameover'
   | 'c2_leaderboard'
   | 'c2_review'
   | 'c2_outro';

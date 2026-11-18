@@ -12,6 +12,7 @@ import {
   ChevronRight,
   AlertCircle,
   Compass,
+  HeartCrack,
 } from 'lucide-react';
 import {
   Question,
@@ -59,7 +60,16 @@ export default function App() {
     nextRealmName?: string;
     correctAnswerText?: string;
     isLastQuestion?: boolean;
+    isGameOver?: boolean;
   } | null>(null);
+
+  // Heart (Sinh mệnh) State
+  const [hearts, setHearts] = useState<number>(3);
+  const heartsRef = useRef<number>(3);
+  const [maxHearts, setMaxHearts] = useState<number>(3);
+  const [hasCharacterCreated, setHasCharacterCreated] = useState<boolean>(false);
+  const [c1Completed, setC1Completed] = useState<boolean>(false);
+  const [c1BonusHeartGranted, setC1BonusHeartGranted] = useState<boolean>(false);
 
   // CHAP 1 STATE: Thám Hiểm Di Tích Cổ
   const [c1Questions, setC1Questions] = useState<Question[]>([]);
@@ -175,6 +185,17 @@ export default function App() {
     }, 2400);
   };
 
+  const grantChap1BonusHeartIfEligible = () => {
+    if (c1Completed && heartsRef.current > 0 && !c1BonusHeartGranted) {
+      const nextHearts = heartsRef.current + 1;
+      heartsRef.current = nextHearts;
+      setHearts(nextHearts);
+      setMaxHearts((prev) => Math.max(prev, nextHearts));
+      setC1BonusHeartGranted(true);
+      showToast('❤️ Hoàn thành Chương 1 còn tim! +1 tim bước vào Chương 2!');
+    }
+  };
+
   // -------------------------------------------------------------
   // TIMER HOOK FOR QUIZ SCREENS
   // -------------------------------------------------------------
@@ -218,6 +239,10 @@ export default function App() {
       playSound('wrong', soundEnabled);
 
       const q = c1Questions[c1Index];
+      const nextHearts = Math.max(0, heartsRef.current - 1);
+      heartsRef.current = nextHearts;
+      setHearts(nextHearts);
+
       const record: UserAnswerRecord = {
         stage: q.stage,
         question: q,
@@ -241,6 +266,7 @@ export default function App() {
         auraGained: 0,
         correctAnswerText: q.correctAnswerText,
         isLastQuestion: q.stage === 10,
+        isGameOver: nextHearts <= 0,
       });
     } else if (screen === 'c2_quiz') {
       if (c2Locked) return;
@@ -249,6 +275,10 @@ export default function App() {
       playSound('wrong', soundEnabled);
 
       const q = c2Questions[c2Index];
+      const nextHearts = Math.max(0, heartsRef.current - 1);
+      heartsRef.current = nextHearts;
+      setHearts(nextHearts);
+
       const record: UserAnswerRecord = {
         stage: q.stage,
         question: q,
@@ -273,6 +303,7 @@ export default function App() {
         realmName: REALMS[c2RealmIndex],
         correctAnswerText: q.correctAnswerText,
         isLastQuestion: q.stage === 10,
+        isGameOver: nextHearts <= 0,
       });
     }
   };
@@ -287,6 +318,12 @@ export default function App() {
     }
 
     const generated = generateAllChap1Questions();
+    heartsRef.current = 3;
+    setHearts(3);
+    setMaxHearts(3);
+    setHasCharacterCreated(true);
+    setC1Completed(false);
+    setC1BonusHeartGranted(false);
     setC1Questions(generated);
     setC1Index(0);
     setC1Score(0);
@@ -346,6 +383,10 @@ export default function App() {
       });
     } else {
       playSound('wrong', soundEnabled);
+      const nextHearts = Math.max(0, heartsRef.current - 1);
+      heartsRef.current = nextHearts;
+      setHearts(nextHearts);
+
       const wrongText = 'Chưa chính xác. Cơ quan chưa được kích hoạt, hãy tiếp tục cố gắng ở câu tiếp theo!';
       setC1Feedback({
         text: wrongText,
@@ -361,6 +402,7 @@ export default function App() {
         auraGained: 0,
         correctAnswerText: q.correctAnswerText,
         isLastQuestion: q.stage === 10,
+        isGameOver: nextHearts <= 0,
       });
     }
 
@@ -375,6 +417,12 @@ export default function App() {
 
   const handleC1NextQuestion = () => {
     setResultModal(null);
+    if (heartsRef.current <= 0) {
+      playSound('wrong', soundEnabled);
+      setScreen('c1_gameover');
+      return;
+    }
+
     if (c1Index < 9) {
       const nextIdx = c1Index + 1;
       setC1Index(nextIdx);
@@ -383,7 +431,8 @@ export default function App() {
       setC1Feedback(null);
       setTimeLeft(20);
     } else {
-      // Completed Chap 1 10 questions -> go to Bí mật sau di tích
+      // Completed Chap 1 10 questions while still having hearts -> go to Bí mật sau di tích
+      setC1Completed(true);
       playLevelUpAudio(1, soundEnabled);
       fireMultiWaveFireworks('chap1');
       saveScoreToLeaderboard(1, c1Score, c1CorrectCount);
@@ -400,6 +449,14 @@ export default function App() {
     if (!c2Treasure) {
       showToast('Vui lòng chọn một pháp bảo trước khi vào ải.');
       return;
+    }
+
+    if (c1Completed && heartsRef.current > 0 && !c1BonusHeartGranted) {
+      grantChap1BonusHeartIfEligible();
+    } else if (!c1Completed && (!hasCharacterCreated || heartsRef.current <= 0)) {
+      heartsRef.current = 3;
+      setHearts(3);
+      setMaxHearts(3);
     }
 
     const generated = generateAllChap2Questions();
@@ -482,6 +539,9 @@ export default function App() {
       });
     } else {
       playSound('wrong', soundEnabled);
+      const nextHearts = Math.max(0, heartsRef.current - 1);
+      heartsRef.current = nextHearts;
+      setHearts(nextHearts);
 
       // Check Ngọc Như Ý
       if (c2Treasure === 'jade' && !c2JadeUsed && q.stage <= 9) {
@@ -518,6 +578,7 @@ export default function App() {
           nextRealmName: REALMS[newRealm],
           correctAnswerText: q.correctAnswerText,
           isLastQuestion: q.stage === 10,
+          isGameOver: nextHearts <= 0,
         });
       } else {
         const wrongText = `Chưa chính xác. Cảnh giới giữ nguyên: [${REALMS[c2RealmIndex]}].`;
@@ -536,6 +597,7 @@ export default function App() {
           realmName: REALMS[c2RealmIndex],
           correctAnswerText: q.correctAnswerText,
           isLastQuestion: q.stage === 10,
+          isGameOver: nextHearts <= 0,
         });
       }
     }
@@ -589,6 +651,15 @@ export default function App() {
 
   const handleC2NextQuestion = () => {
     setResultModal(null);
+    if (heartsRef.current <= 0) {
+      playSound('wrong', soundEnabled);
+      const combinedTotalAura = c1Score + c2Score;
+      const combinedCorrect = c1CorrectCount + c2CorrectCount;
+      saveScoreToLeaderboard(2, combinedTotalAura, combinedCorrect, REALMS[c2RealmIndex]);
+      setScreen('c2_gameover');
+      return;
+    }
+
     if (c2Index < 9) {
       const nextIdx = c2Index + 1;
       setC2Index(nextIdx);
@@ -678,6 +749,32 @@ export default function App() {
   // Full restart
   const handleFullRestart = () => {
     if (timerRef.current) clearInterval(timerRef.current);
+    heartsRef.current = 3;
+    setHearts(3);
+    setMaxHearts(3);
+    setHasCharacterCreated(false);
+    setC1Completed(false);
+    setC1BonusHeartGranted(false);
+    setC1Index(0);
+    setC1Score(0);
+    setC1CorrectCount(0);
+    setC1Answers([]);
+    setC1SelectedOption(null);
+    setC1Locked(false);
+    setC1Feedback(null);
+    setC2Treasure('');
+    setC2Index(0);
+    setC2Score(0);
+    setC2CorrectCount(0);
+    setC2RealmIndex(0);
+    setC2Answers([]);
+    setC2JadeUsed(false);
+    setC2SkipUsed(false);
+    setC2SelectedOption(null);
+    setC2Locked(false);
+    setC2Feedback(null);
+    setResultModal(null);
+    setLevelUpEvent(null);
     setCurrentChapter(1);
     setScreen('c1_intro');
   };
@@ -697,11 +794,13 @@ export default function App() {
 
   // Quick switch chapter handler
   const handleSwitchChapter = (target: ChapterId) => {
+    if (screen === 'c1_gameover' || screen === 'c2_gameover') return;
     if (timerRef.current) clearInterval(timerRef.current);
     if (target === 1) {
       setCurrentChapter(1);
       setScreen('c1_intro');
     } else {
+      grantChap1BonusHeartIfEligible();
       setCurrentChapter(2);
       playSound('warp', soundEnabled);
       // If player already registered, go to c2_rules directly
@@ -826,6 +925,7 @@ export default function App() {
           correctAnswerText={resultModal.correctAnswerText}
           soundEnabled={soundEnabled}
           isLastQuestion={resultModal.isLastQuestion}
+          isGameOver={resultModal.isGameOver}
           onNext={() => {
             const chap = resultModal.chapter;
             setResultModal(null);
@@ -858,14 +958,30 @@ export default function App() {
         realmIndex={c2RealmIndex}
         chap1Seals={c1CorrectCount}
         score={currentChapter === 1 ? c1Score : c2Score}
+        hearts={hearts}
+        maxHearts={maxHearts}
+        showHearts={
+          hasCharacterCreated ||
+          currentChapter === 2 ||
+          screen === 'c1_quiz' ||
+          screen === 'c1_gameover' ||
+          screen === 'c2_quiz' ||
+          screen === 'c2_gameover'
+        }
         soundEnabled={soundEnabled}
         onToggleSound={() => {
           unlockAudio();
           setSoundEnabled((prev) => !prev);
         }}
-        onSwitchChapter={handleSwitchChapter}
+        onSwitchChapter={
+          screen !== 'c1_gameover' && screen !== 'c2_gameover'
+            ? handleSwitchChapter
+            : undefined
+        }
         onOpenLeaderboard={
-          screen !== 'c1_quiz' && screen !== 'c2_quiz'
+          screen !== 'c1_quiz' &&
+          screen !== 'c2_quiz' &&
+          screen !== 'c1_gameover'
             ? () => setScreen(currentChapter === 1 ? 'c1_result' : 'c2_leaderboard')
             : undefined
         }
@@ -1239,10 +1355,16 @@ export default function App() {
                       <button
                         type="button"
                         onClick={handleC1NextQuestion}
-                        className="w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform ml-auto"
+                        className={`w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform ml-auto ${
+                          hearts <= 0
+                            ? 'bg-gradient-to-r from-rose-500 to-red-400 text-white shadow-rose-500/25'
+                            : 'bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 shadow-cyan-400/20'
+                        }`}
                       >
                         <span>
-                          {currentC1Question.stage === 10
+                          {hearts <= 0
+                            ? 'Kết thúc trò chơi ➜'
+                            : currentC1Question.stage === 10
                             ? 'Mở cánh cổng bí ẩn ➜'
                             : 'Thử thách tiếp theo ➜'}
                         </span>
@@ -1384,6 +1506,7 @@ export default function App() {
 
               <button
                 onClick={() => {
+                  grantChap1BonusHeartIfEligible();
                   playSound('warp', soundEnabled);
                   setScreen('transition_to_c2');
                 }}
@@ -1469,6 +1592,7 @@ export default function App() {
               </button>
               <button
                 onClick={() => {
+                  grantChap1BonusHeartIfEligible();
                   playSound('warp', soundEnabled);
                   setScreen('transition_to_c2');
                 }}
@@ -1478,6 +1602,37 @@ export default function App() {
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* CHAP 1 - GAME OVER (HẾT TIM Ở CHƯƠNG 1)                  */}
+        {/* ======================================================== */}
+        {screen === 'c1_gameover' && (
+          <div className="bg-slate-950/75 backdrop-blur-xl border-2 border-rose-500/60 rounded-3xl p-6 sm:p-8 max-w-md mx-auto w-full text-center shadow-[0_0_50px_rgba(244,63,94,0.3)]">
+            <div className="w-20 h-20 rounded-2xl bg-rose-500/15 border border-rose-500/50 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-rose-950/50">
+              <HeartCrack className="w-10 h-10 text-rose-400 drop-shadow-[0_0_10px_rgba(244,63,94,0.8)]" />
+            </div>
+
+            <div className="text-[11px] font-black uppercase tracking-widest text-rose-400 mb-1 drop-shadow-sm">
+              Chương 1 · Hết Sinh Mệnh
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-rose-200 tracking-tight mb-3 drop-shadow-md">
+              GAME OVER
+            </h2>
+
+            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-6 drop-shadow-sm">
+              Nhà thám hiểm <b className="text-amber-300">{playerName || 'bạn'}</b> đã mất hết tim khi giải mã di tích cổ! Hành trình khám phá buộc phải dừng lại tại đây.
+            </p>
+
+            <button
+              type="button"
+              onClick={handleFullRestart}
+              className="w-full min-h-[50px] bg-gradient-to-r from-rose-500 via-red-500 to-amber-400 hover:brightness-105 text-white font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-rose-500/30 active:scale-[0.98] transition-transform"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Bắt đầu lại</span>
+            </button>
           </div>
         )}
 
@@ -1538,6 +1693,7 @@ export default function App() {
             <div className="flex flex-col gap-2.5">
               <button
                 onClick={() => {
+                  grantChap1BonusHeartIfEligible();
                   setCurrentChapter(2);
                   setScreen('c2_rules');
                   playSound('warp', soundEnabled);
@@ -2130,10 +2286,16 @@ export default function App() {
                         <button
                           type="button"
                           onClick={handleC2NextQuestion}
-                          className="w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 active:scale-[0.98] transition-transform ml-auto"
+                          className={`w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform ml-auto ${
+                            hearts <= 0
+                              ? 'bg-gradient-to-r from-rose-500 to-red-400 text-white shadow-rose-500/25'
+                              : 'bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 shadow-amber-400/20'
+                          }`}
                         >
                           <span>
-                            {currentC2Question.stage === 10
+                            {hearts <= 0
+                              ? 'Kết thúc trò chơi ➜'
+                              : currentC2Question.stage === 10
                               ? 'Hoàn tất độ kiếp ➜'
                               : 'Cửa ải tiếp theo ➜'}
                           </span>
@@ -2256,6 +2418,88 @@ export default function App() {
                   }`}
                 >
                   <span>Mở Bảng Phong Thần ➜</span>
+                </button>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ======================================================== */}
+        {/* CHAP 2 - GAME OVER (HẾT TIM Ở CHƯƠNG 2 - KẾT QUẢ TU VI)  */}
+        {/* ======================================================== */}
+        {screen === 'c2_gameover' && (() => {
+          const finalRealmTheme = REALM_THEMES[c2RealmIndex] || REALM_THEMES[0];
+          return (
+            <div className="bg-slate-950/80 backdrop-blur-xl border-2 border-rose-500/60 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto w-full text-center shadow-[0_0_55px_rgba(244,63,94,0.3)]">
+              <div className="w-20 h-20 rounded-2xl bg-rose-500/15 border border-rose-500/50 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-rose-950/50">
+                <HeartCrack className="w-10 h-10 text-rose-400 drop-shadow-[0_0_10px_rgba(244,63,94,0.8)]" />
+              </div>
+
+              <div className="text-[11px] font-black uppercase tracking-widest text-rose-400 mb-1 drop-shadow-sm">
+                Chương 2 · Hết Sinh Mệnh
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-rose-200 tracking-tight mb-2 drop-shadow-md">
+                Trò Chơi Kết Thúc
+              </h2>
+
+              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-5 drop-shadow-sm">
+                Tu sĩ <b className="text-amber-300">{playerName || 'bạn'}</b> ({playerClass || 'Tự do'}) đã dùng hết toàn bộ tim trong Tu Tiên Giới. Tu vi hiện tại được ghi nhận là <b className="text-amber-200">kết quả cuối cùng</b> của bạn!
+              </p>
+
+              {/* Final Cultivation Highlight */}
+              <div
+                className="rounded-2xl p-4 sm:p-5 mb-6 border text-center shadow-lg"
+                style={{
+                  backgroundColor: `${finalRealmTheme.primaryHex}18`,
+                  borderColor: `${finalRealmTheme.primaryHex}70`,
+                  boxShadow: `0 0 25px ${finalRealmTheme.glowRgba}`,
+                }}
+              >
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-300 mb-1">
+                  Tu Vi Hiện Tại (Kết Quả Cuối Cùng)
+                </div>
+                <div
+                  className="text-xl sm:text-2xl font-black mb-2 drop-shadow-sm"
+                  style={{ color: finalRealmTheme.secondaryHex }}
+                >
+                  [{REALMS[c2RealmIndex]}]
+                </div>
+                <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-700/60 text-xs">
+                  <div className="bg-slate-900/60 rounded-xl p-2.5 border border-slate-700/50">
+                    <div className="text-base sm:text-lg font-black text-amber-300 tabular-nums">
+                      {c1Score + c2Score} aura
+                    </div>
+                    <div className="text-[10px] text-slate-400 font-semibold uppercase">
+                      Tổng Tu Vi (C2: {c2Score} aura)
+                    </div>
+                  </div>
+                  <div className="bg-slate-900/60 rounded-xl p-2.5 border border-slate-700/50">
+                    <div className="text-base sm:text-lg font-black text-emerald-400 tabular-nums">
+                      {c2CorrectCount}/10 ải
+                    </div>
+                    <div className="text-[10px] text-slate-400 font-semibold uppercase">
+                      Đã Vượt Chương 2
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setScreen('c2_leaderboard')}
+                  className="flex-1 min-h-[46px] bg-slate-900/75 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-colors"
+                >
+                  <Trophy className="w-4 h-4 text-amber-400" />
+                  <span>Bảng Phong Thần</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleFullRestart}
+                  className="flex-[1.5] min-h-[46px] bg-gradient-to-r from-amber-400 to-amber-300 hover:brightness-105 text-slate-950 font-black text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/20 active:scale-[0.98] transition-transform"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  <span>Bắt đầu lại</span>
                 </button>
               </div>
             </div>

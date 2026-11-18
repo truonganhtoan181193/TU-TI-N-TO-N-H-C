@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Sparkles, Award, Maximize2, Minimize2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Volume2, VolumeX, Sparkles, Award, Maximize2, Minimize2, Heart } from 'lucide-react';
 import { ChapterId, REALMS, REALM_THEMES } from '../types';
 
 interface TopBarProps {
@@ -8,6 +8,9 @@ interface TopBarProps {
   realmIndex?: number;
   chap1Seals?: number;
   score: number;
+  hearts?: number;
+  maxHearts?: number;
+  showHearts?: boolean;
   soundEnabled: boolean;
   onToggleSound: () => void;
   onOpenLeaderboard?: () => void;
@@ -20,6 +23,9 @@ export const TopBar: React.FC<TopBarProps> = ({
   realmIndex = 0,
   chap1Seals = 0,
   score,
+  hearts = 3,
+  maxHearts = 3,
+  showHearts = false,
   soundEnabled,
   onToggleSound,
   onOpenLeaderboard,
@@ -28,6 +34,22 @@ export const TopBar: React.FC<TopBarProps> = ({
   const currentRealm = REALMS[realmIndex] || 'Nhập Môn';
   const realmTheme = REALM_THEMES[realmIndex] || REALM_THEMES[0];
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isShakingHearts, setIsShakingHearts] = useState(false);
+  const prevHeartsRef = useRef(hearts);
+  const totalHeartSlots = Math.max(3, maxHearts, hearts);
+  const isLowHealth = hearts === 1;
+
+  useEffect(() => {
+    if (showHearts && hearts < prevHeartsRef.current) {
+      setIsShakingHearts(true);
+      const timer = setTimeout(() => {
+        setIsShakingHearts(false);
+      }, 500);
+      prevHeartsRef.current = hearts;
+      return () => clearTimeout(timer);
+    }
+    prevHeartsRef.current = hearts;
+  }, [hearts, showHearts]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -119,6 +141,36 @@ export const TopBar: React.FC<TopBarProps> = ({
               >
                 Chương 2
               </button>
+            </div>
+          )}
+
+          {/* Hearts (Red heart icons only, no numeric display) */}
+          {showHearts && (
+            <div
+              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full shadow-inner border transition-colors duration-300 ${
+                isShakingHearts
+                  ? 'animate-heart-shake bg-red-950/60 border-red-400/80 shadow-[0_0_12px_rgba(239,68,68,0.5)]'
+                  : isLowHealth
+                  ? 'bg-rose-950/50 border-red-500/65 shadow-[0_0_10px_rgba(239,68,68,0.3)]'
+                  : 'bg-rose-950/35 border-rose-500/35'
+              }`}
+              aria-label="Sinh mệnh nhân vật"
+            >
+              {Array.from({ length: totalHeartSlots }).map((_, idx) => {
+                const isAlive = idx < hearts;
+                return (
+                  <Heart
+                    key={idx}
+                    className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-300 ${
+                      isAlive
+                        ? isLowHealth
+                          ? 'fill-red-500 text-red-400 animate-heartbeat'
+                          : 'fill-red-500 text-red-400 drop-shadow-[0_0_6px_rgba(239,68,68,0.85)] scale-100'
+                        : 'fill-slate-900/50 text-slate-600/60 scale-90 opacity-55'
+                    }`}
+                  />
+                );
+              })}
             </div>
           )}
 

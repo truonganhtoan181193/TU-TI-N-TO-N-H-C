@@ -72,6 +72,7 @@ export interface ResultModalProps {
   onNext: () => void;
   onClose: () => void;
   isLastQuestion?: boolean;
+  isGameOver?: boolean;
 }
 
 export const ResultModal: React.FC<ResultModalProps> = ({
@@ -89,6 +90,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({
   onNext,
   onClose,
   isLastQuestion = false,
+  isGameOver = false,
 }) => {
   const [animKey, setAnimKey] = useState(0);
   const [isScreenShaking, setIsScreenShaking] = useState(false);
@@ -432,7 +434,9 @@ export const ResultModal: React.FC<ResultModalProps> = ({
             autoFocus
             onClick={onNext}
             className={`w-full sm:w-auto min-h-[46px] px-6 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95 ${
-              isCorrect
+              isGameOver
+                ? 'bg-gradient-to-r from-rose-500 to-red-400 text-white shadow-rose-500/30 hover:brightness-105'
+                : isCorrect
                 ? isChap1
                   ? 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 text-slate-950 shadow-amber-400/30 hover:brightness-105'
                   : 'bg-gradient-to-r from-purple-500 via-amber-300 to-yellow-300 text-slate-950 shadow-purple-500/30 hover:brightness-105'
@@ -440,7 +444,9 @@ export const ResultModal: React.FC<ResultModalProps> = ({
             }`}
           >
             <span>
-              {isLastQuestion
+              {isGameOver
+                ? 'Kết thúc trò chơi ➜'
+                : isLastQuestion
                 ? isChap1
                   ? 'Mở cánh cổng bí ẩn ➜'
                   : 'Hoàn tất độ kiếp ➜'

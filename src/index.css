@@ -906,3 +906,62 @@
   will-change: opacity;
 }
 
+/* ===================================================================== */
+/* HEART SYSTEM: LOW-HEALTH HEARTBEAT & DAMAGE SHAKE ANIMATIONS          */
+/* ===================================================================== */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.85));
+  }
+  15% {
+    transform: scale(1.24);
+    filter: drop-shadow(0 0 12px rgba(244, 63, 94, 1));
+  }
+  28% {
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 7px rgba(239, 68, 68, 0.85));
+  }
+  42% {
+    transform: scale(1.17);
+    filter: drop-shadow(0 0 11px rgba(244, 63, 94, 0.95));
+  }
+  65% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.85));
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.25s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+@keyframes heartShake {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  15% {
+    transform: translate3d(-5px, -1px, 0) rotate(-4deg);
+  }
+  30% {
+    transform: translate3d(5px, 1px, 0) rotate(4deg);
+  }
+  45% {
+    transform: translate3d(-4px, 1px, 0) rotate(-3deg);
+  }
+  60% {
+    transform: translate3d(4px, -1px, 0) rotate(2.5deg);
+  }
+  75% {
+    transform: translate3d(-2px, 0, 0) rotate(-1.5deg);
+  }
+  90% {
+    transform: translate3d(2px, 0, 0) rotate(1deg);
+  }
+}
+
+.animate-heart-shake {
+  animation: heartShake 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  will-change: transform;
+}
