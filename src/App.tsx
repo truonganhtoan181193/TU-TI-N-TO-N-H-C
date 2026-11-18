@@ -2367,7 +2367,55 @@ export default function App() {
 
                       {/* 4. Ascending Floating Character with Celestial Wings */}
                       <div className="animate-ascension-levitate relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-amber-400 via-yellow-200 to-pink-300 border-2 border-yellow-100 flex items-center justify-center text-5xl sm:text-6xl shadow-[0_0_50px_rgba(254,240,138,0.95)]">
-                        🪽
+                        <svg
+                          viewBox="0 0 64 64"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-14 h-14 sm:w-16 sm:h-16 drop-shadow-[0_2px_8px_rgba(146,64,14,0.45)]"
+                          aria-label="Đôi cánh phi thăng"
+                        >
+                          {/* Left Wing */}
+                          <path
+                            d="M29 36C21 35 12 28 7 16C13 18 18 20 23 23C16 21 10 21 6 24C11 27 16 29 22 30C15 30 10 31 8 34C13 36 19 36 25 35C18 37 14 39 12 42C18 42 24 40 29 37"
+                            fill="#FFFBEB"
+                            stroke="#92400E"
+                            strokeWidth="2.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          {/* Right Wing */}
+                          <path
+                            d="M35 36C43 35 52 28 57 16C51 18 46 20 41 23C48 21 54 21 58 24C53 27 48 29 42 30C49 30 54 31 56 34C51 36 45 36 39 35C46 37 50 39 52 42C46 42 40 40 35 37"
+                            fill="#FFFBEB"
+                            stroke="#92400E"
+                            strokeWidth="2.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          {/* Inner Golden Feather Accents */}
+                          <path
+                            d="M27 32C21 29 15 24 11 19M26 35C20 33 14 32 10 33M37 32C43 29 49 24 53 19M38 35C44 33 50 32 54 33"
+                            stroke="#D97706"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                          />
+                          {/* Central Ascension Halo & Crest */}
+                          <circle
+                            cx="32"
+                            cy="35"
+                            r="4.2"
+                            fill="#FDE047"
+                            stroke="#92400E"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M32 23L34 27L32 29L30 27L32 23Z"
+                            fill="#FFFBEB"
+                            stroke="#92400E"
+                            strokeWidth="1.6"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
                         <div className="absolute -top-3 -right-2 bg-gradient-to-r from-yellow-300 to-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg border border-yellow-100 uppercase">
                           CỰC PHẨM
                         </div>
