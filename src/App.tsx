@@ -1832,10 +1832,10 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setC2Treasure('jade')}
-                className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
+                className={`treasure-gold-glow w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
                   c2Treasure === 'jade'
-                    ? 'bg-emerald-950/60 border-emerald-400 ring-2 ring-emerald-400/30 shadow-lg shadow-emerald-900/30'
-                    : 'bg-slate-900/50 border-slate-700/70 hover:border-slate-600'
+                    ? 'treasure-gold-glow-active bg-emerald-950/60 border-emerald-400 ring-2 ring-emerald-400/30'
+                    : 'bg-slate-900/50 border-amber-200/25 hover:border-amber-200/60'
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
@@ -1861,10 +1861,10 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setC2Treasure('time')}
-                className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
+                className={`treasure-gold-glow w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
                   c2Treasure === 'time'
-                    ? 'bg-amber-950/60 border-amber-400 ring-2 ring-amber-400/30 shadow-lg shadow-amber-900/30'
-                    : 'bg-slate-900/50 border-slate-700/70 hover:border-slate-600'
+                    ? 'treasure-gold-glow-active bg-amber-950/60 border-amber-400 ring-2 ring-amber-400/30'
+                    : 'bg-slate-900/50 border-amber-200/25 hover:border-amber-200/60'
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
@@ -1890,10 +1890,10 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setC2Treasure('skip')}
-                className={`w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
+                className={`treasure-gold-glow w-full text-left p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 active:scale-[0.99] backdrop-blur-sm ${
                   c2Treasure === 'skip'
-                    ? 'bg-indigo-950/60 border-indigo-400 ring-2 ring-indigo-400/30 shadow-lg shadow-indigo-900/30'
-                    : 'bg-slate-900/50 border-slate-700/70 hover:border-slate-600'
+                    ? 'treasure-gold-glow-active bg-indigo-950/60 border-indigo-400 ring-2 ring-indigo-400/30'
+                    : 'bg-slate-900/50 border-amber-200/25 hover:border-amber-200/60'
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
