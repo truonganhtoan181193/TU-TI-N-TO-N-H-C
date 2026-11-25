@@ -97,8 +97,8 @@ export default function App() {
 
   // Timer State (Shared)
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const c2MaxTime = c2Treasure === 'time' ? 30 : 20;
-  const [timeLeft, setTimeLeft] = useState(20);
+  const c2MaxTime = c2Treasure === 'time' ? 60 : 45;
+  const [timeLeft, setTimeLeft] = useState(45);
 
   // Realm Breakthrough Screen Fade-to-White Transition
   const prevRealmIndexRef = useRef(0);
@@ -333,7 +333,7 @@ export default function App() {
     setC1Locked(false);
     setC1Feedback(null);
     setResultModal(null);
-    setTimeLeft(20);
+    setTimeLeft(45);
     setCurrentChapter(1);
     setScreen('c1_quiz');
     unlockAudio();
@@ -429,7 +429,7 @@ export default function App() {
       setC1SelectedOption(null);
       setC1Locked(false);
       setC1Feedback(null);
-      setTimeLeft(20);
+      setTimeLeft(45);
     } else {
       // Completed Chap 1 10 questions while still having hearts -> go to Bí mật sau di tích
       setC1Completed(true);
@@ -472,7 +472,7 @@ export default function App() {
     setC2Locked(false);
     setC2Feedback(null);
     setResultModal(null);
-    setTimeLeft(c2Treasure === 'time' ? 30 : 20);
+    setTimeLeft(c2Treasure === 'time' ? 60 : 45);
 
     setCurrentChapter(2);
     setScreen('c2_quiz');
@@ -666,7 +666,7 @@ export default function App() {
       setC2SelectedOption(null);
       setC2Locked(false);
       setC2Feedback(null);
-      setTimeLeft(c2Treasure === 'time' ? 30 : 20);
+      setTimeLeft(c2Treasure === 'time' ? 60 : 45);
 
       // Hiệu ứng "Sấm sét độ kiếp" khi bước vào câu 10 (Thiên Môn Độ Kiếp)
       if (nextIdx === 9) {
@@ -1756,7 +1756,7 @@ export default function App() {
                     Tích Lũy Tu Vi
                   </h3>
                   <p className="text-[11px] text-slate-200 leading-relaxed">
-                    Trả lời đúng cộng 10 aura tu vi. Thời gian suy nghĩ mặc định là 20 giây mỗi câu.
+                    Trả lời đúng cộng 10 aura tu vi. Thời gian suy nghĩ mặc định là 45 giây mỗi câu.
                   </p>
                 </div>
               </div>
@@ -1880,8 +1880,8 @@ export default function App() {
                     Pháp Tắc Thời Gian
                   </h3>
                   <p className="text-xs text-slate-200 leading-relaxed">
-                    <b>Thêm thời gian suy nghĩ:</b> Tăng thời gian làm bài cho tất cả 10 câu hỏi từ <span className="font-bold">20 giây</span> lên{' '}
-                    <span className="text-amber-300 font-bold">30 giây</span>.
+                    <b>Thêm thời gian suy nghĩ:</b> Tăng thời gian làm bài cho tất cả 10 câu hỏi từ <span className="font-bold">45 giây</span> lên{' '}
+                    <span className="text-amber-300 font-bold">60 giây</span>.
                   </p>
                 </div>
               </button>
