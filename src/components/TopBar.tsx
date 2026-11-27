@@ -68,8 +68,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/70 backdrop-blur-md border-b border-slate-800/80 text-white shadow-md">
-      <div className="max-w-4xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3.5 sm:px-6 2xl:px-10 h-14 xl:h-16 flex items-center justify-between gap-2">
+    <header className="sticky top-0 z-40 shrink-0 bg-slate-950/70 backdrop-blur-md border-b border-slate-800/80 text-white shadow-md">
+      <div className="max-w-4xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-3.5 sm:px-6 2xl:px-10 h-14 flex items-center justify-between gap-2">
         {/* Brand */}
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-8 h-8 xl:w-9 xl:h-9 rounded-lg bg-gradient-to-tr from-amber-400 to-amber-200 text-slate-950 font-black text-sm xl:text-base flex items-center justify-center shrink-0 shadow-sm shadow-amber-400/20">

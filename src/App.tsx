@@ -817,7 +817,7 @@ export default function App() {
   const currentC2Question = c2Questions[c2Index];
 
   return (
-    <div className="relative min-h-screen text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950 overflow-x-hidden">
+    <div className="relative min-h-screen lg:h-[100dvh] lg:overflow-hidden text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950 overflow-x-hidden">
       {/* 1 & 2 & 3. Dynamic Submerged Background, Realm Ambient Lighting & Chapter Weather Particles */}
       <ChapterAtmosphere
         chapter={currentChapter}
@@ -942,7 +942,7 @@ export default function App() {
       )}
 
       {/* Interactive Content Container */}
-      <div className="relative z-10 flex flex-col min-h-screen justify-between">
+      <div className="relative z-10 flex flex-col min-h-screen lg:h-full justify-between">
         {/* Toast Notification */}
         {toastMessage && (
           <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-400/80 text-amber-300 px-4 py-2 rounded-full shadow-2xl text-xs sm:text-sm font-bold flex items-center gap-2 animate-bounce">
@@ -988,15 +988,15 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-4xl xl:max-w-6xl 2xl:max-w-7xl mx-auto p-3.5 sm:p-6 2xl:p-8 flex flex-col justify-center">
+      <main className="flex-1 lg:min-h-0 w-full max-w-4xl xl:max-w-6xl 2xl:max-w-7xl mx-auto p-3.5 sm:p-5 lg:py-2.5 lg:px-6 xl:py-3 2xl:py-5 flex flex-col justify-center lg:overflow-y-auto">
         {/* ======================================================== */}
         {/* CHAP 1 - LỜI MỞ ĐẦU (Khung mở đầu Chương 1)               */}
         {/* ======================================================== */}
         {screen === 'c1_intro' && (
-          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-3xl p-6 sm:p-8 xl:p-10 max-w-xl xl:max-w-3xl 2xl:max-w-4xl mx-auto w-full text-center shadow-2xl shadow-cyan-950/30 flex flex-col items-center">
-            <div className="relative mb-4 sm:mb-6">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 xl:w-28 xl:h-28 rounded-3xl bg-gradient-to-tr from-cyan-400 via-amber-400 to-indigo-500 p-1 shadow-xl shadow-cyan-500/10 glow-amber flex items-center justify-center">
-                <div className="w-full h-full bg-slate-900/90 rounded-[22px] flex items-center justify-center text-4xl sm:text-5xl xl:text-6xl">
+          <div className="bg-slate-950/45 backdrop-blur-md border border-cyan-500/30 rounded-3xl p-6 sm:p-8 lg:p-6 xl:p-7 max-w-xl xl:max-w-3xl 2xl:max-w-4xl mx-auto w-full text-center shadow-2xl shadow-cyan-950/30 flex flex-col items-center">
+            <div className="relative mb-4 sm:mb-5 lg:mb-3">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-20 lg:h-20 xl:w-22 xl:h-22 rounded-3xl bg-gradient-to-tr from-cyan-400 via-amber-400 to-indigo-500 p-1 shadow-xl shadow-cyan-500/10 glow-amber flex items-center justify-center">
+                <div className="w-full h-full bg-slate-900/90 rounded-[22px] flex items-center justify-center text-4xl sm:text-5xl lg:text-4xl xl:text-5xl">
                   🏺
                 </div>
               </div>
@@ -1008,38 +1008,38 @@ export default function App() {
             <div className="text-[11px] xl:text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1 drop-shadow-sm">
               Tiếng gọi từ vùng đất lạ
             </div>
-            <h1 className="animate-chapter-float text-2xl sm:text-4xl xl:text-5xl font-black text-slate-50 tracking-tight mb-2 drop-shadow-md">
+            <h1 className="animate-chapter-float text-2xl sm:text-4xl lg:text-3xl xl:text-4xl font-black text-slate-50 tracking-tight mb-2 lg:mb-1.5 drop-shadow-md">
               Thám Hiểm <span className="text-cyan-300">Di Tích Cổ</span>
             </h1>
 
             {/* Motto Banner */}
-            <div className="inline-block bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 backdrop-blur-sm border border-amber-400/50 rounded-xl px-4 py-2 my-2 shadow-sm">
+            <div className="inline-block bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 backdrop-blur-sm border border-amber-400/50 rounded-xl px-4 py-2 lg:py-1.5 my-2 lg:my-1.5 shadow-sm">
               <span className="text-xs sm:text-sm xl:text-base font-black text-amber-300 drop-shadow-sm">
                 &ldquo;ĐIỂM SỐ CỦA TA, DO TA QUYẾT ĐỊNH!&rdquo;
               </span>
             </div>
 
-            <div className="text-xs xl:text-sm text-slate-300 font-semibold mb-4 drop-shadow-sm">
+            <div className="text-xs xl:text-sm text-slate-300 font-semibold mb-4 lg:mb-2.5 drop-shadow-sm">
               ✦ ĐẠI GIÁO CHỦ TRƯƠNG ANH TOÀN – 0329056500 ✦
             </div>
 
-            <p className="text-xs sm:text-sm xl:text-base text-slate-200 leading-relaxed mb-6 max-w-md xl:max-w-xl drop-shadow-sm font-normal">
+            <p className="text-xs sm:text-sm xl:text-base text-slate-200 leading-relaxed lg:leading-snug mb-6 lg:mb-4 max-w-md xl:max-w-xl drop-shadow-sm font-normal">
               Trong một chuyến thám hiểm đến vùng đất chưa từng được ghi chép trên bản đồ, bạn phát hiện những dấu tích kỳ lạ của một nền văn minh cổ xưa. Không ai biết nơi này chứa đựng điều gì. Nhưng một cảm giác thôi thúc khiến bạn quyết định tiến sâu hơn vào khu di tích.
             </p>
 
-            <div className="grid grid-cols-3 gap-2.5 xl:gap-4 w-full max-w-sm xl:max-w-lg mb-6 text-center">
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 shadow-sm">
-                <div className="text-base sm:text-lg xl:text-2xl mb-0.5">📜</div>
+            <div className="grid grid-cols-3 gap-2.5 xl:gap-3 w-full max-w-sm xl:max-w-lg mb-6 lg:mb-4 text-center">
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 lg:p-2.5 shadow-sm">
+                <div className="text-base sm:text-lg xl:text-xl mb-0.5">📜</div>
                 <div className="text-[11px] xl:text-xs font-bold text-slate-100">Manh Mối</div>
                 <div className="text-[9px] xl:text-[10px] text-slate-300">Bản đồ cổ xưa</div>
               </div>
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 shadow-sm">
-                <div className="text-base sm:text-lg xl:text-2xl mb-0.5">🗝️</div>
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 lg:p-2.5 shadow-sm">
+                <div className="text-base sm:text-lg xl:text-xl mb-0.5">🗝️</div>
                 <div className="text-[11px] xl:text-xs font-bold text-slate-100">10 Phong Ấn</div>
                 <div className="text-[9px] xl:text-[10px] text-slate-300">Đại số lớp 7</div>
               </div>
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 shadow-sm">
-                <div className="text-base sm:text-lg xl:text-2xl mb-0.5">🌌</div>
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-3 lg:p-2.5 shadow-sm">
+                <div className="text-base sm:text-lg xl:text-xl mb-0.5">🌌</div>
                 <div className="text-[11px] xl:text-xs font-bold text-slate-100">Dị Giới</div>
                 <div className="text-[9px] xl:text-[10px] text-slate-300">Cổng sang Chương 2</div>
               </div>
@@ -1048,7 +1048,7 @@ export default function App() {
             <div className="flex flex-col sm:flex-row gap-2.5 w-full max-w-sm xl:max-w-md">
               <button
                 onClick={() => setScreen('c1_map')}
-                className="w-full min-h-[48px] xl:min-h-[54px] bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 text-slate-950 font-black text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform"
+                className="w-full min-h-[48px] lg:min-h-[46px] xl:min-h-[48px] bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 text-slate-950 font-black text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform"
               >
                 <span>BẮT ĐẦU THÁM HIỂM</span>
                 <ArrowRight className="w-4 h-4 xl:w-5 xl:h-5" />
@@ -1059,7 +1059,7 @@ export default function App() {
                   setCurrentChapter(2);
                   setScreen(playerName ? 'c2_rules' : 'transition_to_c2');
                 }}
-                className="w-full min-h-[44px] xl:min-h-[50px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm border border-slate-700/80 text-slate-200 hover:text-white font-bold text-xs xl:text-sm rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-colors"
+                className="w-full min-h-[44px] lg:min-h-[46px] xl:min-h-[48px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm border border-slate-700/80 text-slate-200 hover:text-white font-bold text-xs xl:text-sm rounded-xl flex items-center justify-center gap-1.5 active:scale-[0.98] transition-colors"
               >
                 <span>Chuyển thẳng sang Chương 2 ➜</span>
               </button>
@@ -1191,12 +1191,12 @@ export default function App() {
         {/* CHAP 1 - 10 THỬ THÁCH ĐẠI SỐ                             */}
         {/* ======================================================== */}
         {screen === 'c1_quiz' && currentC1Question && (
-          <div className="w-full max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-3 sm:gap-3.5">
+          <div className="w-full max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-2.5 lg:gap-2 xl:gap-2.5">
             {/* Stage header info from CHAP1_STORY_FRAMES */}
             {(() => {
               const frameInfo = CHAP1_STORY_FRAMES[currentC1Question.stage - 1];
               return (
-                <div className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md border border-cyan-500/30 rounded-xl px-3.5 py-2 xl:px-5 xl:py-2.5 shadow-sm">
+                <div className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md border border-cyan-500/30 rounded-xl px-3.5 py-2 lg:py-1.5 xl:px-5 xl:py-2 shadow-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-sm xl:text-base font-black text-cyan-400 drop-shadow-sm">
                       ẢI {currentC1Question.stage < 10 ? `0${currentC1Question.stage}` : currentC1Question.stage}/10
@@ -1209,7 +1209,7 @@ export default function App() {
 
                   {/* Timer */}
                   <div
-                    className={`flex items-center gap-1.5 px-2.5 py-1 xl:px-4 xl:py-1.5 rounded-full text-xs xl:text-sm font-bold tabular-nums transition-colors ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 xl:px-4 xl:py-1 rounded-full text-xs xl:text-sm font-bold tabular-nums transition-colors ${
                       timeLeft <= 5
                         ? 'bg-rose-500/20 border border-rose-500/60 text-rose-300 animate-pulse'
                         : timeLeft <= 8
@@ -1225,7 +1225,7 @@ export default function App() {
             })()}
 
             {/* Progress Bar */}
-            <div className="h-1.5 xl:h-2 w-full bg-slate-900/80 rounded-full overflow-hidden">
+            <div className="h-1.5 w-full bg-slate-900/80 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-cyan-400 to-amber-300 transition-all duration-300"
                 style={{
@@ -1235,7 +1235,7 @@ export default function App() {
             </div>
 
             {/* Status strip */}
-            <div className="flex items-center justify-between text-[11px] sm:text-xs xl:text-sm bg-slate-950/45 backdrop-blur-md border border-slate-700/50 px-3.5 py-1.5 xl:px-5 xl:py-2 rounded-lg text-slate-200">
+            <div className="flex items-center justify-between text-[11px] sm:text-xs xl:text-sm bg-slate-950/45 backdrop-blur-md border border-slate-700/50 px-3.5 py-1.5 xl:px-5 xl:py-1.5 rounded-lg text-slate-200">
               <div className="flex items-center gap-1.5">
                 <span>⚡ Điểm:</span>
                 <span className="font-bold text-amber-300 drop-shadow-sm">{c1Score} aura</span>
@@ -1247,7 +1247,7 @@ export default function App() {
             </div>
 
             {/* Main Question Card (Adaptive 2-column Widescreen Presentation Layout) */}
-            <div className="bg-slate-950/50 backdrop-blur-md border border-slate-700/60 rounded-2xl lg:rounded-3xl p-4 sm:p-6 xl:p-8 shadow-2xl flex flex-col gap-4">
+            <div className="bg-slate-950/50 backdrop-blur-md border border-slate-700/60 rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-5 xl:p-6 2xl:p-7 shadow-2xl flex flex-col gap-3">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-stretch">
                 {/* Left Presentation Column: Question Prompt & Context */}
                 <div className="lg:col-span-5 flex flex-col justify-between">
@@ -1293,7 +1293,7 @@ export default function App() {
                 {/* Right Presentation Column: Options & Controls */}
                 <div className="lg:col-span-7 flex flex-col justify-between gap-3">
                   {/* Options */}
-                  <div className="grid grid-cols-1 gap-2.5 xl:gap-3">
+                  <div className="grid grid-cols-1 gap-2 lg:gap-2 xl:gap-2.5">
                     {currentC1Question.options.map((opt, idx) => {
                       const letter = String.fromCharCode(65 + idx);
                       const isSelected = c1SelectedOption === idx;
@@ -1324,7 +1324,7 @@ export default function App() {
                           type="button"
                           disabled={c1Locked}
                           onClick={() => handleC1Answer(idx)}
-                          className={`min-h-[50px] sm:min-h-[54px] lg:min-h-[60px] xl:min-h-[66px] p-2.5 sm:p-3 xl:p-3.5 rounded-xl lg:rounded-2xl border text-left flex items-center gap-3.5 transition-all active:scale-[0.98] ${btnStyle}`}
+                          className={`min-h-[50px] sm:min-h-[52px] lg:min-h-[50px] xl:min-h-[56px] 2xl:min-h-[64px] p-2.5 sm:p-3 lg:p-2.5 xl:p-3 rounded-xl lg:rounded-2xl border text-left flex items-center gap-3.5 transition-all active:scale-[0.98] ${btnStyle}`}
                         >
                           <span
                             className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 rounded-lg text-xs sm:text-sm lg:text-base font-black flex items-center justify-center shrink-0 shadow-sm ${badgeStyle}`}
@@ -1346,7 +1346,7 @@ export default function App() {
                   </div>
 
                   {/* Action Controls */}
-                  <div className="flex items-center justify-between gap-2.5 pt-3 border-t border-slate-800/80">
+                  <div className="flex items-center justify-between gap-2.5 pt-2.5 border-t border-slate-800/80">
                     <div className="text-slate-400 text-[11px] xl:text-xs">
                       {!c1Locked && 'Chọn một đáp án để kích hoạt cơ quan.'}
                     </div>
@@ -1355,7 +1355,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={handleC1NextQuestion}
-                        className={`w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform ml-auto ${
+                        className={`w-full sm:w-auto min-h-[44px] xl:min-h-[48px] px-6 py-2 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform ml-auto ${
                           hearts <= 0
                             ? 'bg-gradient-to-r from-rose-500 to-red-400 text-white shadow-rose-500/25'
                             : 'bg-gradient-to-r from-cyan-400 to-amber-300 text-slate-950 shadow-cyan-400/20'
@@ -1541,7 +1541,7 @@ export default function App() {
               </button>
             </div>
 
-            <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1 mb-5">
+            <div className="space-y-3 max-h-[60vh] lg:max-h-[52vh] xl:max-h-[56vh] overflow-y-auto pr-1 mb-4">
               {c1Questions.map((q, i) => {
                 const ans = c1Answers[i];
                 const isCorrect = ans?.isCorrect;
@@ -1641,7 +1641,7 @@ export default function App() {
         {/* (Khung mở đầu Chương 2)                                 */}
         {/* ======================================================== */}
         {screen === 'transition_to_c2' && (
-          <div className="relative overflow-hidden bg-slate-950/45 backdrop-blur-md border border-amber-500/40 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto w-full text-center shadow-2xl shadow-amber-950/40 animate-warp-shake">
+          <div className="relative overflow-hidden bg-slate-950/45 backdrop-blur-md border border-amber-500/40 rounded-3xl p-6 sm:p-7 lg:p-6 max-w-lg mx-auto w-full text-center shadow-2xl shadow-amber-950/40 animate-warp-shake">
             {/* Spinning dimensional portal background rings */}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden opacity-30">
               <div className="w-[450px] h-[450px] rounded-full border-2 border-dashed border-cyan-400/40 animate-portal-spin" />
@@ -1650,9 +1650,9 @@ export default function App() {
             </div>
 
             {/* Central Portal Vortex Icon */}
-            <div className="relative mx-auto mb-4 w-24 h-24 flex items-center justify-center">
+            <div className="relative mx-auto mb-4 lg:mb-2.5 w-24 h-24 lg:w-20 lg:h-20 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-500 via-purple-600 to-amber-400 animate-portal-spin blur-md opacity-75" />
-              <div className="relative w-20 h-20 rounded-full bg-slate-950/90 border border-amber-400/60 flex items-center justify-center text-4xl shadow-2xl">
+              <div className="relative w-20 h-20 lg:w-16 lg:h-16 rounded-full bg-slate-950/90 border border-amber-400/60 flex items-center justify-center text-4xl lg:text-3xl shadow-2xl">
                 ☯
               </div>
             </div>
@@ -1661,20 +1661,20 @@ export default function App() {
               Tiến Vào Tu Tiên Giới
             </h2>
 
-            <div className="inline-block bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 backdrop-blur-sm border border-amber-400/50 rounded-xl px-4 py-2 my-2 shadow-sm">
+            <div className="inline-block bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 backdrop-blur-sm border border-amber-400/50 rounded-xl px-4 py-2 lg:py-1.5 my-2 lg:my-1.5 shadow-sm">
               <span className="text-xs sm:text-sm font-black text-amber-300 drop-shadow-sm">
                 &ldquo;ĐIỂM SỐ CỦA TA, DO TA QUYẾT ĐỊNH!&rdquo;
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed my-4 drop-shadow-sm font-normal">
+            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed my-4 lg:my-2.5 drop-shadow-sm font-normal">
               Chuyến thám hiểm di tích tưởng chừng đã kết thúc, nhưng thực chất lại mở đầu cho một hành trình hoàn toàn khác. Bạn đã vô tình bước vào{' '}
               <b className="text-amber-300">Tu Tiên Giới</b> — nơi những thử thách mới đang chờ đợi, và tri thức sẽ trở thành chìa khóa để thăng tiến cảnh giới!
             </p>
 
 
             {playerName && (
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-amber-500/30 rounded-xl px-3.5 py-2 mb-4 text-xs text-slate-200 inline-flex items-center gap-2 shadow-sm">
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-amber-500/30 rounded-xl px-3.5 py-2 mb-4 lg:mb-2.5 text-xs text-slate-200 inline-flex items-center gap-2 shadow-sm">
                 <span>Tu sĩ:</span>
                 <b className="text-amber-300">{playerName}</b>
                 <span className="text-slate-500">·</span>
@@ -1686,7 +1686,7 @@ export default function App() {
               </div>
             )}
 
-            <div className="text-xs text-slate-300 font-semibold mb-6 drop-shadow-sm">
+            <div className="text-xs text-slate-300 font-semibold mb-6 lg:mb-3.5 drop-shadow-sm">
               ✦ ĐẠI GIÁO CHỦ TRƯƠNG ANH TOÀN – 0329056500 ✦
             </div>
 
@@ -1698,14 +1698,14 @@ export default function App() {
                   setScreen('c2_rules');
                   playSound('warp', soundEnabled);
                 }}
-                className="w-full min-h-[50px] bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/25 active:scale-[0.98] transition-transform"
+                className="w-full min-h-[50px] lg:min-h-[44px] bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-400/25 active:scale-[0.98] transition-transform"
               >
                 <span>BẮT ĐẦU HÀNH TRÌNH TU TIÊN ➜</span>
               </button>
 
               <button
                 onClick={() => setScreen('c1_result')}
-                className="w-full min-h-[42px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm text-slate-200 hover:text-white font-bold text-xs rounded-xl transition-colors active:scale-[0.98] border border-slate-700/60"
+                className="w-full min-h-[42px] lg:min-h-[38px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm text-slate-200 hover:text-white font-bold text-xs rounded-xl transition-colors active:scale-[0.98] border border-slate-700/60"
               >
                 Về Bảng Thành Tích Chương 1
               </button>
@@ -1943,10 +1943,10 @@ export default function App() {
           const isTribulationStage = currentC2Question.stage === 10;
 
           return (
-            <div className="w-full max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-3 sm:gap-3.5">
+            <div className="w-full max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto flex flex-col gap-2.5 lg:gap-2 xl:gap-2.5">
               {/* Stage Bar */}
               <div
-                className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md rounded-xl px-3.5 py-2 xl:px-5 xl:py-2.5 shadow-sm border transition-colors duration-500"
+                className="flex items-center justify-between gap-2 bg-slate-950/50 backdrop-blur-md rounded-xl px-3.5 py-2 lg:py-1.5 xl:px-5 xl:py-2 shadow-sm border transition-colors duration-500"
                 style={{
                   borderColor: isTribulationStage ? '#c084fc' : `${currentRealmTheme.primaryHex}60`,
                 }}
@@ -1966,7 +1966,7 @@ export default function App() {
 
                 {/* Timer */}
                 <div
-                  className={`flex items-center gap-1.5 px-2.5 py-1 xl:px-4 xl:py-1.5 rounded-full text-xs xl:text-sm font-bold tabular-nums transition-colors ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1 xl:px-4 xl:py-1 rounded-full text-xs xl:text-sm font-bold tabular-nums transition-colors ${
                     timeLeft <= 5
                       ? 'bg-rose-500/20 border border-rose-500/60 text-rose-300 animate-pulse'
                       : timeLeft <= 8
@@ -1981,7 +1981,7 @@ export default function App() {
 
               {/* Realm Progress Bar & Animated Milestone Badge */}
               <div
-                className="bg-slate-950/50 backdrop-blur-md rounded-2xl p-3 sm:p-4 border transition-all duration-500 shadow-lg flex flex-col gap-2.5"
+                className="bg-slate-950/50 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 lg:p-2.5 lg:px-4 border transition-all duration-500 shadow-lg flex flex-col gap-2 lg:gap-1.5"
                 style={{
                   borderColor: isTribulationStage ? '#c084fc' : `${currentRealmTheme.primaryHex}60`,
                   boxShadow: isTribulationStage
@@ -2138,7 +2138,7 @@ export default function App() {
                     <TribulationSparkParticles />
                   </div>
 
-                  <div className="relative z-10 bg-gradient-to-r from-purple-950/90 via-amber-950/80 to-purple-950/90 border border-purple-400/80 p-3 xl:p-3.5 rounded-xl text-center text-xs xl:text-sm font-bold text-amber-200 shadow-[0_0_25px_rgba(192,132,252,0.45)] flex items-center justify-center gap-2">
+                  <div className="relative z-10 bg-gradient-to-r from-purple-950/90 via-amber-950/80 to-purple-950/90 border border-purple-400/80 p-2.5 lg:py-2 xl:py-2.5 rounded-xl text-center text-xs xl:text-sm font-bold text-amber-200 shadow-[0_0_25px_rgba(192,132,252,0.45)] flex items-center justify-center gap-2">
                     <span className="text-base xl:text-lg animate-bounce">⚡</span>
                     <span>
                       <strong className="text-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.85)]">
@@ -2153,7 +2153,7 @@ export default function App() {
 
               {/* Question Card (Adaptive 2-column Widescreen Presentation Layout) */}
               <div
-                className="bg-slate-950/50 backdrop-blur-md rounded-2xl lg:rounded-3xl p-4 sm:p-6 xl:p-8 shadow-2xl flex flex-col gap-4 border transition-all duration-500"
+                className="bg-slate-950/50 backdrop-blur-md rounded-2xl lg:rounded-3xl p-4 sm:p-5 lg:p-4 xl:p-5 2xl:p-7 shadow-2xl flex flex-col gap-3 border transition-all duration-500"
                 style={{
                   borderColor: isTribulationStage ? '#c084fc' : `${currentRealmTheme.primaryHex}60`,
                   boxShadow: isTribulationStage
@@ -2214,7 +2214,7 @@ export default function App() {
                   {/* Right Presentation Column: Options & Controls */}
                   <div className="lg:col-span-7 flex flex-col justify-between gap-3">
                     {/* Options */}
-                    <div className="grid grid-cols-1 gap-2.5 xl:gap-3">
+                    <div className="grid grid-cols-1 gap-2 lg:gap-2 xl:gap-2.5">
                       {currentC2Question.options.map((opt, idx) => {
                         const letter = String.fromCharCode(65 + idx);
                         const isSelected = c2SelectedOption === idx;
@@ -2245,7 +2245,7 @@ export default function App() {
                             type="button"
                             disabled={c2Locked}
                             onClick={() => handleC2Answer(idx)}
-                            className={`min-h-[50px] sm:min-h-[54px] lg:min-h-[60px] xl:min-h-[66px] p-2.5 sm:p-3 xl:p-3.5 rounded-xl lg:rounded-2xl border text-left flex items-center gap-3.5 transition-all active:scale-[0.98] ${btnStyle}`}
+                            className={`min-h-[48px] sm:min-h-[50px] lg:min-h-[46px] xl:min-h-[52px] 2xl:min-h-[60px] p-2.5 sm:p-3 lg:p-2 xl:p-2.5 rounded-xl lg:rounded-2xl border text-left flex items-center gap-3.5 transition-all active:scale-[0.98] ${btnStyle}`}
                           >
                             <span
                               className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 rounded-lg text-xs sm:text-sm lg:text-base font-black flex items-center justify-center shrink-0 shadow-sm ${badgeStyle}`}
@@ -2267,12 +2267,12 @@ export default function App() {
                     </div>
 
                     {/* Action Controls */}
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 border-t border-slate-800/80">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-2.5 lg:pt-2 border-t border-slate-800/80">
                       {c2Treasure === 'skip' && !c2SkipUsed && currentC2Question.stage <= 9 && !c2Locked && (
                         <button
                           type="button"
                           onClick={handleC2UseSkip}
-                          className="w-full sm:w-auto px-4 py-2.5 xl:px-5 xl:py-3 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-200 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all backdrop-blur-sm"
+                          className="w-full sm:w-auto px-4 py-2 xl:px-5 xl:py-2.5 bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/60 text-indigo-200 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all backdrop-blur-sm"
                         >
                           <span>🔮 Dùng Đại Diễn Quyết (Bỏ qua câu này)</span>
                         </button>
@@ -2286,7 +2286,7 @@ export default function App() {
                         <button
                           type="button"
                           onClick={handleC2NextQuestion}
-                          className={`w-full sm:w-auto min-h-[46px] xl:min-h-[52px] px-6 py-2.5 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform ml-auto ${
+                          className={`w-full sm:w-auto min-h-[44px] lg:min-h-[42px] xl:min-h-[46px] px-6 py-2 font-black text-xs sm:text-sm xl:text-base rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform ml-auto ${
                             hearts <= 0
                               ? 'bg-gradient-to-r from-rose-500 to-red-400 text-white shadow-rose-500/25'
                               : 'bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-slate-950 shadow-amber-400/20'
@@ -2320,7 +2320,7 @@ export default function App() {
 
           return (
             <div
-              className={`relative overflow-hidden backdrop-blur-xl rounded-3xl p-6 sm:p-9 max-w-lg mx-auto w-full text-center shadow-2xl transition-all ${
+              className={`relative overflow-hidden backdrop-blur-xl rounded-3xl p-6 sm:p-8 lg:p-6 max-w-lg mx-auto w-full text-center shadow-2xl transition-all ${
                 isHighestRealm
                   ? 'bg-slate-950/85 border-2 border-amber-300/80 shadow-[0_0_70px_rgba(254,240,138,0.5)] ring-2 ring-yellow-400/30'
                   : 'bg-slate-950/45 border border-amber-500/40 shadow-2xl shadow-amber-950/30'
@@ -2352,7 +2352,7 @@ export default function App() {
                 </h2>
 
                 {/* Character Spotlight with Radiating Light Rays when reaching highest realm */}
-                <div className="relative my-6 flex items-center justify-center">
+                <div className="relative my-6 lg:my-4 flex items-center justify-center">
                   {isHighestRealm ? (
                     <div className="relative flex items-center justify-center">
                       {/* 1. Rotating Conical Light Rays Burst radiating 360 degrees from character */}
@@ -2558,8 +2558,8 @@ export default function App() {
         {/* CHAP 2 - BẢNG PHONG THẦN & KẾT QUẢ                      */}
         {/* ======================================================== */}
         {screen === 'c2_leaderboard' && (
-          <div className="bg-slate-950/50 backdrop-blur-md border border-amber-500/30 rounded-2xl p-4 sm:p-6 max-w-xl mx-auto w-full shadow-2xl shadow-amber-950/30">
-            <div className="text-center mb-4">
+          <div className="bg-slate-950/50 backdrop-blur-md border border-amber-500/30 rounded-2xl p-4 sm:p-6 lg:p-5 max-w-xl mx-auto w-full shadow-2xl shadow-amber-950/30">
+            <div className="text-center mb-4 lg:mb-3">
               <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1 drop-shadow-sm">
                 Bảng Phong Thần · Cả 2 Chương
               </div>
@@ -2571,8 +2571,8 @@ export default function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2.5 mb-5">
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 text-center">
+            <div className="grid grid-cols-3 gap-2.5 mb-5 lg:mb-3">
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 lg:p-2.5 text-center">
                 <div className="text-lg sm:text-2xl font-black text-amber-400 tabular-nums drop-shadow-sm">
                   {c1Score + c2Score}
                 </div>
@@ -2580,7 +2580,7 @@ export default function App() {
                   Tổng aura (2 phần)
                 </div>
               </div>
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 text-center">
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 lg:p-2.5 text-center">
                 <div className="text-lg sm:text-2xl font-black text-emerald-400 tabular-nums drop-shadow-sm">
                   {c1CorrectCount + c2CorrectCount}/20
                 </div>
@@ -2588,7 +2588,7 @@ export default function App() {
                   Câu đúng (Cả 2 phần)
                 </div>
               </div>
-              <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 text-center">
+              <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 lg:p-2.5 text-center">
                 <div className="text-lg sm:text-2xl font-black text-indigo-400 tabular-nums drop-shadow-sm">
                   {Math.round(((c1CorrectCount + c2CorrectCount) / 20) * 100)}%
                 </div>
@@ -2598,7 +2598,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 text-center text-xs text-slate-200 mb-5 leading-relaxed drop-shadow-sm">
+            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl p-3 lg:p-2.5 text-center text-xs text-slate-200 mb-5 lg:mb-3 leading-relaxed drop-shadow-sm">
               Chúc mừng bạn đã đạt danh hiệu{' '}
               <b className="text-amber-300">
                 [
@@ -2617,7 +2617,7 @@ export default function App() {
             </div>
 
             {/* Leaderboard Table */}
-            <div className="mb-6">
+            <div className="mb-6 lg:mb-4">
               <div className="flex items-center justify-between text-xs font-bold text-slate-300 mb-2">
                 <span>DANH SÁCH BẢNG PHONG THẦN</span>
                 <span className="text-[10px] font-normal text-slate-400">
@@ -2626,7 +2626,7 @@ export default function App() {
               </div>
 
               <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/60 rounded-xl overflow-hidden">
-                <div className="overflow-x-auto max-h-48 overflow-y-auto">
+                <div className="overflow-x-auto max-h-48 lg:max-h-40 xl:max-h-48 overflow-y-auto">
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-950/60 text-[10px] text-slate-300 uppercase border-b border-slate-700/60">
                       <tr>
@@ -2721,7 +2721,7 @@ export default function App() {
               </button>
             </div>
 
-            <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1 mb-5">
+            <div className="space-y-3 max-h-[60vh] lg:max-h-[52vh] xl:max-h-[56vh] overflow-y-auto pr-1 mb-4">
               {c2Questions.map((q, i) => {
                 const ans = c2Answers[i];
                 const isCorrect = ans?.isCorrect;
@@ -2795,36 +2795,36 @@ export default function App() {
         {/* CHAP 2 - OUTRO: LỜI KẾT                                  */}
         {/* ======================================================== */}
         {screen === 'c2_outro' && (
-          <div className="bg-slate-950/45 backdrop-blur-md border border-amber-500/40 rounded-2xl p-6 sm:p-8 max-w-md mx-auto w-full text-center shadow-2xl shadow-amber-950/30">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400/20 to-emerald-400/20 border border-amber-400/40 flex items-center justify-center text-3xl mx-auto mb-4">
+          <div className="bg-slate-950/45 backdrop-blur-md border border-amber-500/40 rounded-2xl p-6 sm:p-8 lg:p-6 max-w-md mx-auto w-full text-center shadow-2xl shadow-amber-950/30">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400/20 to-emerald-400/20 border border-amber-400/40 flex items-center justify-center text-3xl mx-auto mb-4 lg:mb-3">
               🏯
             </div>
 
             <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1 drop-shadow-sm">
               Chương 2 · Lời kết
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-100 mb-3 leading-snug drop-shadow-sm">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-100 mb-3 lg:mb-2 leading-snug drop-shadow-sm">
               Hành Trình Khép Lại<br />Tri Thức Còn Mãi
             </h2>
 
-            <div className="inline-block bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 backdrop-blur-sm border border-amber-400/50 rounded-xl px-4 py-2 my-2 shadow-sm">
+            <div className="inline-block bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 backdrop-blur-sm border border-amber-400/50 rounded-xl px-4 py-2 lg:py-1.5 my-2 lg:my-1.5 shadow-sm">
               <span className="text-xs sm:text-sm font-black text-amber-300 drop-shadow-sm">
                 &ldquo;ĐIỂM SỐ CỦA TA, DO TA QUYẾT ĐỊNH!&rdquo;
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed my-4 drop-shadow-sm font-normal">
+            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed my-4 lg:my-2.5 drop-shadow-sm font-normal">
               Chúc mừng tu sĩ <b className="text-amber-300">{playerName || 'bạn'}</b> đã nỗ lực hoàn thành xuất sắc cả 2 chương thử thách (Di Tích Cổ & Tu Tiên Giới). Hãy luôn ghi nhớ: Tinh thần ham học hỏi và sự kiên trì bền bỉ chính là chìa khóa giúp bạn tiến bộ vượt bậc trong toán học!
             </p>
 
-            <div className="text-xs text-slate-300 font-semibold mb-6 drop-shadow-sm">
+            <div className="text-xs text-slate-300 font-semibold mb-6 lg:mb-4 drop-shadow-sm">
               ✦ ĐẠI GIÁO CHỦ TRƯƠNG ANH TOÀN – 0329056500 ✦
             </div>
 
             <div className="flex flex-col gap-2.5">
               <button
                 onClick={handleFullRestart}
-                className="w-full min-h-[48px] bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform"
+                className="w-full min-h-[48px] lg:min-h-[44px] bg-gradient-to-r from-cyan-400 to-amber-300 hover:from-cyan-300 hover:to-amber-200 text-slate-950 font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/20 active:scale-[0.98] transition-transform"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Bắt đầu hành trình mới (Chương 1)</span>
@@ -2832,7 +2832,7 @@ export default function App() {
 
               <button
                 onClick={() => setScreen('c2_leaderboard')}
-                className="w-full min-h-[42px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm text-slate-200 hover:text-white font-bold text-xs rounded-xl transition-colors active:scale-[0.98] border border-slate-700/60"
+                className="w-full min-h-[42px] lg:min-h-[40px] bg-slate-900/70 hover:bg-slate-800/80 backdrop-blur-sm text-slate-200 hover:text-white font-bold text-xs rounded-xl transition-colors active:scale-[0.98] border border-slate-700/60"
               >
                 Xem lại Bảng Phong Thần
               </button>
@@ -2842,8 +2842,16 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="h-10 shrink-0 border-t border-slate-800/60 bg-slate-950/50 backdrop-blur-md flex items-center justify-center text-[10px] text-slate-400 tracking-wider">
-        TU TIÊN TOÁN HỌC · {currentChapter === 1 ? 'CHƯƠNG 1: THÁM HIỂM DI TÍCH CỔ' : 'CHƯƠNG 2: TIẾN VÀO TU TIÊN GIỚI'}
+      <footer className="min-h-11 sm:min-h-12 xl:min-h-13 py-2 px-4 shrink-0 border-t border-amber-400/30 bg-slate-950/85 backdrop-blur-lg shadow-[0_-4px_20px_rgba(0,0,0,0.45)] flex flex-wrap items-center justify-center text-center text-xs sm:text-sm xl:text-base font-extrabold tracking-wide leading-snug">
+        <span className="text-amber-300 drop-shadow-[0_1px_6px_rgba(251,191,36,0.35)]">
+          HỌC TOÁN CÙNG CÔ TOÀN
+        </span>
+        <span className="text-slate-400 mx-1.5 sm:mx-2">·</span>
+        <span className="text-slate-100 drop-shadow-sm">
+          {currentChapter === 1
+            ? 'CHƯƠNG 1: THÁM HIỂM DI TÍCH CỔ'
+            : 'CHƯƠNG 2: TIẾN VÀO TU TIÊN GIỚI'}
+        </span>
       </footer>
       </div>
     </div>

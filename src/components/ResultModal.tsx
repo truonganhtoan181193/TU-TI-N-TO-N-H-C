@@ -156,7 +156,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({
       {/* Main Modal Card */}
       <div
         key={animKey}
-        className={`relative w-full max-w-lg sm:max-w-xl rounded-3xl p-5 sm:p-7 border shadow-2xl overflow-hidden backdrop-blur-2xl transition-all ${
+        className={`relative w-full max-w-lg sm:max-w-xl max-h-[94dvh] rounded-3xl p-5 sm:p-6 lg:p-6 border shadow-2xl overflow-hidden backdrop-blur-2xl transition-all ${
           isCorrect
             ? isChap1
               ? 'animate-crit-impact-shake bg-slate-950/95 border-amber-400/80 shadow-[0_0_50px_rgba(245,158,11,0.35)] ring-2 ring-amber-400/30'
